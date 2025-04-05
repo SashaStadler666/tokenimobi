@@ -1,18 +1,17 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, ExternalLink, Users, Wallet, Clock, Activity, MapPin, Home, Ruler, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { mockTokens, mockTransactions, Token } from "@/lib/mockData";
 import BuySellInterface from "./BuySellInterface";
-import { Separator } from "@/components/ui/separator";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Find the token by ID
   const token = mockTokens.find(t => t.id === id);
   
   if (!token) {
@@ -27,7 +26,6 @@ const TokenDetail = () => {
     );
   }
   
-  // Format numbers for display
   const formatMarketCap = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -42,7 +40,6 @@ const TokenDetail = () => {
     maximumFractionDigits: 2
   }).format(token.volume24h);
   
-  // Token's recent transactions
   const tokenTransactions = mockTransactions.filter(tx => tx.tokenId === token.id);
   
   return (
@@ -59,7 +56,6 @@ const TokenDetail = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left column - Token info */}
         <div className="lg:col-span-2">
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             <div className="w-full md:w-1/3">
@@ -318,7 +314,6 @@ const TokenDetail = () => {
           </Tabs>
         </div>
         
-        {/* Right column - Buy/Sell interface */}
         <div>
           <BuySellInterface token={token} />
           
