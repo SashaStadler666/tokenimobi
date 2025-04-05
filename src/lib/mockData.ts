@@ -1,4 +1,3 @@
-
 export interface Token {
   id: string;
   name: string;
@@ -13,98 +12,126 @@ export interface Token {
   totalFractions: number;
   availableFractions: number;
   holders: number;
+  location?: string;
+  area?: number;
+  propertyType?: string;
+  yearBuilt?: number;
 }
 
 export const mockTokens: Token[] = [
   {
     id: "1",
-    name: "Blue Chip NFT #1",
-    symbol: "BCNFT1",
+    name: "Apartamento Jardins",
+    symbol: "APJD",
     totalSupply: 1,
-    fractionPrice: 0.05,
-    imageUrl: "https://via.placeholder.com/300/3a86ff/ffffff?text=BCNFT1",
-    description: "A highly sought-after blue chip NFT, fractionalized for wider accessibility.",
-    marketCap: 500000,
+    fractionPrice: 125.50,
+    imageUrl: "https://via.placeholder.com/300/3a86ff/ffffff?text=Apt+SP",
+    description: "Apartamento de luxo no bairro Jardins, São Paulo. Localização privilegiada com fácil acesso a restaurantes, shopping e transporte público.",
+    marketCap: 3500000,
     volume24h: 45000,
     priceChange24h: 3.5,
-    totalFractions: 10000,
-    availableFractions: 3500,
-    holders: 450
+    totalFractions: 1000,
+    availableFractions: 350,
+    holders: 450,
+    location: "Jardins, São Paulo, SP",
+    area: 120,
+    propertyType: "Apartamento",
+    yearBuilt: 2018
   },
   {
     id: "2",
-    name: "Digital Art Collective",
-    symbol: "DAC",
+    name: "Casa Barra da Tijuca",
+    symbol: "CSBT",
     totalSupply: 1,
-    fractionPrice: 0.12,
-    imageUrl: "https://via.placeholder.com/300/8338ec/ffffff?text=DAC",
-    description: "A collection of premium digital art pieces bundled together as a single fractionalized token.",
-    marketCap: 1200000,
+    fractionPrice: 212.75,
+    imageUrl: "https://via.placeholder.com/300/8338ec/ffffff?text=Casa+RJ",
+    description: "Casa de alto padrão em condomínio fechado na Barra da Tijuca, Rio de Janeiro. Área de lazer completa com piscina e churrasqueira.",
+    marketCap: 7200000,
     volume24h: 87000,
     priceChange24h: -1.2,
-    totalFractions: 10000,
-    availableFractions: 1200,
-    holders: 840
+    totalFractions: 1000,
+    availableFractions: 120,
+    holders: 840,
+    location: "Barra da Tijuca, Rio de Janeiro, RJ",
+    area: 350,
+    propertyType: "Casa",
+    yearBuilt: 2015
   },
   {
     id: "3",
-    name: "Virtual Land Parcel",
-    symbol: "LAND",
+    name: "Flat Comercial Paulista",
+    symbol: "FCPL",
     totalSupply: 1,
-    fractionPrice: 0.08,
-    imageUrl: "https://via.placeholder.com/300/ff006e/ffffff?text=LAND",
-    description: "Prime virtual real estate in a popular metaverse, fractionalized for shared ownership.",
-    marketCap: 800000,
+    fractionPrice: 89.25,
+    imageUrl: "https://via.placeholder.com/300/ff006e/ffffff?text=Flat+SP",
+    description: "Flat comercial na Av. Paulista, com serviços de hotelaria e ótima rentabilidade para investidores. Mobiliado e pronto para locação.",
+    marketCap: 2800000,
     volume24h: 65000,
     priceChange24h: 5.8,
-    totalFractions: 10000,
-    availableFractions: 2800,
-    holders: 620
+    totalFractions: 1000,
+    availableFractions: 280,
+    holders: 620,
+    location: "Av. Paulista, São Paulo, SP",
+    area: 45,
+    propertyType: "Flat",
+    yearBuilt: 2010
   },
   {
     id: "4",
-    name: "Gaming Guild Token",
-    symbol: "GGT",
-    totalSupply: 1000000,
-    fractionPrice: 0.015,
-    imageUrl: "https://via.placeholder.com/300/fb5607/ffffff?text=GGT",
-    description: "Governance token for a major gaming guild, allowing fractional ownership and voting rights.",
-    marketCap: 15000000,
-    volume24h: 1200000,
+    name: "Loja Centro Histórico",
+    symbol: "LCHS",
+    totalSupply: 1,
+    fractionPrice: 75.50,
+    imageUrl: "https://via.placeholder.com/300/fb5607/ffffff?text=Loja+MG",
+    description: "Loja comercial no centro histórico de Belo Horizonte. Excelente fluxo de pessoas e visibilidade para seu negócio.",
+    marketCap: 1500000,
+    volume24h: 120000,
     priceChange24h: 12.3,
-    totalFractions: 1000000,
-    availableFractions: 350000,
-    holders: 12500
+    totalFractions: 500,
+    availableFractions: 175,
+    holders: 125,
+    location: "Centro, Belo Horizonte, MG",
+    area: 80,
+    propertyType: "Comercial",
+    yearBuilt: 1985
   },
   {
     id: "5",
-    name: "DeFi Protocol Share",
-    symbol: "DPS",
-    totalSupply: 100000,
-    fractionPrice: 0.21,
-    imageUrl: "https://via.placeholder.com/300/ffbe0b/000000?text=DPS",
-    description: "Fractionalized ownership of a leading DeFi protocol, including revenue sharing.",
-    marketCap: 21000000,
+    name: "Galpão Logístico Guarulhos",
+    symbol: "GLGU",
+    totalSupply: 1,
+    fractionPrice: 165.25,
+    imageUrl: "https://via.placeholder.com/300/ffbe0b/000000?text=Galpao+SP",
+    description: "Galpão logístico de alto padrão em Guarulhos, próximo ao aeroporto internacional. Ideal para empresas de logística e e-commerce.",
+    marketCap: 12000000,
     volume24h: 3500000,
     priceChange24h: -2.7,
-    totalFractions: 100000,
-    availableFractions: 28000,
-    holders: 8700
+    totalFractions: 2000,
+    availableFractions: 560,
+    holders: 870,
+    location: "Guarulhos, São Paulo, SP",
+    area: 5000,
+    propertyType: "Industrial",
+    yearBuilt: 2020
   },
   {
     id: "6",
-    name: "Premium Domain Name",
-    symbol: "PDN",
+    name: "Terreno Litoral Norte",
+    symbol: "TLNP",
     totalSupply: 1,
-    fractionPrice: 0.35,
-    imageUrl: "https://via.placeholder.com/300/8ac926/ffffff?text=PDN",
-    description: "Fractionalized ownership of a premium web3 domain name with revenue sharing from leasing.",
+    fractionPrice: 95.75,
+    imageUrl: "https://via.placeholder.com/300/8ac926/ffffff?text=Terreno+SP",
+    description: "Terreno em área de expansão no litoral norte de São Paulo. Ótima oportunidade para desenvolvimento residencial ou empreendimento turístico.",
     marketCap: 3500000,
     volume24h: 420000,
     priceChange24h: 1.5,
-    totalFractions: 10000,
-    availableFractions: 4200,
-    holders: 780
+    totalFractions: 800,
+    availableFractions: 420,
+    holders: 280,
+    location: "Ubatuba, São Paulo, SP",
+    area: 1200,
+    propertyType: "Terreno",
+    yearBuilt: null
   }
 ];
 
@@ -161,9 +188,9 @@ export const mockTransactions: Transaction[] = [
 ];
 
 export const marketStats = {
-  totalMarketCap: 42000000,
-  totalVolume24h: 5812000,
-  totalTokens: 125,
-  totalHolders: 24700,
-  averageReturn30d: 7.8
+  totalMarketCap: 31500000,
+  totalVolume24h: 5237000,
+  totalTokens: 42,
+  totalHolders: 3185,
+  averageReturn30d: 6.3
 };

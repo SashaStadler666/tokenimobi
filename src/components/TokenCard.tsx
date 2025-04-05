@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, MapPin, Ruler, Home } from "lucide-react";
 import { Token } from "@/lib/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -11,19 +11,19 @@ interface TokenCardProps {
 
 const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'BRL',
       maximumFractionDigits: 0,
     }).format(num);
   };
   
   const formatPrice = (num: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 3,
-      maximumFractionDigits: 3,
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(num);
   };
   
@@ -48,13 +48,20 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
             </Badge>
           </div>
           
+          {token.location && (
+            <div className="flex items-center text-sm text-muted-foreground mb-2">
+              <MapPin className="h-3 w-3 mr-1" />
+              <span className="truncate">{token.location}</span>
+            </div>
+          )}
+          
           <p className="text-sm text-muted-foreground line-clamp-2 mb-3 flex-grow">
             {token.description}
           </p>
           
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div>
-              <p className="text-xs text-muted-foreground">Price</p>
+              <p className="text-xs text-muted-foreground">Fração</p>
               <p className="font-medium">{formatPrice(token.fractionPrice)}</p>
             </div>
             <div>
@@ -68,19 +75,23 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
                 <span className="font-medium">{Math.abs(token.priceChange24h).toFixed(1)}%</span>
               </div>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Market Cap</p>
-              <p className="font-medium">{formatNumber(token.marketCap)}</p>
+            <div className="flex items-center">
+              <Home className="h-3 w-3 mr-1" />
+              <p className="text-xs text-muted-foreground mr-1">Tipo:</p>
+              <p className="text-xs">{token.propertyType}</p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Holders</p>
-              <p className="font-medium">{token.holders.toLocaleString()}</p>
-            </div>
+            {token.area && (
+              <div className="flex items-center">
+                <Ruler className="h-3 w-3 mr-1" />
+                <p className="text-xs text-muted-foreground mr-1">Área:</p>
+                <p className="text-xs">{token.area} m²</p>
+              </div>
+            )}
           </div>
           
           <div>
             <div className="flex justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Available</span>
+              <span className="text-muted-foreground">Disponível</span>
               <span>{Math.round(availabilityPercentage)}%</span>
             </div>
             <Progress value={availabilityPercentage} className="h-1.5" />
