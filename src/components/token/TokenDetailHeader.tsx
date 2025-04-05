@@ -17,7 +17,7 @@ const TokenDetailHeader = () => {
         Voltar para o Mercado
       </Button>
       <h2 className="text-lg font-medium text-muted-foreground">
-        Plataforma de Tokenização de Imóveis e Terrenos Agrícolas
+        Raiz Digital • Plataforma de Tokenização de Imóveis e Produção Rural
       </h2>
     </div>
   );
