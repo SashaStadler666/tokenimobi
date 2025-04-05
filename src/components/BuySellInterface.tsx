@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Building, LandPlot } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface BuySellInterfaceProps {
   token: Token;
@@ -18,6 +19,7 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
   const [slippage, setSlippage] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"buy" | "sell">("buy");
+  const [assetType, setAssetType] = useState<"real-estate" | "agricultural">("real-estate");
   
   const maxBuyAmount = Math.min(token.availableFractions, 1000); // Limit max purchase for demo
   const maxSellAmount = 100; // Mock user holdings
@@ -50,9 +52,9 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
     setTimeout(() => {
       setIsProcessing(false);
       if (activeTab === "buy") {
-        toast.success(`Successfully bought ${amount} fractions of ${token.symbol}`);
+        toast.success(`Successfully bought ${amount} fractions of ${token.symbol} (${assetType === "real-estate" ? "Real Estate" : "Agricultural Land"})`);
       } else {
-        toast.success(`Successfully sold ${amount} fractions of ${token.symbol}`);
+        toast.success(`Successfully sold ${amount} fractions of ${token.symbol} (${assetType === "real-estate" ? "Real Estate" : "Agricultural Land"})`);
       }
       setAmount(0);
     }, 2000);
@@ -63,6 +65,18 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
       <CardHeader>
         <CardTitle>Trade Fractions</CardTitle>
         <CardDescription>Buy or sell fractions of {token.name}</CardDescription>
+        <div className="mt-4">
+          <ToggleGroup type="single" value={assetType} onValueChange={(value) => value && setAssetType(value as "real-estate" | "agricultural")}>
+            <ToggleGroupItem value="real-estate" aria-label="Real Estate">
+              <Building className="mr-2 h-4 w-4" />
+              Imóveis
+            </ToggleGroupItem>
+            <ToggleGroupItem value="agricultural" aria-label="Agricultural Land">
+              <LandPlot className="mr-2 h-4 w-4" />
+              Terrenos Agrícolas
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs 
@@ -147,6 +161,10 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
               </div>
               
               <div className="bg-secondary/50 p-3 rounded-md space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Asset Type</span>
+                  <span className="text-sm">{assetType === "real-estate" ? "Real Estate" : "Agricultural Land"}</span>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Price per fraction</span>
                   <span className="text-sm">${token.fractionPrice.toFixed(3)}</span>
@@ -240,6 +258,10 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
               
               <div className="bg-secondary/50 p-3 rounded-md space-y-2">
                 <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Asset Type</span>
+                  <span className="text-sm">{assetType === "real-estate" ? "Real Estate" : "Agricultural Land"}</span>
+                </div>
+                <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Price per fraction</span>
                   <span className="text-sm">${token.fractionPrice.toFixed(3)}</span>
                 </div>
@@ -272,9 +294,9 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
               Processing...
             </>
           ) : activeTab === "buy" ? (
-            `Buy ${amount || 0} ${token.symbol} Fractions`
+            `Buy ${amount || 0} ${token.symbol} ${assetType === "real-estate" ? "Real Estate" : "Agricultural"} Fractions`
           ) : (
-            `Sell ${amount || 0} ${token.symbol} Fractions`
+            `Sell ${amount || 0} ${token.symbol} ${assetType === "real-estate" ? "Real Estate" : "Agricultural"} Fractions`
           )}
         </Button>
       </CardFooter>
