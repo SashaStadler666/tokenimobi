@@ -12,27 +12,10 @@ import { Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "@/components/ConnectWallet";
 import { motion } from "framer-motion";
+import { getImageForType } from "@/lib/imageUtils";
 
 // Import whole property tokens from Tokens page
 import { wholePropertyTokens } from "@/pages/Tokens";
-
-// Function to get fallback images based on property type
-const getImageForType = (type: string | undefined) => {
-  switch (type?.toLowerCase()) {
-    case "apartamento":
-      return "https://images.unsplash.com/photo-1598928506311-f4fe0afa1bd6";
-    case "casa":
-      return "https://images.unsplash.com/photo-1600585154340-be6161a56a0c";
-    case "flat":
-      return "https://images.unsplash.com/photo-1599423300746-b62533397364";
-    case "rural":
-    case "fazenda":
-    case "agro":
-      return "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
-    default:
-      return "https://images.unsplash.com/photo-1501183638710-841dd1904471";
-  }
-};
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,10 +39,8 @@ const TokenDetail = () => {
     );
   }
   
-  // Apply fallback image if imageUrl is missing or empty
-  if (!token.imageUrl) {
-    token.imageUrl = getImageForType(token.propertyType);
-  }
+  // Determine display image without mutating the original token
+  const displayImage = token.imageUrl || getImageForType(token.propertyType);
   
   const formatMarketCap = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -98,21 +79,55 @@ const TokenDetail = () => {
         </div>
         
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 rounded-lg overflow-hidden border"
+          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6 }}
+          className="mb-6 rounded-lg overflow-hidden border relative group ring-1 ring-muted/20"
         >
-          <img
-            src={token.imageUrl}
-            alt={token.name}
-            className="w-full h-64 object-cover"
-            loading="lazy"
-          />
+          <div className="aspect-[16/9] sm:aspect-[3/2] md:aspect-[21/9] lg:aspect-[4/2] w-full relative">
+            <img
+              src={displayImage}
+              alt={token.name}
+              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
+            <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+              >
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white drop-shadow-md">
+                  {token.name}
+                </h2>
+                {token.location && (
+                  <p className="text-white/90 text-sm md:text-base mt-1 drop-shadow-md">
+                    {token.location}
+                  </p>
+                )}
+                <div className="mt-2">
+                  <span className="inline-block bg-primary/90 text-primary-foreground text-xs md:text-sm px-2 py-1 rounded">
+                    {token.propertyType}
+                  </span>
+                  {token.isWholeProperty && (
+                    <span className="ml-2 inline-block bg-accent/90 text-accent-foreground text-xs md:text-sm px-2 py-1 rounded">
+                      Imóvel Inteiro
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </motion.div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+          <motion.div 
+            className="lg:col-span-2"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <TokenDetailInfo 
               token={token} 
               formatMarketCap={formatMarketCap} 
@@ -120,11 +135,15 @@ const TokenDetail = () => {
             />
             
             <TokenDetailTabs token={token} transactions={tokenTransactions} />
-          </div>
+          </motion.div>
           
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <TokenDetailSidebar token={token} />
-          </div>
+          </motion.div>
         </div>
       </div>
       
