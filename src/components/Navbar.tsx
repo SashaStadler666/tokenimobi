@@ -83,6 +83,14 @@ const Navbar = () => {
                     Perguntas Frequentes
                   </Link>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link 
+                    to="/termos-de-uso" 
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Termos de Uso
+                  </Link>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
             <ConnectWallet />
@@ -140,6 +148,14 @@ const Navbar = () => {
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Perguntas Frequentes
+              </Link>
+              <Link
+                to="/termos-de-uso"
+                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Termos de Uso
               </Link>
             </nav>
             <div className="pt-2">

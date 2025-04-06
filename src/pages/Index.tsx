@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import HowItWorks from "@/components/HowItWorks"; 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 
@@ -38,6 +38,12 @@ const Index = () => {
             Simular Investimento
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
+        </div>
+        <div className="mt-4 text-sm text-muted-foreground">
+          <Link to="/termos-de-uso" className="flex items-center justify-center hover:text-primary transition-colors">
+            <FileText className="h-3 w-3 mr-1" />
+            Leia nossos Termos de Uso
+          </Link>
         </div>
       </section>
       
