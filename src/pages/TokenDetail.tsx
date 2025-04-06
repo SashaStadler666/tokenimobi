@@ -1,7 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions } from "@/lib/models";
-import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
