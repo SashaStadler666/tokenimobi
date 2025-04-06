@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Wallet, ChevronDown, Loader2, LogOut, Copy, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Wallet, ChevronDown, Loader2, LogOut, Copy, ExternalLink, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,12 +10,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const ConnectWallet = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+
+  useEffect(() => {
+    // Check if wallet is already connected
+    const walletConnected = localStorage.getItem("walletConnected") === "true";
+    if (walletConnected) {
+      setIsConnected(true);
+      setWalletAddress("0xaBcD...1234");
+    }
+  }, []);
 
   const handleConnect = () => {
     setIsConnecting(true);
@@ -25,6 +35,7 @@ const ConnectWallet = () => {
       setIsConnecting(false);
       setIsConnected(true);
       setWalletAddress("0xaBcD...1234");
+      localStorage.setItem("walletConnected", "true");
       toast.success("Wallet connected successfully");
     }, 1000);
   };
@@ -32,6 +43,7 @@ const ConnectWallet = () => {
   const handleDisconnect = () => {
     setIsConnected(false);
     setWalletAddress("");
+    localStorage.removeItem("walletConnected");
     toast.info("Wallet disconnected");
   };
 
@@ -74,6 +86,12 @@ const ConnectWallet = () => {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>My Wallet</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link to="/portfolio" className="flex items-center w-full">
+            <LineChart className="mr-2 h-4 w-4" />
+            <span>My Portfolio</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={copyAddress}>
           <Copy className="mr-2 h-4 w-4" />
           <span>Copy Address</span>

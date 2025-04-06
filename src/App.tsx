@@ -14,6 +14,7 @@ import CustomHowItWorks from "./pages/CustomHowItWorks";
 import CustomFAQ from "./pages/CustomFAQ";
 import TermosDeUso from "./pages/TermosDeUso";
 import Tokens from "./pages/Tokens";
+import Portfolio from "./pages/Portfolio";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/faq" element={<CustomFAQ />} />
           <Route path="/tokens" element={<Tokens />} />
           <Route path="/termos-de-uso" element={<TermosDeUso />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
