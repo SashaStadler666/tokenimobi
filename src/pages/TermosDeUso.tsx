@@ -1,11 +1,10 @@
-
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText, Download } from "lucide-react";
+import { toast } from "sonner";
 
 const getImageForType = (type) => {
   switch (type?.toLowerCase()) {
@@ -25,29 +24,15 @@ const getImageForType = (type) => {
 };
 
 export default function TermosDeUso() {
-  const [aceito, setAceito] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const accepted = localStorage.getItem("termosAceitos");
-    if (accepted) {
-      setAceito(true);
-    }
-  }, []);
-
-  const handleAccept = () => {
-    localStorage.setItem("termosAceitos", "true");
-    setAceito(true);
-    setTimeout(() => navigate("/dashboard"), 1500);
+  const handleDownloadTerms = () => {
+    // In a real application, this would be a link to a real PDF
+    // This is just a simulation for the demo
+    toast.success("Baixando termos de uso...");
+    // Normally you'd have something like:
+    // window.open("/documents/termos-de-uso.pdf", "_blank");
   };
-
-  if (aceito) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <h2 className="text-2xl font-semibold text-success">Termos aceitos com sucesso!</h2>
-      </div>
-    );
-  }
 
   const examplePropertyTypes = ["Apartamento", "Casa", "Flat", "Fazenda"];
 
@@ -96,14 +81,14 @@ export default function TermosDeUso() {
               <p>
                 Propriedades do tipo agro (fazendas, áreas de cultivo, criação) e urbanas (terrenos para construção civil) possuem características distintas, sendo responsabilidade do investidor verificar os detalhes antes da aquisição de frações.
               </p>
-              <p>
-                Ao clicar em "Aceitar", você declara estar ciente de todas as informações apresentadas e concorda integralmente com os termos de uso.
-              </p>
             </div>
           </ScrollArea>
-          <Button className="w-full" onClick={handleAccept}>
-            Aceitar e Continuar
-          </Button>
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" onClick={handleDownloadTerms} className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Baixar PDF
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -1,19 +1,7 @@
-
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "@/components/PageHeader";
 import { motion } from "framer-motion";
+import PageHeader from "@/components/PageHeader";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const termosAceitos = localStorage.getItem("termosAceitos");
-    if (!termosAceitos) {
-      navigate("/termos-de-uso");
-    }
-  }, [navigate]);
-
   return (
     <div className="min-h-screen p-4 pt-20">
       <PageHeader 

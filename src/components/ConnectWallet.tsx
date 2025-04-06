@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Wallet, ChevronDown, Loader2, LogOut, Copy, ExternalLink, LineChart } from "lucide-react";
+import { Wallet, ChevronDown, Loader2, LogOut, Copy, ExternalLink, LineChart, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,21 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ConnectWallet = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
-  const [showTerms, setShowTerms] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,22 +29,8 @@ const ConnectWallet = () => {
     }
   }, []);
 
-  const handleConnectRequest = () => {
-    // Check if terms have been accepted
-    const termsAccepted = localStorage.getItem("termosAceitos") === "true";
-    
-    if (termsAccepted) {
-      // If terms already accepted, connect directly
-      connectWallet();
-    } else {
-      // Show terms dialog
-      setShowTerms(true);
-    }
-  };
-
   const connectWallet = () => {
     setIsConnecting(true);
-    setShowTerms(false);
     
     // Simulate connecting to wallet
     setTimeout(() => {
@@ -63,11 +40,6 @@ const ConnectWallet = () => {
       localStorage.setItem("walletConnected", "true");
       toast.success("Carteira conectada com sucesso");
     }, 1000);
-  };
-
-  const handleAcceptTerms = () => {
-    localStorage.setItem("termosAceitos", "true");
-    connectWallet();
   };
 
   const handleDisconnect = () => {
@@ -87,58 +59,29 @@ const ConnectWallet = () => {
     toast.success("Visualizando no explorer");
   };
 
+  const viewTerms = () => {
+    navigate("/termos-de-uso");
+  };
+
   if (!isConnected) {
     return (
-      <>
-        <Button 
-          onClick={handleConnectRequest} 
-          disabled={isConnecting}
-          className="button-glow"
-        >
-          {isConnecting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Conectando
-            </>
-          ) : (
-            <>
-              <Wallet className="mr-2 h-4 w-4" />
-              Conectar Carteira
-            </>
-          )}
-        </Button>
-
-        <Dialog open={showTerms} onOpenChange={setShowTerms}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Termos de Uso</DialogTitle>
-              <DialogDescription>
-                Por favor, leia e aceite os termos antes de continuar.
-              </DialogDescription>
-            </DialogHeader>
-            <ScrollArea className="h-64 p-2 border rounded-md bg-muted/10">
-              <div className="text-sm space-y-4">
-                <p>
-                  A plataforma Token Imobi atua como intermediadora tecnológica e não realiza oferta pública de valores mobiliários. O uso do sistema exige validação de identidade e está em conformidade com as diretrizes da LGPD.
-                </p>
-                <p>
-                  O usuário reconhece que investimentos em propriedades tokenizadas estão sujeitos a riscos, incluindo, mas não se limitando a, baixa liquidez, variações de mercado e especificidades regulatórias sobre imóveis urbanos e rurais.
-                </p>
-                <p>
-                  Propriedades do tipo agro (fazendas, áreas de cultivo, criação) e urbanas (terrenos para construção civil) possuem características distintas, sendo responsabilidade do investidor verificar os detalhes antes da aquisição de frações.
-                </p>
-                <p>
-                  Ao clicar em "Aceitar", você declara estar ciente de todas as informações apresentadas e concorda integralmente com os termos de uso.
-                </p>
-              </div>
-            </ScrollArea>
-            <DialogFooter className="flex gap-2 mt-4">
-              <Button variant="outline" onClick={() => setShowTerms(false)}>Cancelar</Button>
-              <Button onClick={handleAcceptTerms}>Aceitar e Conectar</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </>
+      <Button 
+        onClick={connectWallet} 
+        disabled={isConnecting}
+        className="button-glow"
+      >
+        {isConnecting ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Conectando
+          </>
+        ) : (
+          <>
+            <Wallet className="mr-2 h-4 w-4" />
+            Conectar Carteira
+          </>
+        )}
+      </Button>
     );
   }
 
@@ -167,6 +110,10 @@ const ConnectWallet = () => {
         <DropdownMenuItem onClick={goToExplorer}>
           <ExternalLink className="mr-2 h-4 w-4" />
           <span>Ver no Explorer</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={viewTerms}>
+          <FileText className="mr-2 h-4 w-4" />
+          <span>Termos de Uso</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleDisconnect} className="text-destructive focus:text-destructive">
