@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { mockTokens, Token } from "@/lib/models";
@@ -12,7 +11,7 @@ import { motion } from "framer-motion";
 import TokenGrid from "@/components/featured/TokenGrid";
 
 // Sample whole property tokens
-const wholePropertyTokens: Token[] = [
+export const wholePropertyTokens: Token[] = [
   {
     id: "whole-1",
     name: "Fazenda Horizonte Verde",

@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
-import { mockTokens, mockTransactions } from "@/lib/models";
+import { mockTokens, Token } from "@/lib/models";
 import TokenDetailHeader from "./token/TokenDetailHeader";
 import TokenDetailInfo from "./token/TokenDetailInfo";
 import TokenDetailTabs from "./token/TokenDetailTabs";
@@ -10,12 +10,16 @@ import { Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "./ConnectWallet";
 
+// Import whole property tokens from Tokens page
+import { wholePropertyTokens } from "@/pages/Tokens";
+
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isWalletConnected = localStorage.getItem("walletConnected") === "true";
   
-  const token = mockTokens.find(t => t.id === id);
+  // Look for token in both regular tokens and whole property tokens
+  const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
   
   if (!token) {
     return (
