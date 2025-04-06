@@ -9,32 +9,49 @@ import { TrendingUp, Home, Building, MapPin } from "lucide-react";
 const FeaturedTokens = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [activeTab, setActiveTab] = useState("all");
+  const [propertyTypeTab, setPropertyTypeTab] = useState("urbano");
 
   useEffect(() => {
-    // Filter and sort tokens based on active tab
+    // Filter and sort tokens based on active tab and property type
     const getTokens = () => {
+      // First filter by urban/rural property type
+      const propertyTypeFiltered = propertyTypeTab === "urbano" 
+        ? [...mockTokens].filter(t => 
+            t.propertyType === "Apartamento" || 
+            t.propertyType === "Casa" || 
+            t.propertyType === "Flat" ||
+            t.propertyType === "Comercial" ||
+            t.propertyType === "Industrial"
+          )
+        : [...mockTokens].filter(t => 
+            t.propertyType === "Terreno" || 
+            t.propertyType === "Fazenda" ||
+            t.propertyType === "Rural"
+          );
+      
+      // Then apply additional filtering based on active tab
       switch(activeTab) {
         case "residential":
-          return [...mockTokens].filter(t => 
+          return propertyTypeFiltered.filter(t => 
             t.propertyType === "Apartamento" || 
             t.propertyType === "Casa" || 
             t.propertyType === "Flat"
           ).slice(0, 6);
         case "commercial":
-          return [...mockTokens].filter(t => 
+          return propertyTypeFiltered.filter(t => 
             t.propertyType === "Comercial" || 
             t.propertyType === "Industrial"
           ).slice(0, 6);
         case "performance":
-          return [...mockTokens].sort((a, b) => b.priceChange24h - a.priceChange24h).slice(0, 6);
+          return propertyTypeFiltered.sort((a, b) => b.priceChange24h - a.priceChange24h).slice(0, 6);
         case "all":
         default:
-          return mockTokens.slice(0, 6);
+          return propertyTypeFiltered.slice(0, 6);
       }
     };
     
     setTokens(getTokens());
-  }, [activeTab]);
+  }, [activeTab, propertyTypeTab]);
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -65,11 +82,26 @@ const FeaturedTokens = () => {
         </Tabs>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tokens.map((token) => (
-          <TokenCard key={token.id} token={token} />
-        ))}
-      </div>
+      <Tabs defaultValue="urbano" className="mb-10" onValueChange={setPropertyTypeTab}>
+        <TabsList className="w-full sm:w-auto mb-6">
+          <TabsTrigger value="urbano">Urbano</TabsTrigger>
+          <TabsTrigger value="rural">Rural</TabsTrigger>
+        </TabsList>
+        <TabsContent value="urbano" className="mt-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tokens.map((token) => (
+              <TokenCard key={token.id} token={token} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="rural" className="mt-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tokens.map((token) => (
+              <TokenCard key={token.id} token={token} />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
       
       <div className="flex justify-center mt-10">
         <Button variant="outline" className="button-glow">
