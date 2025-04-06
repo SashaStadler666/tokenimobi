@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const FeaturedFooter = () => {
   return (
@@ -12,8 +13,9 @@ const FeaturedFooter = () => {
       </p>
       <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
         <Link to="/tokens">
-          <Button variant="outline" className="button-glow whitespace-nowrap">
+          <Button variant="outline" className="button-glow whitespace-nowrap flex items-center">
             Ver Todos os Imóveis
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </motion.div>

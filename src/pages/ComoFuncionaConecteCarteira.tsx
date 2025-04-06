@@ -137,8 +137,10 @@ const ComoFuncionaConecteCarteira = () => {
             </Button>
             
             <Button size="lg" className="button-glow">
-              <Link to="/tokens">Ver Imóveis Disponíveis</Link>
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <Link to="/tokens" className="flex items-center">
+                Ver Imóveis Disponíveis
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </motion.div>
         </div>

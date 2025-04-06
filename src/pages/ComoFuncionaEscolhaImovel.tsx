@@ -97,7 +97,10 @@ const ComoFuncionaEscolhaImovel = () => {
             transition={{ delay: 0.4, duration: 0.5 }}
           >
             <Button size="lg" className="button-glow">
-              <Link to="/tokens">Explorar Imóveis Disponíveis</Link>
+              <Link to="/tokens" className="flex items-center">
+                Explorar Imóveis Disponíveis
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             
             <Button variant="outline" size="lg">
