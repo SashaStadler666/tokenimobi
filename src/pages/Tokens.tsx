@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { mockTokens, Token } from "@/lib/models";
 import TokenCard from "@/components/TokenCard";
@@ -8,13 +8,26 @@ import PropertyTypeSelector from "@/components/featured/PropertyTypeSelector";
 import FiltersPanel from "@/components/featured/FiltersPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Filter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const Tokens = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const typeFromUrl = queryParams.get('type');
+  
   const [tokens, setTokens] = useState<Token[]>(mockTokens);
-  const [propertyTypeTab, setPropertyTypeTab] = useState("urbano");
+  const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Update property type if URL params change
+  useEffect(() => {
+    if (typeFromUrl === "rural") {
+      setPropertyTypeTab("rural");
+    } else if (typeFromUrl === "urbano") {
+      setPropertyTypeTab("urbano");
+    }
+  }, [typeFromUrl]);
   
   // Filter tokens based on property type
   const filteredTokens = propertyTypeTab === "urbano"

@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, HelpCircle, FileText, Home, Building, LandPlot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,12 @@ import ConnectWallet from "./ConnectWallet";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigateToTokens = (type: string) => {
+    navigate(`/tokens?type=${type}`);
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm fixed w-full z-50">
@@ -36,26 +42,26 @@ const Navbar = () => {
                   <NavigationMenuTrigger>O que é Tokenização</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid grid-cols-2 gap-3 p-4 w-[500px]">
-                      <Link 
-                        to="/tokens?type=urban" 
-                        className="flex items-start p-2 hover:bg-muted rounded-md"
+                      <div 
+                        onClick={() => handleNavigateToTokens("urbano")} 
+                        className="flex items-start p-2 hover:bg-muted rounded-md cursor-pointer"
                       >
                         <Building className="h-5 w-5 mr-2 mt-0.5 text-primary" />
                         <div>
                           <div className="text-sm font-medium">Imóveis Urbanos</div>
                           <p className="text-sm text-muted-foreground">Apartamentos e imóveis comerciais</p>
                         </div>
-                      </Link>
-                      <Link 
-                        to="/tokens?type=rural" 
-                        className="flex items-start p-2 hover:bg-muted rounded-md"
+                      </div>
+                      <div 
+                        onClick={() => handleNavigateToTokens("rural")} 
+                        className="flex items-start p-2 hover:bg-muted rounded-md cursor-pointer"
                       >
                         <LandPlot className="h-5 w-5 mr-2 mt-0.5 text-primary" />
                         <div>
                           <div className="text-sm font-medium">Terras Rurais</div>
                           <p className="text-sm text-muted-foreground">Terrenos agrícolas e produção rural</p>
                         </div>
-                      </Link>
+                      </div>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -119,22 +125,20 @@ const Navbar = () => {
             <nav className="flex flex-col space-y-4">
               <div className="space-y-2">
                 <p className="text-sm font-medium">O que é Tokenização:</p>
-                <Link
-                  to="/tokens?type=urban"
-                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                <div
+                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
+                  onClick={() => handleNavigateToTokens("urbano")}
                 >
                   <Building className="h-4 w-4 mr-2" />
                   Imóveis Urbanos
-                </Link>
-                <Link
-                  to="/tokens?type=rural"
-                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                </div>
+                <div
+                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
+                  onClick={() => handleNavigateToTokens("rural")}
                 >
                   <LandPlot className="h-4 w-4 mr-2" />
                   Terras Rurais
-                </Link>
+                </div>
               </div>
               <Link
                 to="/como-funciona"
