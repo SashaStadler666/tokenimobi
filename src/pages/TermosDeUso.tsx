@@ -1,10 +1,13 @@
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
-import { ArrowLeft, FileText, Download } from "lucide-react";
+import { ArrowLeft, FileText, Download, Check } from "lucide-react";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const getImageForType = (type) => {
   switch (type?.toLowerCase()) {
@@ -25,6 +28,13 @@ const getImageForType = (type) => {
 
 export default function TermosDeUso() {
   const navigate = useNavigate();
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  
+  useEffect(() => {
+    // Check if terms have already been accepted
+    const accepted = localStorage.getItem("termosAceitos") === "true";
+    setTermsAccepted(accepted);
+  }, []);
 
   const handleDownloadTerms = () => {
     // In a real application, this would be a link to a real PDF
@@ -32,6 +42,21 @@ export default function TermosDeUso() {
     toast.success("Baixando termos de uso...");
     // Normally you'd have something like:
     // window.open("/documents/termos-de-uso.pdf", "_blank");
+  };
+  
+  const handleAcceptTerms = () => {
+    localStorage.setItem("termosAceitos", "true");
+    setTermsAccepted(true);
+    toast.success("Termos aceitos com sucesso!");
+  };
+  
+  const handleContinue = () => {
+    // Redirect to the previous page or home
+    if (document.referrer && document.referrer.includes(window.location.origin)) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   };
 
   const examplePropertyTypes = ["Apartamento", "Casa", "Flat", "Fazenda"];
@@ -81,13 +106,51 @@ export default function TermosDeUso() {
               <p>
                 Propriedades do tipo agro (fazendas, áreas de cultivo, criação) e urbanas (terrenos para construção civil) possuem características distintas, sendo responsabilidade do investidor verificar os detalhes antes da aquisição de frações.
               </p>
+              <p>
+                Ao utilizar a plataforma, o usuário assume a responsabilidade por todas as transações e investimentos realizados por meio do sistema, estando ciente de que o mercado imobiliário e de tokens digitais está sujeito a flutuações.
+              </p>
+              <p>
+                A Token Imobi se reserva ao direito de alterar os termos de uso a qualquer momento, sendo responsabilidade do usuário verificar periodicamente as atualizações.
+              </p>
+              <p>
+                Todas as transações realizadas na plataforma são registradas em blockchain e são imutáveis, não podendo ser revertidas pela Token Imobi.
+              </p>
             </div>
           </ScrollArea>
-          <div className="flex justify-end gap-4">
-            <Button variant="outline" onClick={handleDownloadTerms} className="flex items-center gap-2">
-              <Download className="h-4 w-4" />
-              Baixar PDF
-            </Button>
+          
+          <div className="flex flex-col space-y-4">
+            {!termsAccepted && (
+              <div className="flex items-center space-x-2">
+                <Checkbox id="terms" onCheckedChange={(checked) => setTermsAccepted(checked === true)} />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Eu li e aceito os termos de uso da plataforma Token Imobi
+                </label>
+              </div>
+            )}
+            
+            <div className="flex justify-between gap-4">
+              <Button variant="outline" onClick={handleDownloadTerms} className="flex items-center gap-2">
+                <Download className="h-4 w-4" />
+                Baixar PDF
+              </Button>
+              
+              {termsAccepted ? (
+                <Button onClick={handleContinue} className="button-glow">
+                  <Check className="mr-2 h-4 w-4" />
+                  Continuar
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleAcceptTerms} 
+                  disabled={!termsAccepted} 
+                  className={termsAccepted ? "button-glow" : ""}>
+                  Aceitar Termos
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
