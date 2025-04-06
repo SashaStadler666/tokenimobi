@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const FeaturedFooter = () => {
   return (
@@ -10,9 +11,11 @@ const FeaturedFooter = () => {
         Diversifique sua carteira com segurança, em qualquer tipo de solo.
       </p>
       <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-        <Button variant="outline" className="button-glow whitespace-nowrap">
-          Ver Todos os Imóveis
-        </Button>
+        <Link to="/tokens">
+          <Button variant="outline" className="button-glow whitespace-nowrap">
+            Ver Todos os Imóveis
+          </Button>
+        </Link>
       </motion.div>
     </div>
   );
