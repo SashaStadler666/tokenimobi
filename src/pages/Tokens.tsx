@@ -29,6 +29,9 @@ const wholePropertyTokens: Token[] = [
     availableFractions: 1,
     isWholeProperty: true,
     wholePropertyPrice: 5500000, // R$ 5.5 milhões
+    marketCap: 5500000,
+    volume24h: 0,
+    holders: 0
   },
   {
     id: "whole-2",
@@ -46,6 +49,9 @@ const wholePropertyTokens: Token[] = [
     availableFractions: 1,
     isWholeProperty: true,
     wholePropertyPrice: 3200000, // R$ 3.2 milhões
+    marketCap: 3200000,
+    volume24h: 0,
+    holders: 0
   },
   {
     id: "whole-3",
@@ -63,6 +69,9 @@ const wholePropertyTokens: Token[] = [
     availableFractions: 1,
     isWholeProperty: true,
     wholePropertyPrice: 8500000, // R$ 8.5 milhões
+    marketCap: 8500000,
+    volume24h: 0,
+    holders: 0
   },
   {
     id: "whole-4",
@@ -80,6 +89,9 @@ const wholePropertyTokens: Token[] = [
     availableFractions: 1,
     isWholeProperty: true,
     wholePropertyPrice: 12000000, // R$ 12 milhões
+    marketCap: 12000000,
+    volume24h: 0,
+    holders: 0
   },
   {
     id: "whole-5",
@@ -97,6 +109,9 @@ const wholePropertyTokens: Token[] = [
     availableFractions: 1,
     isWholeProperty: true,
     wholePropertyPrice: 1800000, // R$ 1.8 milhões
+    marketCap: 1800000,
+    volume24h: 0,
+    holders: 0
   }
 ];
 
