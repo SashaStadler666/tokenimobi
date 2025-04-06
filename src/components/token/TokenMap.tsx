@@ -4,9 +4,7 @@ import { MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Token } from '@/lib/models';
 import { getLocationCoordinates } from '@/lib/imageUtils';
-
-// Importando leaflet manualmente para evitar problemas com SSR
-const L = typeof window !== 'undefined' ? require('leaflet') : null;
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 interface TokenMapProps {
@@ -15,10 +13,10 @@ interface TokenMapProps {
 
 const TokenMap = ({ token }: TokenMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
   
   useEffect(() => {
-    if (!mapRef.current || !L) return;
+    if (!mapRef.current) return;
     
     // Limpar mapa anterior se existir
     if (mapInstanceRef.current) {
