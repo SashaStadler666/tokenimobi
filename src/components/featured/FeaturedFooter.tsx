@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const FeaturedFooter = () => {
   return (
@@ -8,9 +9,11 @@ const FeaturedFooter = () => {
         Escolha entre oportunidades em grandes centros ou propriedades rurais com alto potencial produtivo. 
         Diversifique sua carteira com segurança, em qualquer tipo de solo.
       </p>
-      <Button variant="outline" className="button-glow whitespace-nowrap">
-        Ver Todos os Imóveis
-      </Button>
+      <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+        <Button variant="outline" className="button-glow whitespace-nowrap">
+          Ver Todos os Imóveis
+        </Button>
+      </motion.div>
     </div>
   );
 };

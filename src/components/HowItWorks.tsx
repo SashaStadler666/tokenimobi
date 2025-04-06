@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search, BarChart3, Wallet, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const steps = [
   {
@@ -34,33 +35,50 @@ const steps = [
 const HowItWorks = () => {
   return (
     <section className="container mx-auto px-4 py-12">
-      <div className="text-center mb-10">
+      <motion.div 
+        className="text-center mb-10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="text-3xl font-bold gradient-text mb-4">Como Funciona</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Investir em imóveis tokenizados é simples, seguro e acessível para todos. Siga estas etapas para começar:
         </p>
-      </div>
+      </motion.div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {steps.map((step, index) => (
-          <Card key={index} className="border border-border hover:border-primary/40 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex flex-col items-center text-center">
-                <div className={`rounded-full p-3 mb-4 ${step.color}`}>
-                  <step.icon className="h-6 w-6" />
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ scale: 1.03 }}
+          >
+            <Card className="border border-border hover:border-primary/40 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className={`rounded-full p-3 mb-4 ${step.color}`}>
+                    <step.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground">{step.description}</p>
                 </div>
-                <h3 className="text-xl font-medium mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
       </div>
       
       <div className="text-center">
-        <Button size="lg" className="button-glow">
-          <Link to="/tokens">Ver Imóveis Disponíveis</Link>
-        </Button>
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+          <Button size="lg" className="button-glow">
+            <Link to="/tokens">Ver Imóveis Disponíveis</Link>
+          </Button>
+        </motion.div>
       </div>
     </section>
   );

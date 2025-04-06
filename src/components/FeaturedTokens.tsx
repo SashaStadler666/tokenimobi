@@ -7,6 +7,7 @@ import FiltersPanel from "./featured/FiltersPanel";
 import TokenGrid from "./featured/TokenGrid";
 import FeaturedHeader from "./featured/FeaturedHeader";
 import FeaturedFooter from "./featured/FeaturedFooter";
+import { motion } from "framer-motion";
 
 const FeaturedTokens = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
@@ -57,7 +58,13 @@ const FeaturedTokens = () => {
   }, [activeTab, propertyTypeTab]);
 
   return (
-    <section className="container mx-auto px-4 py-12">
+    <motion.section 
+      className="container mx-auto px-4 py-12"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+    >
       <FeaturedHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="flex justify-between items-center mb-6">
@@ -70,7 +77,7 @@ const FeaturedTokens = () => {
       <TokenGrid tokens={tokens} propertyTypeTab={propertyTypeTab} />
       
       <FeaturedFooter />
-    </section>
+    </motion.section>
   );
 };
 
