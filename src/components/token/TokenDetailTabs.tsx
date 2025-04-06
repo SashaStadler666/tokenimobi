@@ -5,6 +5,7 @@ import AboutTab from "./tabs/AboutTab";
 import TransactionsTab from "./tabs/TransactionsTab";
 import HoldersTab from "./tabs/HoldersTab";
 import DocumentsTab from "./tabs/DocumentsTab";
+import TabContent from "./tabs/TabContent";
 
 interface TokenDetailTabsProps {
   token: Token;
@@ -20,18 +21,22 @@ const TokenDetailTabs = ({ token, transactions }: TokenDetailTabsProps) => {
         <TabsTrigger value="holders">Investidores</TabsTrigger>
         <TabsTrigger value="documents">Documentos</TabsTrigger>
       </TabsList>
-      <TabsContent value="about">
+      
+      <TabContent value="about">
         <AboutTab token={token} />
-      </TabsContent>
-      <TabsContent value="transactions">
+      </TabContent>
+      
+      <TabContent value="transactions">
         <TransactionsTab transactions={transactions} />
-      </TabsContent>
-      <TabsContent value="holders">
+      </TabContent>
+      
+      <TabContent value="holders">
         <HoldersTab token={token} />
-      </TabsContent>
-      <TabsContent value="documents">
+      </TabContent>
+      
+      <TabContent value="documents">
         <DocumentsTab />
-      </TabsContent>
+      </TabContent>
     </Tabs>
   );
 };

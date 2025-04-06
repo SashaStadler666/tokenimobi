@@ -1,11 +1,15 @@
 
 import React from "react";
 
-const TabFooter = () => {
+interface TabFooterProps {
+  message?: string;
+}
+
+const TabFooter = ({ message }: TabFooterProps) => {
   return (
     <div className="mt-6">
       <p className="italic text-muted-foreground text-sm">
-        Informações detalhadas sobre investidores e projetos estarão disponíveis em breve.
+        {message || "Informações detalhadas sobre investidores e projetos estarão disponíveis em breve."}
       </p>
     </div>
   );
