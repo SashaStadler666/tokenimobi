@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+const urbanImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914";
+const ruralImage = "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
+const bannerImages = [urbanImage, ruralImage];
+
 export default function TermosDeUso() {
   const [aceito, setAceito] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +35,15 @@ export default function TermosDeUso() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 space-y-6">
+      {bannerImages.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt={`Banner ${index === 0 ? 'urbano' : 'rural'}`}
+          className="w-full max-w-3xl h-48 object-cover rounded-lg shadow"
+        />
+      ))}
       <Card className="max-w-3xl w-full border shadow-xl">
         <CardHeader>
           <CardTitle>Termos de Uso</CardTitle>
