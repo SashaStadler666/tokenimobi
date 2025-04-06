@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { mockTokens, Token } from "@/lib/models";
-import TokenCard from "@/components/TokenCard";
 import FilterButton from "@/components/featured/FilterButton";
 import PropertyTypeSelector from "@/components/featured/PropertyTypeSelector";
 import FiltersPanel from "@/components/featured/FiltersPanel";
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Filter } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import TokenGrid from "@/components/featured/TokenGrid";
 
 const Tokens = () => {
   const location = useLocation();
@@ -28,21 +28,6 @@ const Tokens = () => {
       setPropertyTypeTab("urbano");
     }
   }, [typeFromUrl]);
-  
-  // Filter tokens based on property type
-  const filteredTokens = propertyTypeTab === "urbano"
-    ? tokens.filter(t => 
-        t.propertyType === "Apartamento" || 
-        t.propertyType === "Casa" || 
-        t.propertyType === "Flat" ||
-        t.propertyType === "Comercial" ||
-        t.propertyType === "Industrial"
-      )
-    : tokens.filter(t => 
-        t.propertyType === "Terreno" || 
-        t.propertyType === "Fazenda" ||
-        t.propertyType === "Rural"
-      );
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,29 +62,12 @@ const Tokens = () => {
         <FiltersPanel showFilters={showFilters} propertyTypeTab={propertyTypeTab} />
         
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {filteredTokens.map((token, index) => (
-            <motion.div
-              key={token.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              whileHover={{ scale: 1.03 }}
-            >
-              <TokenCard token={token} />
-            </motion.div>
-          ))}
+          <TokenGrid tokens={tokens} propertyTypeTab={propertyTypeTab} />
         </motion.div>
-        
-        {filteredTokens.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhum imóvel encontrado com os filtros selecionados.</p>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -8,9 +8,10 @@ import { useState } from "react";
 
 interface TokenCardProps {
   token: Token;
+  showWholePrice?: boolean;
 }
 
-const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
+const TokenCard: React.FC<TokenCardProps> = ({ token, showWholePrice = false }) => {
   const [imageError, setImageError] = useState(false);
   
   const formatNumber = (num: number) => {
@@ -67,6 +68,12 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
               className="w-full h-full object-cover"
             />
           )}
+          
+          {token.isWholeProperty && (
+            <Badge className="absolute top-2 right-2 bg-primary text-primary-foreground">
+              Imóvel Inteiro
+            </Badge>
+          )}
         </div>
         
         <div className="p-4 flex flex-col flex-grow">
@@ -90,8 +97,14 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
           
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div>
-              <p className="text-xs text-muted-foreground">Fração</p>
-              <p className="font-medium">{formatPrice(token.fractionPrice)}</p>
+              <p className="text-xs text-muted-foreground">
+                {showWholePrice && token.wholePropertyPrice ? "Valor Total" : "Fração"}
+              </p>
+              <p className="font-medium">
+                {showWholePrice && token.wholePropertyPrice 
+                  ? formatNumber(token.wholePropertyPrice)
+                  : formatPrice(token.fractionPrice)}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">24h</p>
@@ -118,13 +131,23 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
             )}
           </div>
           
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Disponível</span>
-              <span>{Math.round(availabilityPercentage)}%</span>
+          {!token.isWholeProperty && (
+            <div>
+              <div className="flex justify-between text-xs mb-1">
+                <span className="text-muted-foreground">Disponível</span>
+                <span>{Math.round(availabilityPercentage)}%</span>
+              </div>
+              <Progress value={availabilityPercentage} className="h-1.5" />
             </div>
-            <Progress value={availabilityPercentage} className="h-1.5" />
-          </div>
+          )}
+          
+          {token.isWholeProperty && (
+            <div className="mt-2">
+              <Badge variant="outline" className="w-full justify-center py-1">
+                Disponível para compra
+              </Badge>
+            </div>
+          )}
         </div>
       </div>
     </Link>

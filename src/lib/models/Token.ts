@@ -1,10 +1,10 @@
-
 export interface Token {
   id: string;
   name: string;
   symbol: string;
   totalSupply: number;
   fractionPrice: number;
+  wholePropertyPrice?: number;
   imageUrl: string;
   description: string;
   marketCap: number;
@@ -17,6 +17,7 @@ export interface Token {
   area?: number;
   propertyType?: string;
   yearBuilt?: number;
+  isWholeProperty?: boolean;
 }
 
 export const mockTokens: Token[] = [
@@ -26,6 +27,7 @@ export const mockTokens: Token[] = [
     symbol: "APJD",
     totalSupply: 1,
     fractionPrice: 125.50,
+    wholePropertyPrice: 3500000,
     imageUrl: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800",
     description: "Apartamento de luxo no bairro Jardins, São Paulo. Localização privilegiada com fácil acesso a restaurantes, shopping e transporte público.",
     marketCap: 3500000,
@@ -37,7 +39,8 @@ export const mockTokens: Token[] = [
     location: "Jardins, São Paulo, SP",
     area: 120,
     propertyType: "Apartamento",
-    yearBuilt: 2018
+    yearBuilt: 2018,
+    isWholeProperty: false
   },
   {
     id: "2",
@@ -56,7 +59,8 @@ export const mockTokens: Token[] = [
     location: "Barra da Tijuca, Rio de Janeiro, RJ",
     area: 350,
     propertyType: "Casa",
-    yearBuilt: 2015
+    yearBuilt: 2015,
+    isWholeProperty: false
   },
   {
     id: "3",
@@ -75,7 +79,8 @@ export const mockTokens: Token[] = [
     location: "Av. Paulista, São Paulo, SP",
     area: 45,
     propertyType: "Flat",
-    yearBuilt: 2010
+    yearBuilt: 2010,
+    isWholeProperty: false
   },
   {
     id: "4",
@@ -94,7 +99,8 @@ export const mockTokens: Token[] = [
     location: "Centro, Belo Horizonte, MG",
     area: 80,
     propertyType: "Comercial",
-    yearBuilt: 1985
+    yearBuilt: 1985,
+    isWholeProperty: false
   },
   {
     id: "5",
@@ -113,7 +119,8 @@ export const mockTokens: Token[] = [
     location: "Guarulhos, São Paulo, SP",
     area: 5000,
     propertyType: "Industrial",
-    yearBuilt: 2020
+    yearBuilt: 2020,
+    isWholeProperty: false
   },
   {
     id: "6",
@@ -132,7 +139,8 @@ export const mockTokens: Token[] = [
     location: "Ubatuba, São Paulo, SP",
     area: 1200,
     propertyType: "Terreno",
-    yearBuilt: null
+    yearBuilt: null,
+    isWholeProperty: false
   },
   {
     id: "7",
@@ -151,7 +159,8 @@ export const mockTokens: Token[] = [
     location: "Sorriso, Mato Grosso, MT",
     area: 15000000, // em m²
     propertyType: "Fazenda",
-    yearBuilt: null
+    yearBuilt: null,
+    isWholeProperty: false
   },
   {
     id: "8",
@@ -170,7 +179,8 @@ export const mockTokens: Token[] = [
     location: "Rio Verde, Goiás, GO",
     area: 8000000, // em m²
     propertyType: "Rural",
-    yearBuilt: null
+    yearBuilt: null,
+    isWholeProperty: false
   },
   {
     id: "9",
@@ -189,6 +199,49 @@ export const mockTokens: Token[] = [
     location: "Uberaba, Minas Gerais, MG",
     area: 3000000, // em m²
     propertyType: "Rural",
-    yearBuilt: 2012
+    yearBuilt: 2012,
+    isWholeProperty: false
+  },
+  {
+    id: "10",
+    name: "Terreno Inteiro Litoral SP",
+    symbol: "TISP",
+    totalSupply: 1,
+    fractionPrice: 95.75,
+    wholePropertyPrice: 2500000,
+    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800",
+    description: "Terreno completo pronto para construção no litoral de São Paulo. Área privilegiada com vista para o mar.",
+    marketCap: 2500000,
+    volume24h: 120000,
+    priceChange24h: 2.3,
+    totalFractions: 800,
+    availableFractions: 0,
+    holders: 1,
+    location: "Guarujá, São Paulo, SP",
+    area: 800,
+    propertyType: "Terreno",
+    yearBuilt: null,
+    isWholeProperty: true
+  },
+  {
+    id: "11",
+    name: "Fazenda Completa MT",
+    symbol: "FCMT",
+    totalSupply: 1,
+    fractionPrice: 185.30,
+    wholePropertyPrice: 8500000,
+    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800",
+    description: "Fazenda completa pronta para operação em Mato Grosso. Infraestrutura completa e alta produtividade.",
+    marketCap: 8500000,
+    volume24h: 350000,
+    priceChange24h: 1.7,
+    totalFractions: 3000,
+    availableFractions: 0,
+    holders: 1,
+    location: "Sinop, Mato Grosso, MT",
+    area: 5000000, // em m²
+    propertyType: "Fazenda",
+    yearBuilt: 2015,
+    isWholeProperty: true
   }
 ];
