@@ -7,13 +7,18 @@ import TokenDetailHeader from "@/components/token/TokenDetailHeader";
 import TokenDetailInfo from "@/components/token/TokenDetailInfo";
 import TokenDetailTabs from "@/components/token/TokenDetailTabs";
 import TokenDetailSidebar from "@/components/token/TokenDetailSidebar";
+import TokenMap from "@/components/token/TokenMap";
+import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { Button } from "@/components/ui/button";
-import { Wallet } from "lucide-react";
+import { Wallet, Building, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "@/components/ConnectWallet";
+import ThemeToggle from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
 import { getImageForType, getPropertyIcon, getPropertyDescription } from "@/lib/imageUtils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useState, useRef, useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 // Import whole property tokens from Tokens page
 import { wholePropertyTokens } from "@/pages/Tokens";
@@ -22,20 +27,26 @@ const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isWalletConnected = localStorage.getItem("walletConnected") === "true";
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const { toast } = useToast();
   
   // Look for token in both regular tokens and whole property tokens
   const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
   
   if (!token) {
     return (
-      <div className="container mx-auto px-4 pt-24 pb-12 text-center">
-        <h2 className="text-2xl font-bold mb-4">Imóvel não encontrado</h2>
-        <button 
-          onClick={() => navigate("/")} 
-          className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          Voltar para Home
-        </button>
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <div className="container mx-auto px-4 pt-24 pb-12 text-center flex-grow">
+          <h2 className="text-2xl font-bold mb-4">Imóvel não encontrado</h2>
+          <button 
+            onClick={() => navigate("/")} 
+            className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Voltar para Home
+          </button>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -58,13 +69,45 @@ const TokenDetail = () => {
   }).format(token.volume24h);
   
   const tokenTransactions = mockTransactions.filter(tx => tx.tokenId === token.id);
+
+  const handleBuyClick = () => {
+    if (!isWalletConnected) {
+      toast({
+        title: "Carteira não conectada",
+        description: "Conecte sua carteira para realizar esta operação",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    toast({
+      title: "Iniciando processo de compra",
+      description: token.isWholeProperty 
+        ? "Você está adquirindo o imóvel inteiro" 
+        : "Você está comprando frações deste token",
+    });
+    
+    // Scroll to the buy interface
+    const buyElement = document.getElementById('buy-section');
+    if (buyElement) {
+      buyElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  // Determine property type icon
+  const PropertyTypeIcon = token.propertyType?.toLowerCase().includes('fazenda') || 
+                          token.propertyType?.toLowerCase().includes('rural') ? 
+                          Leaf : Building;
   
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       
       <div className="container mx-auto px-4 pt-24 pb-12 flex-grow">
-        <TokenDetailHeader />
+        <div className="flex justify-between items-center mb-6">
+          <TokenDetailHeader />
+          <ThemeToggle />
+        </div>
         
         <div className="flex justify-end mb-4">
           {isWalletConnected ? (
@@ -83,14 +126,15 @@ const TokenDetail = () => {
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6 }}
-          className="mb-6 rounded-lg overflow-hidden border relative group ring-1 ring-muted/20"
+          className="mb-6 rounded-lg overflow-hidden border relative group ring-1 ring-muted/20 glow-shadow"
         >
           <div className="aspect-[16/9] sm:aspect-[3/2] md:aspect-[21/9] lg:aspect-[4/2] w-full relative">
             <img
               src={displayImage}
               alt={token.name}
-              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+              className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${isImageLoaded ? 'ken-burns-effect' : ''}`}
               loading="lazy"
+              onLoad={() => setIsImageLoaded(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
             <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">
@@ -123,8 +167,8 @@ const TokenDetail = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-xl">
-                      {getPropertyIcon(token.propertyType)}
+                    <div className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-xl float-icon">
+                      <PropertyTypeIcon className="h-5 w-5 text-white" />
                     </div>
                   </TooltipTrigger>
                   <TooltipContent side="left">
@@ -149,6 +193,13 @@ const TokenDetail = () => {
               formatVolume={formatVolume} 
             />
             
+            {token.location && (
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-3">Localização</h3>
+                <TokenMap token={token} />
+              </div>
+            )}
+            
             <TokenDetailTabs token={token} transactions={tokenTransactions} />
           </motion.div>
           
@@ -156,11 +207,14 @@ const TokenDetail = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+            id="buy-section"
           >
             <TokenDetailSidebar token={token} />
           </motion.div>
         </div>
       </div>
+      
+      <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
       
       <Footer />
     </div>

@@ -39,6 +39,39 @@
     --radius: 0.5rem;
   }
 
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 85% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 60% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 80%;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -47,7 +80,7 @@
 
 @layer components {
   .glassmorphism {
-    @apply bg-white/80 backdrop-blur-md border border-border/50 shadow-lg;
+    @apply bg-white/80 dark:bg-foreground/10 backdrop-blur-md border border-border/50 shadow-lg;
   }
   
   .token-card {
@@ -70,5 +103,21 @@
   
   .button-glow:hover::after {
     @apply opacity-100;
+  }
+
+  .image-fade-mask {
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  }
+
+  .float-icon {
+    @apply animate-float;
+  }
+
+  .glow-shadow {
+    box-shadow: 0 0 30px 5px rgba(var(--primary), 0.15);
+  }
+
+  .ken-burns-effect {
+    @apply animate-ken-burns;
   }
 }
