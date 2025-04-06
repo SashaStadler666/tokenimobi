@@ -13,6 +13,24 @@ import ConnectWallet from "./ConnectWallet";
 // Import whole property tokens from Tokens page
 import { wholePropertyTokens } from "@/pages/Tokens";
 
+// Function to get fallback images based on property type
+const getImageForType = (type: string | undefined) => {
+  switch (type?.toLowerCase()) {
+    case "apartamento":
+      return "https://images.unsplash.com/photo-1598928506311-f4fe0afa1bd6";
+    case "casa":
+      return "https://images.unsplash.com/photo-1600585154340-be6161a56a0c";
+    case "flat":
+      return "https://images.unsplash.com/photo-1599423300746-b62533397364";
+    case "rural":
+    case "fazenda":
+    case "agro":
+      return "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
+    default:
+      return "https://images.unsplash.com/photo-1501183638710-841dd1904471";
+  }
+};
+
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -33,6 +51,11 @@ const TokenDetail = () => {
         </button>
       </div>
     );
+  }
+  
+  // Apply fallback image if imageUrl is missing or empty
+  if (!token.imageUrl) {
+    token.imageUrl = getImageForType(token.propertyType);
   }
   
   const formatMarketCap = new Intl.NumberFormat('pt-BR', {
