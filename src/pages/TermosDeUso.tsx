@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 
 const getImageForType = (type) => {
   switch (type?.toLowerCase()) {
@@ -52,6 +53,17 @@ export default function TermosDeUso() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 space-y-6">
+      <div className="w-full max-w-5xl px-4">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate("/")}
+          className="mb-6"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar para a Página Inicial
+        </Button>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl w-full">
         {examplePropertyTypes.map((type, index) => (
           <motion.img
