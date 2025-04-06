@@ -6,7 +6,9 @@ const HeaderSection = () => {
   return (
     <div className="flex justify-between items-center mb-6">
       <TokenDetailHeader />
-      <ThemeToggle />
+      <div className="flex items-center">
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

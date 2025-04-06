@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { motion } from 'framer-motion';
 
 const ThemeToggle = () => {
@@ -21,10 +22,10 @@ const ThemeToggle = () => {
     }
   }, []);
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+  const toggleTheme = (checked: boolean) => {
+    setIsDarkMode(checked);
     
-    if (!isDarkMode) {
+    if (checked) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
@@ -34,23 +35,17 @@ const ThemeToggle = () => {
   };
 
   return (
-    <motion.div
-      whileTap={{ scale: 0.95 }}
-    >
-      <Button 
-        variant="outline" 
-        size="icon" 
-        onClick={toggleTheme}
-        className="rounded-full bg-background dark:bg-foreground/10 border border-border"
-      >
-        {isDarkMode ? (
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        ) : (
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        )}
-        <span className="sr-only">Alternar tema</span>
-      </Button>
-    </motion.div>
+    <div className="flex items-center space-x-2">
+      <Sun className="h-[1.2rem] w-[1.2rem] text-muted-foreground" />
+      <Switch 
+        checked={isDarkMode}
+        onCheckedChange={toggleTheme}
+        id="theme-mode"
+        className="data-[state=checked]:bg-primary"
+      />
+      <Moon className="h-[1.2rem] w-[1.2rem] text-muted-foreground" />
+      <span className="sr-only">Alternar tema</span>
+    </div>
   );
 };
 
