@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { mockTokens, Token } from "@/lib/models";
 import FilterButton from "@/components/featured/FilterButton";
 import PropertyTypeSelector from "@/components/featured/PropertyTypeSelector";
@@ -172,6 +174,8 @@ const Tokens = () => {
           <TokenGrid tokens={tokens} propertyTypeTab={propertyTypeTab} />
         </motion.div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

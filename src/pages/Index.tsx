@@ -3,6 +3,7 @@ import FeaturedTokens from "@/components/FeaturedTokens";
 import MarketOverview from "@/components/MarketOverview";
 import Navbar from "@/components/Navbar";
 import HowItWorks from "@/components/HowItWorks"; 
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, FileText } from "lucide-react";
@@ -165,6 +166,8 @@ const Index = () => {
       </motion.section>
       
       <FeaturedTokens />
+      
+      <Footer />
     </div>
   );
 };
