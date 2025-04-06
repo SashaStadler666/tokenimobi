@@ -23,7 +23,8 @@ import {
   Cell,
   BarChart,
   Bar,
-  Legend
+  Legend,
+  TooltipProps
 } from "recharts";
 
 // Generate mock performance data
@@ -238,7 +239,7 @@ const Portfolio = () => {
                         ))}
                       </Pie>
                       <Tooltip 
-                        formatter={(value) => [`R$ ${value.toFixed(2)}`, 'Valor']}
+                        formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Valor']}
                         labelFormatter={(label) => `Token: ${label}`}
                       />
                     </RechartsPieChart>
