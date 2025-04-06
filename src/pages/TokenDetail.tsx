@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, Token, mockTransactions } from "@/lib/models";
 import Navbar from "@/components/Navbar";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "@/components/ConnectWallet";
+import { motion } from "framer-motion";
 
 // Import whole property tokens from Tokens page
 import { wholePropertyTokens } from "@/pages/Tokens";
@@ -94,6 +96,20 @@ const TokenDetail = () => {
             <ConnectWallet />
           )}
         </div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-6 rounded-lg overflow-hidden border"
+        >
+          <img
+            src={token.imageUrl}
+            alt={token.name}
+            className="w-full h-64 object-cover"
+            loading="lazy"
+          />
+        </motion.div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
