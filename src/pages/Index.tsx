@@ -2,12 +2,20 @@
 import FeaturedTokens from "@/components/FeaturedTokens";
 import MarketOverview from "@/components/MarketOverview";
 import Navbar from "@/components/Navbar";
+import HowItWorks from "@/components/HowItWorks"; 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 const Index = () => {
+  const howItWorksRef = useRef<HTMLElement>(null);
+  
+  const scrollToHowItWorks = () => {
+    howItWorksRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -18,21 +26,27 @@ const Index = () => {
           Invista em Imóveis Tokenizados
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Adquira frações de propriedades imobiliárias de alta qualidade a partir de R$50.
-          Diversifique seus investimentos no mercado imobiliário com segurança e liquidez.
+          Invista a partir de <strong>R$1.000</strong> em imóveis fracionados.
+          Participe do mercado imobiliário com liquidez, transparência e segurança blockchain.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Button size="lg" className="button-glow">
-            <Link to="/dashboard">Ver Meu Portfólio</Link>
+          <Button size="lg" className="button-glow" onClick={scrollToHowItWorks}>
+            Quero Começar
+            <ArrowDown className="ml-2 h-4 w-4" />
           </Button>
           <Button size="lg" variant="outline">
-            Como Funciona
+            Simular Investimento
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </section>
       
       <MarketOverview />
+      
+      {/* Componente "Como Funciona" */}
+      <section ref={howItWorksRef}>
+        <HowItWorks />
+      </section>
       
       {/* Card explicativo sobre tokenização */}
       <section className="container mx-auto px-4 py-8">

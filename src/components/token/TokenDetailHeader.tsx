@@ -22,7 +22,7 @@ const TokenDetailHeader = () => {
         </div>
         <div>
           <h2 className="text-lg font-medium text-muted-foreground flex items-center">
-            Token Imobi <span className="mx-2">•</span> Plataforma de Tokenização de Imóveis Urbanos e Rurais
+            TokenImobi <span className="mx-2">•</span> Plataforma de Tokenização de Imóveis Urbanos e Rurais
           </h2>
           <p className="text-sm text-muted-foreground">
             Conectando investidores a propriedades imobiliárias e terras rurais através da tecnologia blockchain

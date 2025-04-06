@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import TokenDetail from "./pages/TokenDetail";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import HowItWorks from "./pages/HowItWorks";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/token/:id" element={<TokenDetail />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/como-funciona" element={<HowItWorks />} />
+          <Route path="/faq" element={<FAQ />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
