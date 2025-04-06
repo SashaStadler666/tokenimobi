@@ -15,6 +15,10 @@ import CustomFAQ from "./pages/CustomFAQ";
 import TermosDeUso from "./pages/TermosDeUso";
 import Tokens from "./pages/Tokens";
 import Portfolio from "./pages/Portfolio";
+import ComoFuncionaEscolhaImovel from "./pages/ComoFuncionaEscolhaImovel";
+import ComoFuncionaAnaliseDados from "./pages/ComoFuncionaAnaliseDados";
+import ComoFuncionaSimuleInvestimento from "./pages/ComoFuncionaSimuleInvestimento";
+import ComoFuncionaConecteCarteira from "./pages/ComoFuncionaConecteCarteira";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,10 @@ const App = () => (
           <Route path="/token/:id" element={<TokenDetail />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/como-funciona" element={<CustomHowItWorks />} />
+          <Route path="/como-funciona/escolha-imovel" element={<ComoFuncionaEscolhaImovel />} />
+          <Route path="/como-funciona/analise-dados" element={<ComoFuncionaAnaliseDados />} />
+          <Route path="/como-funciona/simule-investimento" element={<ComoFuncionaSimuleInvestimento />} />
+          <Route path="/como-funciona/conecte-carteira" element={<ComoFuncionaConecteCarteira />} />
           <Route path="/faq" element={<CustomFAQ />} />
           <Route path="/tokens" element={<Tokens />} />
           <Route path="/termos-de-uso" element={<TermosDeUso />} />

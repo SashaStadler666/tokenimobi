@@ -37,7 +37,7 @@ const Navbar = () => {
                   <NavigationMenuContent>
                     <div className="grid grid-cols-2 gap-3 p-4 w-[500px]">
                       <Link 
-                        to="/about/tokenizacao" 
+                        to="/tokens?type=urban" 
                         className="flex items-start p-2 hover:bg-muted rounded-md"
                       >
                         <Building className="h-5 w-5 mr-2 mt-0.5 text-primary" />
@@ -47,7 +47,7 @@ const Navbar = () => {
                         </div>
                       </Link>
                       <Link 
-                        to="/about/tokenizacao-rural" 
+                        to="/tokens?type=rural" 
                         className="flex items-start p-2 hover:bg-muted rounded-md"
                       >
                         <LandPlot className="h-5 w-5 mr-2 mt-0.5 text-primary" />
@@ -117,14 +117,25 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
             <nav className="flex flex-col space-y-4">
-              <Link
-                to="/about/tokenizacao"
-                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Building className="h-4 w-4 mr-2" />
-                O que é Tokenização
-              </Link>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">O que é Tokenização:</p>
+                <Link
+                  to="/tokens?type=urban"
+                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Building className="h-4 w-4 mr-2" />
+                  Imóveis Urbanos
+                </Link>
+                <Link
+                  to="/tokens?type=rural"
+                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <LandPlot className="h-4 w-4 mr-2" />
+                  Terras Rurais
+                </Link>
+              </div>
               <Link
                 to="/como-funciona"
                 className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
