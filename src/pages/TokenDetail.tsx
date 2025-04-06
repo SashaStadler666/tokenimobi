@@ -12,7 +12,8 @@ import { Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "@/components/ConnectWallet";
 import { motion } from "framer-motion";
-import { getImageForType } from "@/lib/imageUtils";
+import { getImageForType, getPropertyIcon, getPropertyDescription } from "@/lib/imageUtils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Import whole property tokens from Tokens page
 import { wholePropertyTokens } from "@/pages/Tokens";
@@ -68,7 +69,7 @@ const TokenDetail = () => {
         <div className="flex justify-end mb-4">
           {isWalletConnected ? (
             <Link to="/portfolio">
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="flex items-center gap-2 hover:scale-105 transition-transform">
                 <Wallet className="h-4 w-4" />
                 Minha Carteira
               </Button>
@@ -117,6 +118,20 @@ const TokenDetail = () => {
                   )}
                 </div>
               </motion.div>
+            </div>
+            <div className="absolute top-0 right-0 p-3">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-xl">
+                      {getPropertyIcon(token.propertyType)}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    <p>{getPropertyDescription(token.propertyType)}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </motion.div>

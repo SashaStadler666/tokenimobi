@@ -16,3 +16,51 @@ export const getImageForType = (type: string | undefined): string => {
       return "https://images.unsplash.com/photo-1501183638710-841dd1904471";
   }
 };
+
+// Get property icon based on type
+export const getPropertyIcon = (type: string | undefined): string => {
+  switch (type?.toLowerCase()) {
+    case "apartamento":
+      return "🏢";
+    case "casa":
+      return "🏡";
+    case "flat":
+      return "🏨";
+    case "comercial":
+      return "🏪";
+    case "industrial":
+      return "🏭";
+    case "terreno":
+      return "📍";
+    case "rural":
+      return "🌾";
+    case "fazenda":
+      return "🌱";
+    default:
+      return "🏠";
+  }
+};
+
+// Get property description based on type
+export const getPropertyDescription = (type: string | undefined): string => {
+  switch (type?.toLowerCase()) {
+    case "apartamento":
+      return "Unidade residencial em prédio multifamiliar";
+    case "casa":
+      return "Imóvel residencial unifamiliar";
+    case "flat":
+      return "Apartamento com serviços de hotelaria";
+    case "comercial":
+      return "Imóvel para uso comercial ou varejo";
+    case "industrial":
+      return "Galpão ou espaço para operações industriais";
+    case "terreno":
+      return "Lote sem construção com potencial para desenvolvimento";
+    case "rural":
+      return "Terreno em zona rural para diversos usos";
+    case "fazenda":
+      return "Propriedade rural produtiva";
+    default:
+      return "Imóvel tokenizado";
+  }
+};

@@ -5,6 +5,9 @@ import { Token } from "@/lib/models";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { getPropertyIcon, getPropertyDescription } from "@/lib/imageUtils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface TokenCardProps {
   token: Token;
@@ -52,13 +55,28 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, showWholePrice = false }) 
   
   return (
     <Link to={`/token/${token.id}`} className="block">
-      <div className="token-card bg-card h-full flex flex-col border rounded-lg hover:border-primary/50 transition-colors">
-        <div className="aspect-square overflow-hidden relative bg-muted">
+      <motion.div 
+        className="token-card bg-card h-full flex flex-col border rounded-lg hover:border-primary/50 transition-colors overflow-hidden"
+        whileHover={{ 
+          y: -5,
+          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+        }}
+        transition={{ duration: 0.2 }}
+      >
+        <div className="aspect-square overflow-hidden relative bg-muted group">
           {!imageError ? (
-            <img 
+            <motion.img 
               src={token.imageUrl} 
               alt={token.name} 
-              className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+              className="w-full h-full object-cover"
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.05 }}
+              transition={{ 
+                duration: 10, 
+                repeat: Infinity, 
+                repeatType: "reverse", 
+                ease: "linear" 
+              }}
               onError={() => setImageError(true)}
             />
           ) : (
@@ -74,11 +92,40 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, showWholePrice = false }) 
               Imóvel Inteiro
             </Badge>
           )}
+          
+          <div className="absolute top-2 left-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-8 h-8 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-lg">
+                    {getPropertyIcon(token.propertyType)}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{getPropertyDescription(token.propertyType)}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         
         <div className="p-4 flex flex-col flex-grow">
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-bold truncate">{token.name}</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h3 className="font-bold truncate">{token.name}</h3>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-sm">{token.name}</p>
+                  {token.description && (
+                    <p className="text-xs text-muted-foreground mt-1">{token.description.substring(0, 100)}...</p>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Badge variant="outline" className="text-xs bg-secondary">
               {token.symbol}
             </Badge>
@@ -143,13 +190,13 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, showWholePrice = false }) 
           
           {token.isWholeProperty && (
             <div className="mt-2">
-              <Badge variant="outline" className="w-full justify-center py-1">
+              <Badge variant="outline" className="w-full justify-center py-1 hover:bg-primary/10 transition-colors">
                 Disponível para compra
               </Badge>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };
