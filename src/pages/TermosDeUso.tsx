@@ -5,14 +5,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const urbanImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914";
-const ruralImage = "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
-const buildingImage = "https://images.unsplash.com/photo-1501183638710-841dd1904471";
-const apartmentImage = "https://images.unsplash.com/photo-1598928506311-f4fe0afa1bd6";
-const houseImage = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c";
-const flatImage = "https://images.unsplash.com/photo-1599423300746-b62533397364";
-
-const bannerImages = [urbanImage, ruralImage, buildingImage, apartmentImage, houseImage, flatImage];
+const getImageForType = (type) => {
+  switch (type?.toLowerCase()) {
+    case "apartamento":
+      return "https://images.unsplash.com/photo-1598928506311-f4fe0afa1bd6";
+    case "casa":
+      return "https://images.unsplash.com/photo-1600585154340-be6161a56a0c";
+    case "flat":
+      return "https://images.unsplash.com/photo-1599423300746-b62533397364";
+    case "rural":
+    case "fazenda":
+    case "agro":
+      return "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
+    default:
+      return "https://images.unsplash.com/photo-1501183638710-841dd1904471";
+  }
+};
 
 export default function TermosDeUso() {
   const [aceito, setAceito] = useState(false);
@@ -39,13 +47,15 @@ export default function TermosDeUso() {
     );
   }
 
+  const examplePropertyTypes = ["Apartamento", "Casa", "Flat", "Fazenda"];
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 space-y-6">
-      {bannerImages.map((src, index) => (
+      {examplePropertyTypes.map((type, index) => (
         <img
           key={index}
-          src={src}
-          alt={`Banner ${index}`}
+          src={getImageForType(type)}
+          alt={`Exemplo de propriedade: ${type}`}
           loading="lazy"
           className="w-full max-w-3xl h-48 object-cover rounded-lg shadow"
         />
