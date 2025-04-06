@@ -5,10 +5,14 @@ import TokenDetailHeader from "./token/TokenDetailHeader";
 import TokenDetailInfo from "./token/TokenDetailInfo";
 import TokenDetailTabs from "./token/TokenDetailTabs";
 import TokenDetailSidebar from "./token/TokenDetailSidebar";
+import { Button } from "@/components/ui/button";
+import { Wallet } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const isWalletConnected = localStorage.getItem("walletConnected") === "true";
   
   const token = mockTokens.find(t => t.id === id);
   
@@ -46,6 +50,17 @@ const TokenDetail = () => {
     <div className="container mx-auto px-4 pt-24 pb-12">
       <TokenDetailHeader />
       
+      {isWalletConnected && (
+        <div className="flex justify-end mb-4">
+          <Link to="/portfolio">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Wallet className="h-4 w-4" />
+              Minha Carteira
+            </Button>
+          </Link>
+        </div>
+      )}
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <TokenDetailInfo 
@@ -59,6 +74,30 @@ const TokenDetail = () => {
         
         <div>
           <TokenDetailSidebar token={token} />
+          
+          {!isWalletConnected && (
+            <div className="mt-4 p-4 border border-primary/20 rounded-md bg-muted/20 text-center">
+              <p className="text-sm text-muted-foreground mb-2">
+                Conecte sua carteira para comprar tokens
+              </p>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => {
+                  const termsAccepted = localStorage.getItem("termosAceitos") === "true";
+                  if (termsAccepted) {
+                    localStorage.setItem("walletConnected", "true");
+                    window.location.reload();
+                  } else {
+                    navigate("/termos-de-uso");
+                  }
+                }}
+              >
+                <Wallet className="mr-2 h-4 w-4" />
+                Conectar Carteira
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
