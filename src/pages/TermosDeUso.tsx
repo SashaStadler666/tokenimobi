@@ -7,7 +7,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const urbanImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914";
 const ruralImage = "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
-const bannerImages = [urbanImage, ruralImage];
+const buildingImage = "https://images.unsplash.com/photo-1501183638710-841dd1904471";
+const bannerImages = [urbanImage, ruralImage, buildingImage];
 
 export default function TermosDeUso() {
   const [aceito, setAceito] = useState(false);
@@ -40,7 +41,7 @@ export default function TermosDeUso() {
         <img
           key={index}
           src={src}
-          alt={`Banner ${index === 0 ? 'urbano' : 'rural'}`}
+          alt={`Banner ${index === 0 ? 'urbano' : index === 1 ? 'rural' : 'imóvel'}`}
           className="w-full max-w-3xl h-48 object-cover rounded-lg shadow"
         />
       ))}
