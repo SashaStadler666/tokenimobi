@@ -19,12 +19,14 @@ import ComoFuncionaEscolhaImovel from "./pages/ComoFuncionaEscolhaImovel";
 import ComoFuncionaAnaliseDados from "./pages/ComoFuncionaAnaliseDados";
 import ComoFuncionaSimuleInvestimento from "./pages/ComoFuncionaSimuleInvestimento";
 import ComoFuncionaConecteCarteira from "./pages/ComoFuncionaConecteCarteira";
+import ThemeToggle from "./components/ThemeToggle";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <ThemeToggle />
       <Toaster />
       <Sonner />
       <BrowserRouter>
