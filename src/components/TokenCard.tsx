@@ -1,15 +1,18 @@
 
 import { Link } from "react-router-dom";
-import { ArrowUp, ArrowDown, MapPin, Ruler, Home } from "lucide-react";
+import { ArrowUp, ArrowDown, MapPin, Ruler, Home, ImageIcon } from "lucide-react";
 import { Token } from "@/lib/models";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
 
 interface TokenCardProps {
   token: Token;
 }
 
 const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
+  const [imageError, setImageError] = useState(false);
+  
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -29,15 +32,41 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
   
   const availabilityPercentage = (token.availableFractions / token.totalFractions) * 100;
   
+  // Create backup image URL based on property type
+  const getBackupImageUrl = () => {
+    const type = token.propertyType?.toLowerCase() || 'default';
+    const bgColor = {
+      'apartamento': '3a86ff',
+      'casa': '8338ec',
+      'flat': 'ff006e',
+      'comercial': 'fb5607',
+      'industrial': 'ffbe0b',
+      'terreno': '8ac926',
+      'fazenda': '2a9d8f',
+      'rural': 'e9c46a'
+    }[type] || '6c757d';
+    
+    return `https://placehold.co/300x300/${bgColor}/ffffff?text=${token.propertyType || 'Imóvel'}`;
+  };
+  
   return (
     <Link to={`/token/${token.id}`} className="block">
-      <div className="token-card bg-card h-full flex flex-col">
-        <div className="aspect-square overflow-hidden">
-          <img 
-            src={token.imageUrl} 
-            alt={token.name} 
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-          />
+      <div className="token-card bg-card h-full flex flex-col border rounded-lg hover:border-primary/50 transition-colors">
+        <div className="aspect-square overflow-hidden relative bg-muted">
+          {!imageError ? (
+            <img 
+              src={token.imageUrl} 
+              alt={token.name} 
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <img 
+              src={getBackupImageUrl()}
+              alt={token.name}
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
         
         <div className="p-4 flex flex-col flex-grow">
@@ -84,7 +113,7 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
               <div className="flex items-center">
                 <Ruler className="h-3 w-3 mr-1" />
                 <p className="text-xs text-muted-foreground mr-1">Área:</p>
-                <p className="text-xs">{token.area} m²</p>
+                <p className="text-xs">{token.area >= 10000 ? `${(token.area / 10000).toFixed(1)} ha` : `${token.area} m²`}</p>
               </div>
             )}
           </div>

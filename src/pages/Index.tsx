@@ -57,6 +57,51 @@ const Index = () => {
             </Link>
           </motion.div>
         </div>
+
+        {/* Preview de imagens */}
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+            <img 
+              src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&h=400" 
+              alt="Apartamento" 
+              className="rounded-lg shadow-md w-full h-32 object-cover"
+            />
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+            <img 
+              src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=600&h=400" 
+              alt="Casa" 
+              className="rounded-lg shadow-md w-full h-32 object-cover"
+            />
+          </motion.div>
+          <motion.div 
+            whileHover={{ scale: 1.05 }} 
+            transition={{ duration: 0.2 }}
+            className="hidden md:block"
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1566041510639-8d95a2490bfb?auto=format&fit=crop&w=600&h=400" 
+              alt="Flat" 
+              className="rounded-lg shadow-md w-full h-32 object-cover"
+            />
+          </motion.div>
+          <motion.div 
+            whileHover={{ scale: 1.05 }} 
+            transition={{ duration: 0.2 }}
+            className="hidden md:block"
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&h=400" 
+              alt="Terreno" 
+              className="rounded-lg shadow-md w-full h-32 object-cover"
+            />
+          </motion.div>
+        </motion.div>
       </motion.section>
       
       <MarketOverview />
