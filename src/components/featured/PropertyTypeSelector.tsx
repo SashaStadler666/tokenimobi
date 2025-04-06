@@ -8,14 +8,14 @@ interface PropertyTypeSelectorProps {
 
 const PropertyTypeSelector = ({ value, onValueChange }: PropertyTypeSelectorProps) => {
   return (
-    <Tabs defaultValue={value} className="mb-10" onValueChange={onValueChange}>
+    <div className="mb-10">
       <div className="flex justify-between items-center mb-6">
         <TabsList className="w-full sm:w-auto">
-          <TabsTrigger value="urbano">Urbano</TabsTrigger>
-          <TabsTrigger value="rural">Rural</TabsTrigger>
+          <TabsTrigger value="urbano" onClick={() => onValueChange("urbano")}>Urbano</TabsTrigger>
+          <TabsTrigger value="rural" onClick={() => onValueChange("rural")}>Rural</TabsTrigger>
         </TabsList>
       </div>
-    </Tabs>
+    </div>
   );
 };
 
