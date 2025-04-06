@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
-import { mockTokens, mockTransactions } from "@/lib/mockData";
+import { mockTokens, mockTransactions } from "@/lib/models";
 import TokenDetailHeader from "./token/TokenDetailHeader";
 import TokenDetailInfo from "./token/TokenDetailInfo";
 import TokenDetailTabs from "./token/TokenDetailTabs";

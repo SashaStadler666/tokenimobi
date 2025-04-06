@@ -1,5 +1,5 @@
 
-import { Token } from "@/lib/mockData";
+import { Token } from "@/lib/models";
 import TokenCard from "@/components/TokenCard";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 

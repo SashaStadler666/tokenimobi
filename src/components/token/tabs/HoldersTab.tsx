@@ -1,5 +1,5 @@
 
-import { Token } from "@/lib/mockData";
+import { Token } from "@/lib/models";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building, LandPlot, Leaf, Users } from "lucide-react";
 

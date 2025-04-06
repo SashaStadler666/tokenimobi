@@ -1,6 +1,6 @@
 
 import { Separator } from "@/components/ui/separator";
-import { Token } from "@/lib/mockData";
+import { Token } from "@/lib/models";
 import { Share2, ExternalLink, MapPin, Users, Wallet, Home, Ruler, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

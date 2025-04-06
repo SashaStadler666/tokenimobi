@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Token } from "@/lib/mockData";
+import { Token } from "@/lib/models";
 import BuySellInterface from "../BuySellInterface";
 
 interface TokenDetailSidebarProps {

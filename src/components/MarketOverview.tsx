@@ -1,7 +1,7 @@
 
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { marketStats, mockTokens } from "@/lib/mockData";
+import { marketStats, mockTokens } from "@/lib/models";
 import { TrendingUp, BarChart3, Users, Coins, PieChart } from "lucide-react";
 
 const MarketOverview = () => {

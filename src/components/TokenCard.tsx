@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { ArrowUp, ArrowDown, MapPin, Ruler, Home } from "lucide-react";
-import { Token } from "@/lib/mockData";
+import { Token } from "@/lib/models";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 

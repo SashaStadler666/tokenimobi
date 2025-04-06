@@ -1,6 +1,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Token, Transaction } from "@/lib/mockData";
+import { Token, Transaction } from "@/lib/models";
 import AboutTab from "./tabs/AboutTab";
 import TransactionsTab from "./tabs/TransactionsTab";
 import HoldersTab from "./tabs/HoldersTab";

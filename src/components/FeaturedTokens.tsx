@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { mockTokens, Token } from "@/lib/mockData";
+import { mockTokens, Token } from "@/lib/models";
 import FilterButton from "./featured/FilterButton";
 import PropertyTypeSelector from "./featured/PropertyTypeSelector";
 import FiltersPanel from "./featured/FiltersPanel";

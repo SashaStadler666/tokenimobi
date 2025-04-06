@@ -1,5 +1,4 @@
-
-import { Transaction } from "@/lib/mockData";
+import { Transaction } from "@/lib/models";
 
 interface TransactionsTabProps {
   transactions: Transaction[];
