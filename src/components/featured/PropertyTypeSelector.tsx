@@ -10,10 +10,12 @@ const PropertyTypeSelector = ({ value, onValueChange }: PropertyTypeSelectorProp
   return (
     <div className="mb-10">
       <div className="flex justify-between items-center mb-6">
-        <TabsList className="w-full sm:w-auto">
-          <TabsTrigger value="urbano" onClick={() => onValueChange("urbano")}>Urbano</TabsTrigger>
-          <TabsTrigger value="rural" onClick={() => onValueChange("rural")}>Rural</TabsTrigger>
-        </TabsList>
+        <Tabs value={value} onValueChange={onValueChange}>
+          <TabsList className="w-full sm:w-auto">
+            <TabsTrigger value="urbano">Urbano</TabsTrigger>
+            <TabsTrigger value="rural">Rural</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
     </div>
   );
