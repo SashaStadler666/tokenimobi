@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
 
 const getImageForType = (type) => {
   switch (type?.toLowerCase()) {
@@ -51,15 +52,19 @@ export default function TermosDeUso() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 space-y-6">
-      {examplePropertyTypes.map((type, index) => (
-        <img
-          key={index}
-          src={getImageForType(type)}
-          alt={`Exemplo de propriedade: ${type}`}
-          loading="lazy"
-          className="w-full max-w-3xl h-48 object-cover rounded-lg shadow"
-        />
-      ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl w-full">
+        {examplePropertyTypes.map((type, index) => (
+          <motion.img
+            key={index}
+            src={getImageForType(type)}
+            alt={`Exemplo de propriedade: ${type}`}
+            loading="lazy"
+            className="w-full h-48 object-cover rounded-lg shadow"
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
+      </div>
       <Card className="max-w-3xl w-full border shadow-xl">
         <CardHeader>
           <CardTitle>Termos de Uso</CardTitle>
