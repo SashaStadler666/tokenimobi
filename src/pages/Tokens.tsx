@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -5,8 +6,50 @@ import { mockTokens, Token } from "@/lib/models";
 import { useLocation } from "react-router-dom";
 import TokensPageHeader from "@/components/tokens/TokensPageHeader";
 import TokenFilterControls from "@/components/tokens/TokenFilterControls";
-import CheapestTokenDisplay from "@/components/tokens/CheapestTokenDisplay";
-import { useTokenFilter } from "@/hooks/useTokenFilter";
+import TokenGrid from "@/components/featured/TokenGrid";
+import { wholePropertyTokens } from "@/pages/Tokens";
+
+const Tokens = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const typeFromUrl = queryParams.get('type');
+  
+  const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
+  const [showFilters, setShowFilters] = useState(false);
+  const allTokens = [...mockTokens, ...wholePropertyTokens];
+  
+  useEffect(() => {
+    if (typeFromUrl === "rural") {
+      setPropertyTypeTab("rural");
+    } else if (typeFromUrl === "urbano") {
+      setPropertyTypeTab("urbano");
+    }
+  }, [typeFromUrl]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      <div className="container mx-auto px-4 pt-24 pb-12">
+        <TokensPageHeader 
+          title="Propriedades Disponíveis" 
+          description="Explore nossa seleção de imóveis urbanos e rurais tokenizados"
+        />
+        
+        <TokenFilterControls
+          propertyTypeTab={propertyTypeTab}
+          setPropertyTypeTab={setPropertyTypeTab}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+        />
+        
+        <TokenGrid tokens={allTokens} propertyTypeTab={propertyTypeTab} />
+      </div>
+      
+      <Footer />
+    </div>
+  );
+};
 
 // Sample whole property tokens
 export const wholePropertyTokens: Token[] = [
@@ -111,48 +154,5 @@ export const wholePropertyTokens: Token[] = [
     holders: 0
   }
 ];
-
-const Tokens = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const typeFromUrl = queryParams.get('type');
-  
-  const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
-  const [showFilters, setShowFilters] = useState(false);
-  const allTokens = [...mockTokens, ...wholePropertyTokens];
-  const { filteredTokens } = useTokenFilter(allTokens);
-  
-  useEffect(() => {
-    if (typeFromUrl === "rural") {
-      setPropertyTypeTab("rural");
-    } else if (typeFromUrl === "urbano") {
-      setPropertyTypeTab("urbano");
-    }
-  }, [typeFromUrl]);
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 pt-24 pb-12">
-        <TokensPageHeader 
-          title="Token Mais Barato a partir de R$ 1.000,00" 
-          description="Exibindo a opção mais acessível para investimento a partir de R$ 1.000,00"
-        />
-        
-        <TokenFilterControls
-          propertyTypeTab={propertyTypeTab}
-          setPropertyTypeTab={setPropertyTypeTab}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
-        />
-        
-        <CheapestTokenDisplay tokens={filteredTokens} />
-      </div>
-      
-      <Footer />
-    </div>
-  );
-};
 
 export default Tokens;

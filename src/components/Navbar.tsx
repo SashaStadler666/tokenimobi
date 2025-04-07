@@ -47,7 +47,7 @@ const Navbar = () => {
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Categorias</NavigationMenuTrigger>
+                  <NavigationMenuTrigger>Loja</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid grid-cols-2 gap-3 p-4 w-[500px]">
                       <div 
@@ -132,7 +132,7 @@ const Navbar = () => {
                 Imóveis Disponíveis
               </Link>
               <div className="space-y-2">
-                <p className="text-sm font-medium">Categorias:</p>
+                <p className="text-sm font-medium">Loja:</p>
                 <div
                   className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
                   onClick={() => handleNavigateToTokens("urbano")}
