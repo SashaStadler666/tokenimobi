@@ -1,13 +1,14 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Token } from "@/lib/models";
+import { Token, Transaction, mockTransactions } from "@/lib/models";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PortfolioTokenCardProps {
   token: Token;
@@ -15,8 +16,24 @@ interface PortfolioTokenCardProps {
 
 const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
   const [sellAmount, setSellAmount] = useState("0");
-  const [userOwnedFractions, setUserOwnedFractions] = useState(50); // Mock data, assume user owns 50 fractions
+  const [userOwnedFractions, setUserOwnedFractions] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  
+  // Load owned fractions from transactions when component mounts
+  useEffect(() => {
+    // Calculate owned fractions based on transactions for this token
+    const tokenTransactions = mockTransactions.filter(tx => tx.tokenId === token.id);
+    const owned = tokenTransactions.reduce((total, tx) => {
+      if (tx.type === 'buy') {
+        return total + tx.fractions;
+      } else if (tx.type === 'sell') {
+        return total - tx.fractions;
+      }
+      return total;
+    }, 0);
+    
+    setUserOwnedFractions(owned);
+  }, [token.id]);
   
   const handleSell = () => {
     const amount = parseInt(sellAmount);
@@ -31,6 +48,23 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
     }
     
     // In a real app, this would call an API to process the sell order
+    // Create a new mock transaction
+    const newTransaction: Transaction = {
+      id: `tx${mockTransactions.length + 1}`,
+      tokenId: token.id,
+      type: 'sell',
+      fractions: amount,
+      price: token.fractionPrice,
+      total: amount * token.fractionPrice,
+      timestamp: new Date(),
+      status: 'completed',
+      txHash: `0x${Math.random().toString(16).substring(2)}`,
+      address: '0xaBcD...1234'
+    };
+    
+    // Add to mock transactions
+    mockTransactions.push(newTransaction);
+    
     setUserOwnedFractions(prev => prev - amount);
     toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
     setDialogOpen(false); // Close dialog after successful sell
@@ -42,6 +76,8 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
     // In a real app, we might want to execute the sell immediately
     // For now we just set the amount, so user can review before confirming
   };
+  
+  const totalValue = userOwnedFractions * token.fractionPrice;
   
   return (
     <Card className="overflow-hidden border border-muted">
@@ -86,7 +122,16 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Valor total</p>
-            <p className="font-medium">R${(userOwnedFractions * token.fractionPrice).toFixed(2)}</p>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className="font-medium cursor-help">R${totalValue.toFixed(2)}</p>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{userOwnedFractions} frações x R${token.fractionPrice.toFixed(2)}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
         

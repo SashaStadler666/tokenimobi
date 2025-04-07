@@ -1,16 +1,38 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Token } from "@/lib/models";
+import { Token, mockTransactions, addTransaction } from "@/lib/models";
 import BuySellInterface from "../BuySellInterface";
+import { toast } from "sonner";
 
 interface TokenDetailSidebarProps {
   token: Token;
 }
 
 const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
+  const [buyAmount, setBuyAmount] = useState(0);
+
+  // Handle buy transaction
+  const handleBuy = (amount: number) => {
+    if (amount <= 0) return;
+    
+    // Create a new transaction
+    addTransaction({
+      tokenId: token.id,
+      type: 'buy',
+      fractions: amount,
+      price: token.fractionPrice,
+      total: amount * token.fractionPrice,
+      timestamp: new Date()
+    });
+    
+    // Show success message
+    toast.success(`Compra de ${amount} frações do token ${token.name} realizada com sucesso!`);
+  };
+  
   return (
     <div>
-      <BuySellInterface token={token} />
+      <BuySellInterface token={token} onBuy={handleBuy} />
       
       <Card className="mt-6">
         <CardHeader className="pb-2">
