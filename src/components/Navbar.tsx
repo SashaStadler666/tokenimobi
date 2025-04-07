@@ -39,7 +39,15 @@ const Navbar = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>O que é Tokenização</NavigationMenuTrigger>
+                  <Link 
+                    to="/tokens" 
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Imóveis Disponíveis
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Categorias</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid grid-cols-2 gap-3 p-4 w-[500px]">
                       <div 
@@ -71,14 +79,6 @@ const Navbar = () => {
                     className={navigationMenuTriggerStyle()}
                   >
                     Como Funciona
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link 
-                    to="/tokens" 
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    Imóveis Disponíveis
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -123,8 +123,16 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
             <nav className="flex flex-col space-y-4">
+              <Link
+                to="/tokens"
+                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Imóveis Disponíveis
+              </Link>
               <div className="space-y-2">
-                <p className="text-sm font-medium">O que é Tokenização:</p>
+                <p className="text-sm font-medium">Categorias:</p>
                 <div
                   className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
                   onClick={() => handleNavigateToTokens("urbano")}
@@ -147,14 +155,6 @@ const Navbar = () => {
               >
                 <HelpCircle className="h-4 w-4 mr-2" />
                 Como Funciona
-              </Link>
-              <Link
-                to="/tokens"
-                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Home className="h-4 w-4 mr-2" />
-                Imóveis Disponíveis
               </Link>
               <Link
                 to="/faq"
