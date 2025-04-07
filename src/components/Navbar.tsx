@@ -1,16 +1,13 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Search, HelpCircle, FileText, Home, Building, LandPlot } from "lucide-react";
+import { Menu, X, HelpCircle, FileText, Home, Building, LandPlot } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import ConnectWallet from "./ConnectWallet";
@@ -39,39 +36,24 @@ const Navbar = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link 
-                    to="/tokens" 
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    Imóveis Disponíveis
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Loja</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid grid-cols-2 gap-3 p-4 w-[500px]">
-                      <div 
-                        onClick={() => handleNavigateToTokens("urbano")} 
-                        className="flex items-start p-2 hover:bg-muted rounded-md cursor-pointer"
-                      >
-                        <Building className="h-5 w-5 mr-2 mt-0.5 text-primary" />
-                        <div>
-                          <div className="text-sm font-medium">Imóveis Urbanos</div>
-                          <p className="text-sm text-muted-foreground">Apartamentos e imóveis comerciais</p>
-                        </div>
-                      </div>
-                      <div 
-                        onClick={() => handleNavigateToTokens("rural")} 
-                        className="flex items-start p-2 hover:bg-muted rounded-md cursor-pointer"
-                      >
-                        <LandPlot className="h-5 w-5 mr-2 mt-0.5 text-primary" />
-                        <div>
-                          <div className="text-sm font-medium">Terras Rurais</div>
-                          <p className="text-sm text-muted-foreground">Terrenos agrícolas e produção rural</p>
-                        </div>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={() => handleNavigateToTokens("urbano")} 
+                      variant="outline"
+                      className="flex items-center"
+                    >
+                      <Building className="h-4 w-4 mr-2" />
+                      Imóveis Urbanos
+                    </Button>
+                    <Button 
+                      onClick={() => handleNavigateToTokens("rural")} 
+                      variant="outline"
+                      className="flex items-center"
+                    >
+                      <LandPlot className="h-4 w-4 mr-2" />
+                      Terras Rurais
+                    </Button>
+                  </div>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link 
@@ -123,30 +105,23 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
             <nav className="flex flex-col space-y-4">
-              <Link
-                to="/tokens"
-                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Home className="h-4 w-4 mr-2" />
-                Imóveis Disponíveis
-              </Link>
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Loja:</p>
-                <div
-                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
+              <div className="flex flex-col space-y-2">
+                <Button
                   onClick={() => handleNavigateToTokens("urbano")}
+                  variant="outline"
+                  className="flex items-center justify-start"
                 >
                   <Building className="h-4 w-4 mr-2" />
                   Imóveis Urbanos
-                </div>
-                <div
-                  className="text-sm pl-4 flex items-center text-foreground/80 hover:text-foreground transition-colors cursor-pointer"
+                </Button>
+                <Button
                   onClick={() => handleNavigateToTokens("rural")}
+                  variant="outline"
+                  className="flex items-center justify-start"
                 >
                   <LandPlot className="h-4 w-4 mr-2" />
                   Terras Rurais
-                </div>
+                </Button>
               </div>
               <Link
                 to="/como-funciona"
