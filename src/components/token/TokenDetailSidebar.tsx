@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Token, mockTransactions, addTransaction } from "@/lib/models";
-import BuySellInterface from "../BuySellInterface";
+import BuySellInterface from "../trade/BuySellInterface";
 import { toast } from "sonner";
 
 interface TokenDetailSidebarProps {
