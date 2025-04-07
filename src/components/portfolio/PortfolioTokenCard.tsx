@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Token } from "@/lib/models";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ interface PortfolioTokenCardProps {
 const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
   const [sellAmount, setSellAmount] = useState("0");
   const [userOwnedFractions] = useState(50); // Mock data, assume user owns 50 fractions
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   const handleSell = () => {
     const amount = parseInt(sellAmount);
@@ -31,6 +32,7 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
     
     // In a real app, this would call an API to process the sell order
     toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
+    setDialogOpen(false); // Close dialog after successful sell
   };
   
   const handleSellAll = () => {
@@ -87,13 +89,16 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
         </div>
         
         <div className="flex space-x-2">
-          <Dialog>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="destructive" size="sm" className="flex-1">Vender</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Vender frações de {token.name}</DialogTitle>
+                <DialogDescription>
+                  Especifique a quantidade de frações que deseja vender.
+                </DialogDescription>
               </DialogHeader>
               <div className="py-4">
                 <div className="mb-4">
