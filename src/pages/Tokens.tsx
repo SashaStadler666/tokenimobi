@@ -11,6 +11,7 @@ import { ArrowLeft, Filter } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import TokenGrid from "@/components/featured/TokenGrid";
+import { toast } from "sonner";
 
 // Sample whole property tokens
 export const wholePropertyTokens: Token[] = [
@@ -120,10 +121,12 @@ const Tokens = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const typeFromUrl = queryParams.get('type');
+  const minPriceParam = queryParams.get('minPrice');
   
   const [tokens, setTokens] = useState<Token[]>([...mockTokens, ...wholePropertyTokens]);
   const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
   const [showFilters, setShowFilters] = useState(false);
+  const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
   
   // Update property type if URL params change
   useEffect(() => {
@@ -133,6 +136,53 @@ const Tokens = () => {
       setPropertyTypeTab("urbano");
     }
   }, [typeFromUrl]);
+
+  // Apply the price filter to find cheapest token above 1000
+  useEffect(() => {
+    // Start with all tokens
+    let availableTokens = [...mockTokens, ...wholePropertyTokens];
+    
+    // Filter tokens by minimum price (1000 reais)
+    const minPrice = 1000;
+    const tokensAboveMinPrice = availableTokens.filter(token => {
+      // Check if it's a fractional token with price >= minPrice
+      if (!token.isWholeProperty && token.fractionPrice >= minPrice) {
+        return true;
+      }
+      // Check if it's a whole property token with price >= minPrice
+      if (token.isWholeProperty && token.wholePropertyPrice && token.wholePropertyPrice >= minPrice) {
+        return true;
+      }
+      return false;
+    });
+    
+    // Find the cheapest token above minimum price
+    let cheapestToken: Token | null = null;
+    
+    if (tokensAboveMinPrice.length > 0) {
+      cheapestToken = tokensAboveMinPrice.reduce((prev, current) => {
+        const prevPrice = !prev.isWholeProperty ? prev.fractionPrice : (prev.wholePropertyPrice || Infinity);
+        const currentPrice = !current.isWholeProperty ? current.fractionPrice : (current.wholePropertyPrice || Infinity);
+        return prevPrice < currentPrice ? prev : current;
+      });
+      
+      if (cheapestToken) {
+        setFilteredTokens([cheapestToken]);
+        
+        // Notify user
+        toast.success(
+          `Token mais barato encontrado: ${cheapestToken.name} - ${
+            !cheapestToken.isWholeProperty 
+              ? `R$ ${cheapestToken.fractionPrice.toFixed(2)}/fração`
+              : `R$ ${(cheapestToken.wholePropertyPrice || 0).toLocaleString('pt-BR')}`
+          }`
+        );
+      }
+    } else {
+      setFilteredTokens([]);
+      toast.error("Nenhum token encontrado com preço a partir de R$ 1.000,00");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -153,9 +203,9 @@ const Tokens = () => {
               </Button>
             </Link>
           </div>
-          <h1 className="text-3xl font-bold gradient-text mb-2">Imóveis Disponíveis</h1>
+          <h1 className="text-3xl font-bold gradient-text mb-2">Token Mais Barato a partir de R$ 1.000,00</h1>
           <p className="text-muted-foreground">
-            Explore nossa seleção completa de imóveis tokenizados urbanos e rurais
+            Exibindo a opção mais acessível para investimento a partir de R$ 1.000,00
           </p>
         </motion.div>
         
@@ -171,7 +221,33 @@ const Tokens = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <TokenGrid tokens={tokens} propertyTypeTab={propertyTypeTab} />
+          {filteredTokens.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTokens.map((token, index) => (
+                <motion.div
+                  key={token.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.03 }}
+                  className="col-span-full md:col-span-1 lg:col-span-1"
+                >
+                  <div className="p-4 border rounded-lg bg-accent/5">
+                    <div className="mb-2 text-lg font-semibold text-accent">Melhor opção para investimento</div>
+                    <TokenCard token={token} showWholePrice={token.isWholeProperty} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center p-8 border rounded-lg bg-muted">
+              <p className="text-xl font-semibold mb-2">Nenhum token encontrado</p>
+              <p className="text-muted-foreground">Não encontramos tokens com preço a partir de R$ 1.000,00</p>
+              <Link to="/tokens">
+                <Button variant="outline" className="mt-4">Ver todos os tokens</Button>
+              </Link>
+            </div>
+          )}
         </motion.div>
       </div>
       
