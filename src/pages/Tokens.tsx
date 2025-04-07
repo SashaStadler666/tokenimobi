@@ -2,16 +2,11 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { mockTokens, Token } from "@/lib/models";
-import FilterButton from "@/components/featured/FilterButton";
-import PropertyTypeSelector from "@/components/featured/PropertyTypeSelector";
-import FiltersPanel from "@/components/featured/FiltersPanel";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Filter } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import TokenGrid from "@/components/featured/TokenGrid";
-import TokenCard from "@/components/tokens/TokenCard";
-import { toast } from "sonner";
+import { useLocation } from "react-router-dom";
+import TokensPageHeader from "@/components/tokens/TokensPageHeader";
+import TokenFilterControls from "@/components/tokens/TokenFilterControls";
+import CheapestTokenDisplay from "@/components/tokens/CheapestTokenDisplay";
+import { useTokenFilter } from "@/hooks/useTokenFilter";
 
 // Sample whole property tokens
 export const wholePropertyTokens: Token[] = [
@@ -121,12 +116,11 @@ const Tokens = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const typeFromUrl = queryParams.get('type');
-  const minPriceParam = queryParams.get('minPrice');
   
-  const [tokens, setTokens] = useState<Token[]>([...mockTokens, ...wholePropertyTokens]);
   const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
+  const allTokens = [...mockTokens, ...wholePropertyTokens];
+  const { filteredTokens } = useTokenFilter(allTokens);
   
   useEffect(() => {
     if (typeFromUrl === "rural") {
@@ -136,111 +130,24 @@ const Tokens = () => {
     }
   }, [typeFromUrl]);
 
-  useEffect(() => {
-    let availableTokens = [...mockTokens, ...wholePropertyTokens];
-    
-    const minPrice = 1000;
-    const tokensAboveMinPrice = availableTokens.filter(token => {
-      if (!token.isWholeProperty && token.fractionPrice >= minPrice) {
-        return true;
-      }
-      if (token.isWholeProperty && token.wholePropertyPrice && token.wholePropertyPrice >= minPrice) {
-        return true;
-      }
-      return false;
-    });
-    
-    let cheapestToken: Token | null = null;
-    
-    if (tokensAboveMinPrice.length > 0) {
-      cheapestToken = tokensAboveMinPrice.reduce((prev, current) => {
-        const prevPrice = !prev.isWholeProperty ? prev.fractionPrice : (prev.wholePropertyPrice || Infinity);
-        const currentPrice = !current.isWholeProperty ? current.fractionPrice : (current.wholePropertyPrice || Infinity);
-        return prevPrice < currentPrice ? prev : current;
-      });
-      
-      if (cheapestToken) {
-        setFilteredTokens([cheapestToken]);
-        
-        toast.success(
-          `Token mais barato encontrado: ${cheapestToken.name} - ${
-            !cheapestToken.isWholeProperty 
-              ? `R$ ${cheapestToken.fractionPrice.toFixed(2)}/fração`
-              : `R$ ${(cheapestToken.wholePropertyPrice || 0).toLocaleString('pt-BR')}`
-          }`
-        );
-      }
-    } else {
-      setFilteredTokens([]);
-      toast.error("Nenhum token encontrado com preço a partir de R$ 1.000,00");
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
       <div className="container mx-auto px-4 pt-24 pb-12">
-        <motion.div 
-          className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="flex items-center mb-2">
-            <Link to="/">
-              <Button variant="ghost" size="sm" className="mr-2">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Voltar
-              </Button>
-            </Link>
-          </div>
-          <h1 className="text-3xl font-bold gradient-text mb-2">Token Mais Barato a partir de R$ 1.000,00</h1>
-          <p className="text-muted-foreground">
-            Exibindo a opção mais acessível para investimento a partir de R$ 1.000,00
-          </p>
-        </motion.div>
+        <TokensPageHeader 
+          title="Token Mais Barato a partir de R$ 1.000,00" 
+          description="Exibindo a opção mais acessível para investimento a partir de R$ 1.000,00"
+        />
         
-        <div className="flex justify-between items-center mb-6">
-          <PropertyTypeSelector value={propertyTypeTab} onValueChange={setPropertyTypeTab} />
-          <FilterButton showFilters={showFilters} onClick={() => setShowFilters(!showFilters)} />
-        </div>
+        <TokenFilterControls
+          propertyTypeTab={propertyTypeTab}
+          setPropertyTypeTab={setPropertyTypeTab}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+        />
         
-        <FiltersPanel showFilters={showFilters} propertyTypeTab={propertyTypeTab} />
-        
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {filteredTokens.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTokens.map((token, index) => (
-                <motion.div
-                  key={token.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="col-span-full md:col-span-1 lg:col-span-1"
-                >
-                  <div className="p-4 border rounded-lg bg-accent/5">
-                    <div className="mb-2 text-lg font-semibold text-accent">Melhor opção para investimento</div>
-                    <TokenCard token={token} showWholePrice={token.isWholeProperty} />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-8 border rounded-lg bg-muted">
-              <p className="text-xl font-semibold mb-2">Nenhum token encontrado</p>
-              <p className="text-muted-foreground">Não encontramos tokens com preço a partir de R$ 1.000,00</p>
-              <Link to="/tokens">
-                <Button variant="outline" className="mt-4">Ver todos os tokens</Button>
-              </Link>
-            </div>
-          )}
-        </motion.div>
+        <CheapestTokenDisplay tokens={filteredTokens} />
       </div>
       
       <Footer />
