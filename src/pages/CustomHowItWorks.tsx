@@ -3,6 +3,8 @@ import PageHeader from "@/components/PageHeader";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building, Home, Trees, FileText, ShieldCheck, BarChart3, Wallet, UserRound } from "lucide-react";
+import HowItWorksComponent from "@/components/HowItWorks";
+import Footer from "@/components/Footer";
 
 const CustomHowItWorks = () => {
   const steps = [
@@ -65,6 +67,9 @@ const CustomHowItWorks = () => {
         title="Como Funciona" 
         description="Entenda como funciona o processo de tokenização de imóveis na Token Imobi."
       />
+      
+      {/* Adicionado o componente HowItWorks aqui */}
+      <HowItWorksComponent />
       
       <motion.div 
         className="container mx-auto mt-8"
@@ -167,6 +172,8 @@ const CustomHowItWorks = () => {
           </div>
         </div>
       </motion.div>
+      
+      <Footer />
     </div>
   );
 };
