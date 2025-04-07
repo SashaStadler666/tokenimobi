@@ -32,7 +32,7 @@ const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
   
   return (
     <div>
-      <BuySellInterface token={token} onBuy={handleBuy} />
+      <BuySellInterface token={token} onBuySubmit={handleBuy} />
       
       <Card className="mt-6">
         <CardHeader className="pb-2">
