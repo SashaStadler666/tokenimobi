@@ -55,11 +55,7 @@ const TokenDetail = () => {
 
   const handleBuyClick = () => {
     if (!isWalletConnected) {
-      toast({
-        title: "Carteira não conectada",
-        description: "Conecte sua carteira para realizar esta operação",
-        variant: "destructive"
-      });
+      toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
     }
     
     // Scroll to the buy interface
