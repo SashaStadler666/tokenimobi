@@ -5,7 +5,8 @@ import BuySellInterface from "../trade/BuySellInterface";
 import TokenDetailCard from "./TokenDetailCard";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import PurchaseTokenModal from "./PurchaseTokenModal";
+import NewPurchaseTokenModal from "./NewPurchaseTokenModal";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 interface TokenDetailSidebarProps {
   token: Token;
@@ -13,6 +14,7 @@ interface TokenDetailSidebarProps {
 
 const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const { isConnected, connectWallet } = useWalletConnection();
   
   // Handle buy transaction via BuySellInterface
   const handleBuy = (amount: number) => {
@@ -36,10 +38,12 @@ const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
       
       <TokenDetailCard token={token} />
       
-      <PurchaseTokenModal 
+      <NewPurchaseTokenModal 
         token={token}
         open={showPurchaseModal}
         onOpenChange={setShowPurchaseModal}
+        isWalletConnected={isConnected}
+        onConnectWallet={connectWallet}
       />
     </div>
   );

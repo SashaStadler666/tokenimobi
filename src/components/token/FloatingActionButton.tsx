@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Token } from '@/lib/models';
 import { Button } from '@/components/ui/button';
 import { ArrowUpCircle, Wallet } from 'lucide-react';
-import PurchaseTokenModal from './PurchaseTokenModal';
+import NewPurchaseTokenModal from './NewPurchaseTokenModal';
+import { useWalletConnection } from '@/hooks/useWalletConnection';
 
 interface FloatingActionButtonProps {
   token: Token;
@@ -15,6 +16,7 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
   const [isVisible, setIsVisible] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const { isConnected, connectWallet } = useWalletConnection();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,10 +76,12 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
         </motion.div>
       )}
 
-      <PurchaseTokenModal 
+      <NewPurchaseTokenModal 
         token={token}
         open={showPurchaseModal}
         onOpenChange={setShowPurchaseModal}
+        isWalletConnected={isConnected}
+        onConnectWallet={connectWallet}
       />
     </>
   );
