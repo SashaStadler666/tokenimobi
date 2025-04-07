@@ -15,7 +15,7 @@ interface PortfolioTokenCardProps {
 
 const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
   const [sellAmount, setSellAmount] = useState("0");
-  const [userOwnedFractions] = useState(50); // Mock data, assume user owns 50 fractions
+  const [userOwnedFractions, setUserOwnedFractions] = useState(50); // Mock data, assume user owns 50 fractions
   const [dialogOpen, setDialogOpen] = useState(false);
   
   const handleSell = () => {
@@ -31,8 +31,10 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
     }
     
     // In a real app, this would call an API to process the sell order
+    setUserOwnedFractions(prev => prev - amount);
     toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
     setDialogOpen(false); // Close dialog after successful sell
+    setSellAmount("0"); // Reset the sell amount for next time
   };
   
   const handleSellAll = () => {
@@ -91,7 +93,14 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
         <div className="flex space-x-2">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="destructive" size="sm" className="flex-1">Vender</Button>
+              <Button 
+                variant="destructive" 
+                size="sm" 
+                className="flex-1"
+                disabled={userOwnedFractions <= 0}
+              >
+                Vender
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -116,6 +125,7 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
                       size="sm"
                       onClick={handleSellAll}
                       className="w-full"
+                      disabled={userOwnedFractions <= 0}
                     >
                       Vender Todas ({userOwnedFractions} frações)
                     </Button>
@@ -132,7 +142,12 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
                 <DialogClose asChild>
                   <Button variant="outline">Cancelar</Button>
                 </DialogClose>
-                <Button onClick={handleSell}>Confirmar Venda</Button>
+                <Button 
+                  onClick={handleSell}
+                  disabled={!sellAmount || parseFloat(sellAmount) <= 0 || parseFloat(sellAmount) > userOwnedFractions}
+                >
+                  Confirmar Venda
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
