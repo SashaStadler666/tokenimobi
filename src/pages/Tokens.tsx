@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,6 +10,7 @@ import { ArrowLeft, Filter } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import TokenGrid from "@/components/featured/TokenGrid";
+import TokenCard from "@/components/tokens/TokenCard";
 import { toast } from "sonner";
 
 // Sample whole property tokens
@@ -128,7 +128,6 @@ const Tokens = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
   
-  // Update property type if URL params change
   useEffect(() => {
     if (typeFromUrl === "rural") {
       setPropertyTypeTab("rural");
@@ -137,26 +136,20 @@ const Tokens = () => {
     }
   }, [typeFromUrl]);
 
-  // Apply the price filter to find cheapest token above 1000
   useEffect(() => {
-    // Start with all tokens
     let availableTokens = [...mockTokens, ...wholePropertyTokens];
     
-    // Filter tokens by minimum price (1000 reais)
     const minPrice = 1000;
     const tokensAboveMinPrice = availableTokens.filter(token => {
-      // Check if it's a fractional token with price >= minPrice
       if (!token.isWholeProperty && token.fractionPrice >= minPrice) {
         return true;
       }
-      // Check if it's a whole property token with price >= minPrice
       if (token.isWholeProperty && token.wholePropertyPrice && token.wholePropertyPrice >= minPrice) {
         return true;
       }
       return false;
     });
     
-    // Find the cheapest token above minimum price
     let cheapestToken: Token | null = null;
     
     if (tokensAboveMinPrice.length > 0) {
@@ -169,7 +162,6 @@ const Tokens = () => {
       if (cheapestToken) {
         setFilteredTokens([cheapestToken]);
         
-        // Notify user
         toast.success(
           `Token mais barato encontrado: ${cheapestToken.name} - ${
             !cheapestToken.isWholeProperty 
