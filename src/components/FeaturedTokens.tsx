@@ -14,6 +14,8 @@ const FeaturedTokens = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [propertyTypeTab, setPropertyTypeTab] = useState("urbano");
   const [showFilters, setShowFilters] = useState(false);
+  // Add default acquisitionMode state
+  const [acquisitionMode, setAcquisitionMode] = useState("fracionados");
   
   useEffect(() => {
     // Filter and sort tokens based on active tab and property type
@@ -72,9 +74,17 @@ const FeaturedTokens = () => {
         <FilterButton showFilters={showFilters} onClick={() => setShowFilters(!showFilters)} />
       </div>
 
-      <FiltersPanel showFilters={showFilters} propertyTypeTab={propertyTypeTab} />
+      <FiltersPanel 
+        showFilters={showFilters} 
+        propertyTypeTab={propertyTypeTab} 
+        acquisitionMode={acquisitionMode}
+      />
       
-      <TokenGrid tokens={tokens} propertyTypeTab={propertyTypeTab} />
+      <TokenGrid 
+        tokens={tokens} 
+        propertyTypeTab={propertyTypeTab} 
+        acquisitionMode={acquisitionMode}
+      />
       
       <FeaturedFooter />
     </motion.section>
