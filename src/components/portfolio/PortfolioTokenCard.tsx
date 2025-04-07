@@ -33,6 +33,12 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
     toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
   };
   
+  const handleSellAll = () => {
+    setSellAmount(userOwnedFractions.toString());
+    // In a real app, we might want to execute the sell immediately
+    // For now we just set the amount, so user can review before confirming
+  };
+  
   return (
     <Card className="overflow-hidden border border-muted">
       <div className="relative h-40 bg-muted">
@@ -99,6 +105,16 @@ const PortfolioTokenCard = ({ token }: PortfolioTokenCardProps) => {
                     min={1}
                     max={userOwnedFractions}
                   />
+                  <div className="mt-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleSellAll}
+                      className="w-full"
+                    >
+                      Vender Todas ({userOwnedFractions} frações)
+                    </Button>
+                  </div>
                 </div>
                 <div className="mb-4">
                   <p className="text-sm text-muted-foreground mb-2">Preço estimado</p>
