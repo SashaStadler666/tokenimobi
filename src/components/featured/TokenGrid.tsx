@@ -63,6 +63,7 @@ const TokenGrid = ({ tokens, propertyTypeTab }: TokenGridProps) => {
               )}
             </div>
           </TabsContent>
+          
           <TabsContent value="rural" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {ruralTokens.length > 0 ? (
@@ -110,6 +111,7 @@ const TokenGrid = ({ tokens, propertyTypeTab }: TokenGridProps) => {
               )}
             </div>
           </TabsContent>
+          
           <TabsContent value="rural" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {ruralWholeTokens.length > 0 ? (
