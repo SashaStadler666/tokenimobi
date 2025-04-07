@@ -13,9 +13,9 @@ const FeaturedFooter = () => {
       </p>
       <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
         <Button variant="outline" className="button-glow whitespace-nowrap flex items-center">
-          <Link to="/tokens" className="flex items-center">
+          <Link to="/tokens" className="flex items-center gap-2">
             Ver Todos os Imóveis
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
       </motion.div>
