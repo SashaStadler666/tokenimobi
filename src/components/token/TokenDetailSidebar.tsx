@@ -4,8 +4,8 @@ import { Token } from "@/lib/models";
 import BuySellInterface from "../trade/BuySellInterface";
 import TokenDetailCard from "./TokenDetailCard";
 import { toast } from "sonner";
-import PurchaseModal from "./PurchaseModal";
 import { Button } from "@/components/ui/button";
+import PurchaseTokenModal from "./PurchaseTokenModal";
 
 interface TokenDetailSidebarProps {
   token: Token;
@@ -36,7 +36,7 @@ const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
       
       <TokenDetailCard token={token} />
       
-      <PurchaseModal 
+      <PurchaseTokenModal 
         token={token}
         open={showPurchaseModal}
         onOpenChange={setShowPurchaseModal}

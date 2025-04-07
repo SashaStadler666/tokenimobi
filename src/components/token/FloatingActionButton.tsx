@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Token } from '@/lib/models';
 import { Button } from '@/components/ui/button';
 import { ArrowUpCircle, Wallet } from 'lucide-react';
-import PurchaseModal from './PurchaseModal';
+import PurchaseTokenModal from './PurchaseTokenModal';
 
 interface FloatingActionButtonProps {
   token: Token;
@@ -74,7 +74,7 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
         </motion.div>
       )}
 
-      <PurchaseModal 
+      <PurchaseTokenModal 
         token={token}
         open={showPurchaseModal}
         onOpenChange={setShowPurchaseModal}
