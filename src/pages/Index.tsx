@@ -4,6 +4,7 @@ import MarketOverview from "@/components/MarketOverview";
 import Navbar from "@/components/Navbar";
 import HowItWorks from "@/components/HowItWorks"; 
 import Footer from "@/components/Footer";
+import InfoGraphicSection from "@/components/InfoGraphicSection";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, FileText } from "lucide-react";
@@ -108,6 +109,9 @@ const Index = () => {
       </motion.section>
       
       <MarketOverview />
+      
+      {/* Adicionando aqui o novo componente InfoGraphicSection */}
+      <InfoGraphicSection />
       
       {/* Componente "Como Funciona" */}
       <section ref={howItWorksRef}>
