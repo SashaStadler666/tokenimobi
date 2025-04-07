@@ -73,7 +73,7 @@ const TokenMap = ({ token }: TokenMapProps) => {
   
   return (
     <motion.div 
-      className="relative rounded-lg overflow-hidden border border-border shadow-lg h-[300px]"
+      className="relative rounded-lg overflow-hidden border border-border shadow-lg h-[300px] z-10"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
