@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions } from "@/lib/models";
 import Navbar from "@/components/Navbar";
@@ -11,7 +11,9 @@ import TokenContainer from "@/components/token/TokenContainer";
 import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { wholePropertyTokens } from "@/pages/Tokens";
 import { toast } from "sonner";
-import NewPurchaseTokenModal from "@/components/token/NewPurchaseTokenModal";
+import PurchaseTokenModal from "@/components/token/PurchaseTokenModal";
+import { ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -61,7 +63,7 @@ const TokenDetail = () => {
       toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
     }
     
-    // Abre o modal de compra ao invés de rolar para a seção de compra
+    // Abre o modal de compra
     setShowPurchaseModal(true);
   };
   
@@ -78,6 +80,13 @@ const TokenDetail = () => {
         <HeaderSection />
         <WalletSection isWalletConnected={isWalletConnected} />
         <TokenHero token={token} />
+        
+        <div className="my-6">
+          <Button onClick={() => setShowPurchaseModal(true)} className="w-full flex items-center gap-2">
+            <ShoppingCart className="h-4 w-4" /> Comprar Token
+          </Button>
+        </div>
+        
         <TokenContainer 
           token={token} 
           tokenTransactions={tokenTransactions}
@@ -88,10 +97,10 @@ const TokenDetail = () => {
       
       <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
       
-      <NewPurchaseTokenModal 
-        token={token}
+      <PurchaseTokenModal
         open={showPurchaseModal}
-        onOpenChange={setShowPurchaseModal}
+        onClose={() => setShowPurchaseModal(false)}
+        token={token}
         isWalletConnected={isWalletConnected}
         onConnectWallet={handleConnectWallet}
       />
