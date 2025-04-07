@@ -1,8 +1,7 @@
 
 import { useWalletConnection } from "@/hooks/useWalletConnection";
-import ConnectButton from "./wallet/ConnectButton";
-import TermsDialog from "./wallet/TermsDialog";
-import WalletMenu from "./wallet/WalletMenu";
+import ConnectSection from "./wallet/ConnectSection";
+import WalletSection from "./wallet/WalletSection";
 
 const ConnectWallet = () => {
   const {
@@ -22,33 +21,24 @@ const ConnectWallet = () => {
     setTermsAccepted
   } = useWalletConnection();
 
-  if (!isConnected) {
-    return (
-      <>
-        <ConnectButton 
-          isConnecting={isConnecting} 
-          onClick={connectWallet} 
-        />
-        
-        <TermsDialog 
-          open={showTermsDialog}
-          onOpenChange={setShowTermsDialog}
-          termsAccepted={termsAccepted}
-          onTermsChange={() => setTermsAccepted(!termsAccepted)}
-          onAcceptTerms={handleAcceptTerms}
-          onViewFullTerms={redirectToTermsPage}
-        />
-      </>
-    );
-  }
-
-  return (
-    <WalletMenu 
+  return isConnected ? (
+    <WalletSection 
       walletAddress={walletAddress}
       onCopyAddress={copyAddress}
       onExplorerView={goToExplorer}
       onViewTerms={viewTerms}
       onDisconnect={handleDisconnect}
+    />
+  ) : (
+    <ConnectSection 
+      isConnecting={isConnecting}
+      showTermsDialog={showTermsDialog}
+      termsAccepted={termsAccepted}
+      onConnect={connectWallet}
+      onAcceptTerms={handleAcceptTerms}
+      onViewFullTerms={redirectToTermsPage}
+      onDialogOpenChange={setShowTermsDialog}
+      onTermsChange={() => setTermsAccepted(!termsAccepted)}
     />
   );
 };
