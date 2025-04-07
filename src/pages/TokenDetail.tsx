@@ -1,7 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions } from "@/lib/models";
-import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeaderSection from "@/components/token/HeaderSection";
@@ -10,12 +9,12 @@ import TokenHero from "@/components/token/TokenHero";
 import TokenContainer from "@/components/token/TokenContainer";
 import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { wholePropertyTokens } from "@/pages/Tokens";
+import { toast } from "sonner";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isWalletConnected = localStorage.getItem("walletConnected") === "true";
-  const { toast } = useToast();
   
   // Look for token in both regular tokens and whole property tokens
   const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
@@ -61,15 +60,7 @@ const TokenDetail = () => {
         description: "Conecte sua carteira para realizar esta operação",
         variant: "destructive"
       });
-      return;
     }
-    
-    toast({
-      title: "Iniciando processo de compra",
-      description: token.isWholeProperty 
-        ? "Você está adquirindo o imóvel inteiro" 
-        : "Você está comprando frações deste token",
-    });
     
     // Scroll to the buy interface
     const buyElement = document.getElementById('buy-section');

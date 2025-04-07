@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Token } from '@/lib/models';
 import { Button } from '@/components/ui/button';
 import { ArrowUpCircle, Wallet } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import PurchaseModal from './PurchaseModal';
 
 interface FloatingActionButtonProps {
   token: Token;
@@ -14,7 +14,7 @@ interface FloatingActionButtonProps {
 const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const { toast } = useToast();
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +33,11 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
       top: 0,
       behavior: 'smooth'
     });
+  };
+
+  const handleBuyButtonClick = () => {
+    setShowPurchaseModal(true);
+    onBuyClick(); // Keep the original behavior
   };
 
   return (
@@ -57,7 +62,7 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
           )}
           
           <Button
-            onClick={onBuyClick}
+            onClick={handleBuyButtonClick}
             className="rounded-full shadow-lg flex items-center gap-2 px-5"
           >
             <Wallet className="h-4 w-4" />
@@ -68,6 +73,12 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
           </Button>
         </motion.div>
       )}
+
+      <PurchaseModal 
+        token={token}
+        open={showPurchaseModal}
+        onOpenChange={setShowPurchaseModal}
+      />
     </>
   );
 };

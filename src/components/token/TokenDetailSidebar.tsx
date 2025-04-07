@@ -1,39 +1,46 @@
 
 import { useState } from "react";
-import { Token, addTransaction } from "@/lib/models";
+import { Token } from "@/lib/models";
 import BuySellInterface from "../trade/BuySellInterface";
 import TokenDetailCard from "./TokenDetailCard";
 import { toast } from "sonner";
+import PurchaseModal from "./PurchaseModal";
+import { Button } from "@/components/ui/button";
 
 interface TokenDetailSidebarProps {
   token: Token;
 }
 
 const TokenDetailSidebar = ({ token }: TokenDetailSidebarProps) => {
-  const [buyAmount, setBuyAmount] = useState(0);
-
-  // Handle buy transaction
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  
+  // Handle buy transaction via BuySellInterface
   const handleBuy = (amount: number) => {
     if (amount <= 0) return;
     
-    // Create a new transaction
-    addTransaction({
-      tokenId: token.id,
-      type: 'buy',
-      fractions: amount,
-      price: token.fractionPrice,
-      total: amount * token.fractionPrice,
-      timestamp: new Date()
-    });
-    
-    // Show success message
     toast.success(`Compra de ${amount} frações do token ${token.name} realizada com sucesso!`);
   };
   
   return (
-    <div>
-      <BuySellInterface token={token} onBuySubmit={handleBuy} />
+    <div className="space-y-6">
+      <div id="buy-section" className="space-y-4">
+        <Button 
+          onClick={() => setShowPurchaseModal(true)}
+          className="w-full button-glow"
+        >
+          Comprar {token.symbol}
+        </Button>
+        
+        <BuySellInterface token={token} onBuySubmit={handleBuy} />
+      </div>
+      
       <TokenDetailCard token={token} />
+      
+      <PurchaseModal 
+        token={token}
+        open={showPurchaseModal}
+        onOpenChange={setShowPurchaseModal}
+      />
     </div>
   );
 };
