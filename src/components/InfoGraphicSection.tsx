@@ -11,21 +11,24 @@ const InfoGraphicSection = () => {
       title: "Escolha sua propriedade",
       description: "Navegue entre opções urbanas e rurais tokenizadas. Veja detalhes, localização e rentabilidade estimada.",
       delay: 0.2,
-      color: "bg-primary/10 text-primary"
+      color: "bg-primary/10 text-primary",
+      ariaLabel: "Ícone casa"
     },
     {
       icon: ShieldCheck,
       title: "Invista com segurança",
       description: "A partir de R$1.000 você pode adquirir frações tokenizadas registradas em blockchain, com total transparência.",
       delay: 0.4,
-      color: "bg-accent/10 text-accent"
+      color: "bg-accent/10 text-accent",
+      ariaLabel: "Ícone segurança"
     },
     {
       icon: TrendingUp,
       title: "Acompanhe seus ganhos",
       description: "Veja rendimentos, valorização, histórico de distribuição e negocie suas frações no marketplace quando quiser.",
       delay: 0.6,
-      color: "bg-primary/10 text-primary"
+      color: "bg-primary/10 text-primary",
+      ariaLabel: "Ícone crescimento"
     }
   ];
 
@@ -56,7 +59,7 @@ const InfoGraphicSection = () => {
               whileHover={{ y: -5 }}
             >
               <div className={`rounded-full p-3 ${step.color} w-16 h-16 mx-auto mb-4 flex items-center justify-center`}>
-                <step.icon className="w-8 h-8" />
+                <step.icon className="w-8 h-8" aria-label={step.ariaLabel} />
               </div>
               <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
               <p className="text-sm text-muted-foreground">
@@ -87,7 +90,7 @@ const InfoGraphicSection = () => {
               transition={{ delay: 0.9, duration: 0.5 }}
             >
               <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <Home className="w-6 h-6 text-primary" />
+                <Home className="w-6 h-6 text-primary" aria-label="Ícone casa" />
               </div>
               <p className="text-sm font-medium">Propriedade</p>
             </motion.div>
@@ -99,7 +102,7 @@ const InfoGraphicSection = () => {
               viewport={{ once: true }}
               transition={{ delay: 1.0, duration: 0.5 }}
             >
-              <ArrowRight className="w-6 h-6 text-muted-foreground" />
+              <ArrowRight className="w-6 h-6 text-muted-foreground" aria-label="Seta para direita" />
             </motion.div>
 
             {/* Item 2: Tokenização */}
@@ -111,7 +114,7 @@ const InfoGraphicSection = () => {
               transition={{ delay: 1.1, duration: 0.5 }}
             >
               <div className="rounded-full bg-accent/10 p-3 mb-2">
-                <ShieldCheck className="w-6 h-6 text-accent" />
+                <ShieldCheck className="w-6 h-6 text-accent" aria-label="Ícone segurança" />
               </div>
               <p className="text-sm font-medium">Tokenização</p>
             </motion.div>
@@ -123,7 +126,7 @@ const InfoGraphicSection = () => {
               viewport={{ once: true }}
               transition={{ delay: 1.2, duration: 0.5 }}
             >
-              <ArrowRight className="w-6 h-6 text-muted-foreground" />
+              <ArrowRight className="w-6 h-6 text-muted-foreground" aria-label="Seta para direita" />
             </motion.div>
 
             {/* Item 3: Investidores */}
@@ -135,7 +138,7 @@ const InfoGraphicSection = () => {
               transition={{ delay: 1.3, duration: 0.5 }}
             >
               <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <TrendingUp className="w-6 h-6 text-primary" />
+                <TrendingUp className="w-6 h-6 text-primary" aria-label="Ícone crescimento" />
               </div>
               <p className="text-sm font-medium">Investidores</p>
             </motion.div>
@@ -154,7 +157,7 @@ const InfoGraphicSection = () => {
           <Button size="lg" className="button-glow" asChild>
             <Link to="/tokens" className="flex items-center">
               Comece a Investir Agora
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" aria-label="Seta para direita" />
             </Link>
           </Button>
         </motion.div>

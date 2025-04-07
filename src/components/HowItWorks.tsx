@@ -11,28 +11,32 @@ const steps = [
     description: "Navegue pelo nosso catálogo de propriedades urbanas e rurais tokenizadas e selecione a que melhor se adequa ao seu perfil de investimento.",
     icon: Search,
     color: "bg-primary/10 text-primary",
-    link: "/como-funciona/escolha-imovel"
+    link: "/como-funciona/escolha-imovel",
+    ariaLabel: "Ícone lupa"
   },
   {
     title: "Analise os dados",
     description: "Veja o histórico de valorização, documentação e detalhes sobre o rendimento projetado para cada fração do imóvel.",
     icon: BarChart3,
     color: "bg-accent/10 text-accent",
-    link: "/como-funciona/analise-dados"
+    link: "/como-funciona/analise-dados",
+    ariaLabel: "Ícone gráfico"
   },
   {
     title: "Simule seu investimento",
     description: "Defina quanto deseja investir (a partir de R$1.000) e veja a projeção de rendimentos ao longo do tempo.",
     icon: TrendingUp,
     color: "bg-primary/10 text-primary",
-    link: "/como-funciona/simule-investimento"
+    link: "/como-funciona/simule-investimento",
+    ariaLabel: "Ícone crescimento"
   },
   {
     title: "Conecte sua carteira",
     description: "Conecte sua carteira digital para finalizar seu investimento com segurança através da tecnologia blockchain.",
     icon: Wallet,
     color: "bg-accent/10 text-accent",
-    link: "/como-funciona/conecte-carteira"
+    link: "/como-funciona/conecte-carteira",
+    ariaLabel: "Ícone carteira"
   }
 ];
 
@@ -67,7 +71,7 @@ const HowItWorks = () => {
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center">
                     <div className={`rounded-full p-3 mb-4 ${step.color}`}>
-                      <step.icon className="h-6 w-6" />
+                      <step.icon className="h-6 w-6" aria-label={step.ariaLabel} />
                     </div>
                     <h3 className="text-xl font-medium mb-2">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
@@ -84,7 +88,7 @@ const HowItWorks = () => {
           <Button size="lg" className="button-glow" asChild>
             <Link to="/como-funciona" className="flex items-center">
               Ver Mais Detalhes
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" aria-label="Seta para direita" />
             </Link>
           </Button>
         </motion.div>
