@@ -44,12 +44,12 @@ const Index = () => {
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-            <Link to="/tokens">
-              <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/tokens" className="flex items-center">
                 Simular Investimento
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </motion.div>
         </div>
         <div className="mt-4 text-sm text-muted-foreground">
