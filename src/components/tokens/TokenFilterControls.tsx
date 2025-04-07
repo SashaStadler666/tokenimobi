@@ -3,23 +3,24 @@ import PropertyTypeSelector from "@/components/featured/PropertyTypeSelector";
 import FilterButton from "@/components/featured/FilterButton";
 import FiltersPanel from "@/components/featured/FiltersPanel";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
 
 interface TokenFilterControlsProps {
   propertyTypeTab: string;
   setPropertyTypeTab: (value: string) => void;
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
+  acquisitionMode: string;
+  setAcquisitionMode: (mode: string) => void;
 }
 
 const TokenFilterControls = ({ 
   propertyTypeTab, 
   setPropertyTypeTab, 
   showFilters, 
-  setShowFilters 
+  setShowFilters,
+  acquisitionMode,
+  setAcquisitionMode
 }: TokenFilterControlsProps) => {
-  const [acquisitionMode, setAcquisitionMode] = useState<string>("fracionados");
-
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

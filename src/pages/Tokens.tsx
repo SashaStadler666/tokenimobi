@@ -15,6 +15,7 @@ const Tokens = () => {
   
   const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
   const [showFilters, setShowFilters] = useState(false);
+  const [acquisitionMode, setAcquisitionMode] = useState<string>("fracionados");
   const allTokens = [...mockTokens, ...wholePropertyTokens];
   
   useEffect(() => {
@@ -40,9 +41,15 @@ const Tokens = () => {
           setPropertyTypeTab={setPropertyTypeTab}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
+          acquisitionMode={acquisitionMode}
+          setAcquisitionMode={setAcquisitionMode}
         />
         
-        <TokenGrid tokens={allTokens} propertyTypeTab={propertyTypeTab} />
+        <TokenGrid 
+          tokens={allTokens} 
+          propertyTypeTab={propertyTypeTab} 
+          acquisitionMode={acquisitionMode}
+        />
       </div>
       
       <Footer />
