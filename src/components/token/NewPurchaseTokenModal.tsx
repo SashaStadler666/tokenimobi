@@ -26,6 +26,7 @@ const NewPurchaseTokenModal = ({ open, onOpenChange, token, isWalletConnected, o
 
   const totalPrice = fractions * token.fractionPrice;
   const meetsMinimum = totalPrice >= 1000;
+  const minimumFractions = Math.ceil(1000 / token.fractionPrice);
 
   const handleBuy = () => {
     if (!meetsMinimum) return;
@@ -58,7 +59,7 @@ const NewPurchaseTokenModal = ({ open, onOpenChange, token, isWalletConnected, o
           <Input
             type="number"
             placeholder="Quantidade de frações"
-            min={1}
+            min={minimumFractions}
             value={fractions || ""}
             onChange={(e) => setFractions(Number(e.target.value))}
           />
