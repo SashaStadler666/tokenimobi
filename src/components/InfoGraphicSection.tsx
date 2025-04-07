@@ -1,30 +1,29 @@
 
 import { motion } from "framer-motion";
-import { Building, Coins, BarChart3, Users, ArrowRight } from "lucide-react";
+import { Home, ShieldCheck, TrendingUp, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const InfoGraphicSection = () => {
   const steps = [
     {
-      number: "1",
+      icon: Home,
       title: "Escolha sua propriedade",
       description: "Navegue entre opções urbanas e rurais tokenizadas. Veja detalhes, localização e rentabilidade estimada.",
-      icon: Building,
       delay: 0.2,
       color: "bg-primary/10 text-primary"
     },
     {
-      number: "2",
+      icon: ShieldCheck,
       title: "Invista com segurança",
       description: "A partir de R$1.000 você pode adquirir frações tokenizadas registradas em blockchain, com total transparência.",
-      icon: Coins,
       delay: 0.4,
       color: "bg-accent/10 text-accent"
     },
     {
-      number: "3",
+      icon: TrendingUp,
       title: "Acompanhe seus ganhos",
       description: "Veja rendimentos, valorização, histórico de distribuição e negocie suas frações no marketplace quando quiser.",
-      icon: BarChart3,
       delay: 0.6,
       color: "bg-primary/10 text-primary"
     }
@@ -59,7 +58,6 @@ const InfoGraphicSection = () => {
               <div className={`rounded-full p-3 ${step.color} w-16 h-16 mx-auto mb-4 flex items-center justify-center`}>
                 <step.icon className="w-8 h-8" />
               </div>
-              <div className="text-primary text-3xl font-bold mb-3">{step.number}</div>
               <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
               <p className="text-sm text-muted-foreground">
                 {step.description}
@@ -89,7 +87,7 @@ const InfoGraphicSection = () => {
               transition={{ delay: 0.9, duration: 0.5 }}
             >
               <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <Building className="w-6 h-6 text-primary" />
+                <Home className="w-6 h-6 text-primary" />
               </div>
               <p className="text-sm font-medium">Propriedade</p>
             </motion.div>
@@ -113,7 +111,7 @@ const InfoGraphicSection = () => {
               transition={{ delay: 1.1, duration: 0.5 }}
             >
               <div className="rounded-full bg-accent/10 p-3 mb-2">
-                <Coins className="w-6 h-6 text-accent" />
+                <ShieldCheck className="w-6 h-6 text-accent" />
               </div>
               <p className="text-sm font-medium">Tokenização</p>
             </motion.div>
@@ -137,58 +135,29 @@ const InfoGraphicSection = () => {
               transition={{ delay: 1.3, duration: 0.5 }}
             >
               <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <Users className="w-6 h-6 text-primary" />
+                <TrendingUp className="w-6 h-6 text-primary" />
               </div>
               <p className="text-sm font-medium">Investidores</p>
-            </motion.div>
-
-            {/* Seta */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.4, duration: 0.5 }}
-            >
-              <ArrowRight className="w-6 h-6 text-muted-foreground" />
-            </motion.div>
-
-            {/* Item 4: Rendimentos */}
-            <motion.div 
-              className="flex flex-col items-center bg-background p-4 rounded-xl border border-border z-10"
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.5, duration: 0.5 }}
-            >
-              <div className="rounded-full bg-accent/10 p-3 mb-2">
-                <BarChart3 className="w-6 h-6 text-accent" />
-              </div>
-              <p className="text-sm font-medium">Rendimentos</p>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* Estatísticas e benefícios */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { metric: "R$1.000", label: "Investimento mínimo" },
-            { metric: "100%", label: "Transparência blockchain" },
-            { metric: "24/7", label: "Negociação no mercado" },
-            { metric: "Imediato", label: "Recebimento de rendimentos" },
-          ].map((stat, index) => (
-            <motion.div 
-              key={index}
-              className="p-4 rounded-lg border border-border"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 * index, duration: 0.5 }}
-            >
-              <div className="text-2xl font-bold gradient-text">{stat.metric}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
+        {/* Botão de call to action */}
+        <motion.div 
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 1.5, duration: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+        >
+          <Button size="lg" className="button-glow" asChild>
+            <Link to="/tokens" className="flex items-center">
+              Comece a Investir Agora
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </motion.div>
       </motion.div>
     </section>
   );
