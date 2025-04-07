@@ -15,9 +15,10 @@ interface FilterValues {
 interface FiltersPanelProps {
   showFilters: boolean;
   propertyTypeTab: string;
+  acquisitionMode?: string;
 }
 
-const FiltersPanel = ({ showFilters, propertyTypeTab }: FiltersPanelProps) => {
+const FiltersPanel = ({ showFilters, propertyTypeTab, acquisitionMode = "fracionados" }: FiltersPanelProps) => {
   const urbanForm = useForm<FilterValues>({
     defaultValues: {
       location: "",
@@ -38,6 +39,10 @@ const FiltersPanel = ({ showFilters, propertyTypeTab }: FiltersPanelProps) => {
 
   return (
     <div className="mb-6 p-4 bg-muted/30 rounded-lg border border-muted">
+      <div className="text-sm font-medium mb-4">
+        Filtros para imóveis {propertyTypeTab === "urbano" ? "urbanos" : "rurais"} {acquisitionMode === "fracionados" ? "fracionados" : "inteiros"}
+      </div>
+      
       {propertyTypeTab === "urbano" ? (
         <UrbanFilters form={urbanForm} />
       ) : (

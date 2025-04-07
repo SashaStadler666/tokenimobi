@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, HelpCircle, FileText, Home, Building, LandPlot } from "lucide-react";
+import { Menu, X, HelpCircle, FileText, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -15,11 +15,6 @@ import ConnectWallet from "./ConnectWallet";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-
-  const handleNavigateToTokens = (type: string) => {
-    navigate(`/tokens?type=${type}`);
-    setIsMenuOpen(false);
-  };
 
   return (
     <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm fixed w-full z-50">
@@ -36,24 +31,13 @@ const Navbar = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <div className="flex gap-3">
-                    <Button 
-                      onClick={() => handleNavigateToTokens("urbano")} 
-                      variant="outline"
-                      className="flex items-center"
-                    >
-                      <Building className="h-4 w-4 mr-2" />
-                      Imóveis Urbanos
-                    </Button>
-                    <Button 
-                      onClick={() => handleNavigateToTokens("rural")} 
-                      variant="outline"
-                      className="flex items-center"
-                    >
-                      <LandPlot className="h-4 w-4 mr-2" />
-                      Terras Rurais
-                    </Button>
-                  </div>
+                  <Link 
+                    to="/tokens" 
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    <Building className="h-4 w-4 mr-2" />
+                    Imóveis Disponíveis
+                  </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link 
@@ -105,24 +89,14 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
             <nav className="flex flex-col space-y-4">
-              <div className="flex flex-col space-y-2">
-                <Button
-                  onClick={() => handleNavigateToTokens("urbano")}
-                  variant="outline"
-                  className="flex items-center justify-start"
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Imóveis Urbanos
-                </Button>
-                <Button
-                  onClick={() => handleNavigateToTokens("rural")}
-                  variant="outline"
-                  className="flex items-center justify-start"
-                >
-                  <LandPlot className="h-4 w-4 mr-2" />
-                  Terras Rurais
-                </Button>
-              </div>
+              <Link
+                to="/tokens"
+                className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Building className="h-4 w-4 mr-2" />
+                Imóveis Disponíveis
+              </Link>
               <Link
                 to="/como-funciona"
                 className="text-sm font-medium flex items-center text-foreground/80 hover:text-foreground transition-colors"
