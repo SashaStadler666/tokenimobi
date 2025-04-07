@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { mockTokens, mockTransactions } from "@/lib/models";
+import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeaderSection from "@/components/token/HeaderSection";
@@ -9,7 +8,6 @@ import WalletSection from "@/components/token/WalletSection";
 import TokenHero from "@/components/token/TokenHero";
 import TokenContainer from "@/components/token/TokenContainer";
 import FloatingActionButton from "@/components/token/FloatingActionButton";
-import { wholePropertyTokens } from "@/pages/Tokens";
 import { toast } from "sonner";
 import PurchaseTokenModal from "@/components/token/PurchaseTokenModal";
 import { ShoppingCart } from "lucide-react";
