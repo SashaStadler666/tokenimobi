@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Token } from "@/lib/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,9 +11,10 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface BuySellInterfaceProps {
   token: Token;
+  onBuySubmit: (amount: number) => void;
 }
 
-const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
+const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token, onBuySubmit }) => {
   const [amount, setAmount] = useState<number>(0);
   const [slippage, setSlippage] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -52,6 +52,7 @@ const BuySellInterface: React.FC<BuySellInterfaceProps> = ({ token }) => {
     setTimeout(() => {
       setIsProcessing(false);
       if (activeTab === "buy") {
+        onBuySubmit(amount); // Call the provided onBuySubmit handler for buy operations
         toast.success(`Successfully bought ${amount} fractions of ${token.symbol} (${assetType === "real-estate" ? "Real Estate" : "Agricultural Land"})`);
       } else {
         toast.success(`Successfully sold ${amount} fractions of ${token.symbol} (${assetType === "real-estate" ? "Real Estate" : "Agricultural Land"})`);
