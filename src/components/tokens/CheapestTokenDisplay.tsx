@@ -17,7 +17,7 @@ const CheapestTokenDisplay = ({ tokens }: CheapestTokenDisplayProps) => {
       transition={{ duration: 0.5 }}
     >
       {tokens.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {tokens.map((token, index) => (
             <motion.div
               key={token.id}
@@ -25,11 +25,14 @@ const CheapestTokenDisplay = ({ tokens }: CheapestTokenDisplayProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
               whileHover={{ scale: 1.03 }}
-              className="col-span-full md:col-span-1 lg:col-span-1"
+              className="max-w-md mx-auto w-full"
             >
               <div className="p-4 border rounded-lg bg-accent/5">
                 <div className="mb-2 text-lg font-semibold text-accent">Melhor opção para investimento</div>
-                <TokenCard token={token} showWholePrice={token.isWholeProperty} />
+                <TokenCard 
+                  token={token} 
+                  showWholePrice={token.isWholeProperty} 
+                />
               </div>
             </motion.div>
           ))}
