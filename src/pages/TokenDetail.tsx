@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions } from "@/lib/models";
 import Navbar from "@/components/Navbar";
@@ -10,11 +11,13 @@ import TokenContainer from "@/components/token/TokenContainer";
 import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { wholePropertyTokens } from "@/pages/Tokens";
 import { toast } from "sonner";
+import NewPurchaseTokenModal from "@/components/token/NewPurchaseTokenModal";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isWalletConnected = localStorage.getItem("walletConnected") === "true";
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
   // Look for token in both regular tokens and whole property tokens
   const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
@@ -58,11 +61,13 @@ const TokenDetail = () => {
       toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
     }
     
-    // Scroll to the buy interface
-    const buyElement = document.getElementById('buy-section');
-    if (buyElement) {
-      buyElement.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Abre o modal de compra ao invés de rolar para a seção de compra
+    setShowPurchaseModal(true);
+  };
+  
+  const handleConnectWallet = () => {
+    localStorage.setItem("walletConnected", "true");
+    window.location.reload();
   };
   
   return (
@@ -82,6 +87,14 @@ const TokenDetail = () => {
       </div>
       
       <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
+      
+      <NewPurchaseTokenModal 
+        token={token}
+        open={showPurchaseModal}
+        onOpenChange={setShowPurchaseModal}
+        isWalletConnected={isWalletConnected}
+        onConnectWallet={handleConnectWallet}
+      />
       
       <Footer />
     </div>
