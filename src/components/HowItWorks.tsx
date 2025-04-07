@@ -82,8 +82,8 @@ const HowItWorks = () => {
       <div className="text-center">
         <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
           <Button size="lg" className="button-glow" asChild>
-            <Link to="/tokens" className="flex items-center">
-              Ver Imóveis Disponíveis
+            <Link to="/como-funciona" className="flex items-center">
+              Ver Mais Detalhes
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
