@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models";
@@ -9,9 +10,9 @@ import TokenHero from "@/components/token/TokenHero";
 import TokenContainer from "@/components/token/TokenContainer";
 import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { toast } from "sonner";
-import PurchaseTokenModal from "@/components/token/PurchaseTokenModal";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PurchaseModal from "@/components/token/PurchaseModal";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,11 +66,6 @@ const TokenDetail = () => {
     setShowPurchaseModal(true);
   };
   
-  const handleConnectWallet = () => {
-    localStorage.setItem("walletConnected", "true");
-    window.location.reload();
-  };
-  
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
@@ -95,12 +91,10 @@ const TokenDetail = () => {
       
       <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
       
-      <PurchaseTokenModal
+      <PurchaseModal
         open={showPurchaseModal}
-        onClose={() => setShowPurchaseModal(false)}
+        onOpenChange={setShowPurchaseModal}
         token={token}
-        isWalletConnected={isWalletConnected}
-        onConnectWallet={handleConnectWallet}
       />
       
       <Footer />
