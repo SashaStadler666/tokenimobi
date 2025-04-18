@@ -5,19 +5,16 @@ import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeaderSection from "@/components/token/HeaderSection";
-import WalletSection from "@/components/token/WalletSection";
 import TokenHero from "@/components/token/TokenHero";
 import TokenContainer from "@/components/token/TokenContainer";
-import FloatingActionButton from "@/components/token/FloatingActionButton";
 import { toast } from "sonner";
-import { ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import PurchaseModal from "@/components/token/PurchaseModal";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isWalletConnected = localStorage.getItem("walletConnected") === "true";
+  const { isConnected } = useWalletConnection();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
   // Look for token in both regular tokens and whole property tokens
@@ -58,11 +55,10 @@ const TokenDetail = () => {
   const tokenTransactions = mockTransactions.filter(tx => tx.tokenId === token.id);
 
   const handleBuyClick = () => {
-    if (!isWalletConnected) {
+    if (!isConnected) {
       toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
+      return;
     }
-    
-    // Abre o modal de compra
     setShowPurchaseModal(true);
   };
   
@@ -72,24 +68,16 @@ const TokenDetail = () => {
       
       <div className="container mx-auto px-4 pt-24 pb-12 flex-grow">
         <HeaderSection />
-        <WalletSection isWalletConnected={isWalletConnected} />
         <TokenHero token={token} />
-        
-        <div className="my-6">
-          <Button onClick={() => setShowPurchaseModal(true)} className="w-full flex items-center gap-2">
-            <ShoppingCart className="h-4 w-4" /> Comprar Token
-          </Button>
-        </div>
         
         <TokenContainer 
           token={token} 
           tokenTransactions={tokenTransactions}
           formatMarketCap={formatMarketCap}
           formatVolume={formatVolume}
+          onBuyClick={handleBuyClick}
         />
       </div>
-      
-      <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
       
       <PurchaseModal
         open={showPurchaseModal}
