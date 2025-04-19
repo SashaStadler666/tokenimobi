@@ -4,6 +4,10 @@ import { Input } from "@/components/ui/input";
 import { StepProps } from "../types";
 import { MINIMUM_INVESTMENT } from "../constants";
 import { toast } from "sonner";
+import { mintToken } from "@/utils/contractUtils";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export const InputStep = ({ 
   token,
@@ -12,14 +16,31 @@ export const InputStep = ({
   onAmountChange,
   minimumFractions,
 }: StepProps) => {
+  const { walletAddress } = useWalletConnection();
+  const [isProcessing, setIsProcessing] = useState(false);
   const totalCost = amount * token.fractionPrice;
   
-  const handleProceedToSummary = () => {
+  const handleProceedToSummary = async () => {
+    if (!walletAddress) {
+      toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
+      return;
+    }
+
     if (amount <= 0 || totalCost < MINIMUM_INVESTMENT) {
       toast.error("Investimento mínimo de R$1.000,00 necessário");
       return;
     }
-    onNext();
+
+    setIsProcessing(true);
+    try {
+      // For demonstration, using K1 type. You might want to add logic to determine K1 vs K2
+      const success = await mintToken('K1', walletAddress);
+      if (success) {
+        onNext();
+      }
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -63,10 +84,17 @@ export const InputStep = ({
       
       <Button
         onClick={handleProceedToSummary}
-        disabled={totalCost < MINIMUM_INVESTMENT}
+        disabled={totalCost < MINIMUM_INVESTMENT || isProcessing}
         className="w-full button-glow"
       >
-        Prosseguir
+        {isProcessing ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Processando...
+          </>
+        ) : (
+          'Prosseguir'
+        )}
       </Button>
     </>
   );
