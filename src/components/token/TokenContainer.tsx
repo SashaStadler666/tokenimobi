@@ -5,15 +5,17 @@ import TokenDetailInfo from "./TokenDetailInfo";
 import TokenDetailTabs from "./TokenDetailTabs";
 import TokenDetailSidebar from "./TokenDetailSidebar";
 import TokenMap from "./TokenMap";
+import FloatingActionButton from "./FloatingActionButton";
 
 interface TokenContainerProps {
   token: Token;
   tokenTransactions: Transaction[];
   formatMarketCap: string;
   formatVolume: string;
+  onBuyClick: () => void;
 }
 
-const TokenContainer = ({ token, tokenTransactions, formatMarketCap, formatVolume }: TokenContainerProps) => {
+const TokenContainer = ({ token, tokenTransactions, formatMarketCap, formatVolume, onBuyClick }: TokenContainerProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <motion.div 
@@ -44,8 +46,10 @@ const TokenContainer = ({ token, tokenTransactions, formatMarketCap, formatVolum
         transition={{ duration: 0.5, delay: 0.4 }}
         id="buy-section"
       >
-        <TokenDetailSidebar token={token} />
+        <TokenDetailSidebar token={token} onBuyClick={onBuyClick} />
       </motion.div>
+
+      <FloatingActionButton token={token} onBuyClick={onBuyClick} />
     </div>
   );
 };
