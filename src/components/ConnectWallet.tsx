@@ -2,6 +2,7 @@
 import { useWalletConnection } from "@/hooks/useWalletConnection";
 import ConnectSection from "./wallet/ConnectSection";
 import WalletSection from "./wallet/WalletSection";
+import { useEffect } from "react";
 
 const ConnectWallet = () => {
   const {
@@ -20,6 +21,14 @@ const ConnectWallet = () => {
     setShowTermsDialog,
     setTermsAccepted
   } = useWalletConnection();
+
+  // Check if wallet is connected when component loads
+  useEffect(() => {
+    const walletConnected = localStorage.getItem("walletConnected") === "true";
+    if (walletConnected && !isConnected) {
+      connectWallet();
+    }
+  }, []);
 
   return isConnected ? (
     <WalletSection 

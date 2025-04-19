@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import { toast } from "sonner";
 
 export const useWalletConnection = () => {
@@ -60,18 +59,22 @@ export const useWalletConnection = () => {
     try {
       // Request account access
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setWalletAddress(accounts[0]);
-      setIsConnected(true);
-      localStorage.setItem("walletConnected", "true");
-      toast.success("Carteira conectada com sucesso!");
       
-      // Listen for account changes
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', () => window.location.reload());
-      
-    } catch (error) {
+      if (accounts && accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        setIsConnected(true);
+        localStorage.setItem("walletConnected", "true");
+        toast.success("Carteira conectada com sucesso!");
+        
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+        window.ethereum.on('chainChanged', () => window.location.reload());
+      } else {
+        toast.error("Nenhuma conta selecionada. Tente novamente.");
+      }
+    } catch (error: any) {
       console.error("Error connecting wallet:", error);
-      toast.error("Erro ao conectar carteira. Tente novamente.");
+      toast.error(error.message || "Erro ao conectar carteira. Tente novamente.");
     } finally {
       setIsConnecting(false);
     }

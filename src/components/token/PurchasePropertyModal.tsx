@@ -31,6 +31,14 @@ const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyMo
     }, 2000);
   };
 
+  const handleConnectAndBuy = async () => {
+    await connectWallet();
+    // After connection is successful, we can proceed
+    if (isConnected) {
+      handlePurchase();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -62,7 +70,7 @@ const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyMo
           </div>
 
           {!isConnected ? (
-            <Button variant="outline" onClick={connectWallet} className="w-full">
+            <Button variant="outline" onClick={handleConnectAndBuy} className="w-full">
               <Wallet className="mr-2 h-4 w-4" />
               Conectar Carteira
             </Button>

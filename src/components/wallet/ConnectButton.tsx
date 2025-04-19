@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Wallet, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +13,7 @@ const ConnectButton = ({ isConnecting, onClick }: ConnectButtonProps) => {
       onClick={onClick} 
       disabled={isConnecting}
       className="button-glow"
+      type="button"
     >
       {isConnecting ? (
         <>
