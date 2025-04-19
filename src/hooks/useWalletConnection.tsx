@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 export const useWalletConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -9,46 +9,82 @@ export const useWalletConnection = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [showTermsDialog, setShowTermsDialog] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if wallet is already connected
+    // Check if wallet was previously connected
     const walletConnected = localStorage.getItem("walletConnected") === "true";
     const termsAccepted = localStorage.getItem("termosAceitos") === "true";
     
     if (walletConnected) {
-      setIsConnected(true);
-      setWalletAddress("0xaBcD...1234");
+      checkWalletConnection();
     }
     
     setTermsAccepted(termsAccepted || false);
   }, []);
 
-  const connectWallet = () => {
+  const checkWalletConnection = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Get the connected accounts
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          setIsConnected(true);
+          localStorage.setItem("walletConnected", "true");
+        }
+      } catch (error) {
+        console.error("Error checking wallet connection:", error);
+        setIsConnected(false);
+        localStorage.removeItem("walletConnected");
+      }
+    }
+  };
+
+  const connectWallet = async () => {
     // Check if terms have been accepted
     const termsAccepted = localStorage.getItem("termosAceitos") === "true";
     
     if (!termsAccepted) {
-      // Show terms dialog
       setShowTermsDialog(true);
       return;
     }
     
-    // If terms accepted, proceed with wallet connection
-    proceedWithConnection();
-  };
-  
-  const proceedWithConnection = () => {
+    if (typeof window.ethereum === 'undefined') {
+      toast.error("MetaMask não encontrada. Por favor, instale a extensão MetaMask.");
+      window.open('https://metamask.io/download/', '_blank');
+      return;
+    }
+
     setIsConnecting(true);
     
-    // Simulate connecting to wallet
-    setTimeout(() => {
-      setIsConnecting(false);
+    try {
+      // Request account access
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setWalletAddress(accounts[0]);
       setIsConnected(true);
-      setWalletAddress("0xaBcD...1234");
       localStorage.setItem("walletConnected", "true");
-      toast.success("Carteira conectada com sucesso");
-    }, 1000);
+      toast.success("Carteira conectada com sucesso!");
+      
+      // Listen for account changes
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', () => window.location.reload());
+      
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      toast.error("Erro ao conectar carteira. Tente novamente.");
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const handleAccountsChanged = (accounts: string[]) => {
+    if (accounts.length === 0) {
+      // User disconnected their wallet
+      handleDisconnect();
+    } else {
+      // User switched accounts
+      setWalletAddress(accounts[0]);
+    }
   };
 
   const handleDisconnect = () => {
@@ -59,29 +95,28 @@ export const useWalletConnection = () => {
   };
 
   const copyAddress = () => {
-    navigator.clipboard.writeText("0xaBcD1234567890AbCdEf1234567890aBcDeF1234");
+    navigator.clipboard.writeText(walletAddress);
     toast.success("Endereço copiado para a área de transferência");
   };
 
   const goToExplorer = () => {
-    window.open("https://etherscan.io/address/0xaBcD1234567890AbCdEf1234567890aBcDeF1234", "_blank");
-    toast.success("Visualizando no explorer");
+    window.open(`https://etherscan.io/address/${walletAddress}`, "_blank");
   };
 
   const viewTerms = () => {
-    navigate("/termos-de-uso");
+    window.open("/termos-de-uso", "_blank");
   };
   
   const handleAcceptTerms = () => {
     localStorage.setItem("termosAceitos", "true");
     setTermsAccepted(true);
     setShowTermsDialog(false);
-    proceedWithConnection();
+    connectWallet();
   };
   
   const redirectToTermsPage = () => {
     setShowTermsDialog(false);
-    navigate("/termos-de-uso");
+    window.location.href = "/termos-de-uso";
   };
 
   return {
