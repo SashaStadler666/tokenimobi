@@ -14,6 +14,7 @@ const ConnectButton = ({ isConnecting, onClick }: ConnectButtonProps) => {
       disabled={isConnecting}
       className="button-glow"
       type="button"
+      size="lg"
     >
       {isConnecting ? (
         <>

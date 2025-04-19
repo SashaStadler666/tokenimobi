@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
-import ConnectWallet from "@/components/ConnectWallet";
 import { motion } from "framer-motion";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
 
