@@ -1,11 +1,12 @@
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Token, Transaction } from "@/lib/models";
 import AboutTab from "./tabs/AboutTab";
 import TransactionsTab from "./tabs/TransactionsTab";
 import HoldersTab from "./tabs/HoldersTab";
 import DocumentsTab from "./tabs/DocumentsTab";
 import TabContent from "./tabs/TabContent";
+import { useState } from "react";
 
 interface TokenDetailTabsProps {
   token: Token;
@@ -13,8 +14,10 @@ interface TokenDetailTabsProps {
 }
 
 const TokenDetailTabs = ({ token, transactions }: TokenDetailTabsProps) => {
+  const [activeTab, setActiveTab] = useState("about");
+
   return (
-    <Tabs defaultValue="about" className="mt-8">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
       <TabsList>
         <TabsTrigger value="about">Sobre</TabsTrigger>
         <TabsTrigger value="transactions">Transações</TabsTrigger>
