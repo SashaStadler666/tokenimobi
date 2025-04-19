@@ -1,73 +1,96 @@
-# Welcome to your Lovable project
 
-## Project info
+# TokenImobi - Tokenized Real Estate Investment Platform
 
-**URL**: https://lovable.dev/projects/bc4d5f5a-3b4d-4bfb-bae0-5ff79518d6a1
+## Overview
 
-## How can I edit this code?
+TokenImobi is an innovative platform that democratizes real estate investment through blockchain-based property tokenization. Investors can purchase fractional tokens of properties, enabling low-entry investments and increased market accessibility.
 
-There are several ways of editing your application.
+## 🚀 Key Features
 
-**Use Lovable**
+- Fractional Property Ownership
+- Blockchain-Backed Tokens
+- Low Minimum Investment (Starting from R$1,000)
+- Real-Time Property Marketplace
+- Transparent Investment Tracking
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bc4d5f5a-3b4d-4bfb-bae0-5ff79518d6a1) and start prompting.
+## 🛠 Technologies Used
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React 18
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Component Library**: Shadcn UI
+- **State Management**: React Query
+- **Animation**: Framer Motion
+- **Routing**: React Router
 
-**Use your preferred IDE**
+## 📦 Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v18+)
+- npm or Bun
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🔧 Local Development Setup
 
-Follow these steps:
+```bash
+# Clone the repository
+git clone https://github.com/your-org/tokenimobi
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Navigate to project directory
+cd tokenimobi
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🌐 Project Structure
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+src/
+├── components/         # Reusable UI components
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions and models
+├── pages/              # Top-level page components
+└── styles/             # Global styles and themes
+```
 
-**Use GitHub Codespaces**
+## 🚀 Deployment
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The application is deployed via Lovable. To publish:
+1. Go to [Lovable Project](https://lovable.dev/projects/bc4d5f5a-3b4d-4bfb-bae0-5ff79518d6a1)
+2. Click "Publish"
 
-## What technologies are used for this project?
+## 🔒 Custom Domain
 
-This project is built with:
+Connect a custom domain in Project > Settings > Domains
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 💡 How It Works
 
-## How can I deploy this project?
+1. Browse available tokenized properties
+2. Connect your wallet
+3. Choose investment amount
+4. Purchase property tokens
+5. Track your investments in real-time
 
-Simply open [Lovable](https://lovable.dev/projects/bc4d5f5a-3b4d-4bfb-bae0-5ff79518d6a1) and click on Share -> Publish.
+## 🤝 Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Yes it is!
+## 📄 License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 📞 Contact
+
+TokenImobi Team - [Contact Us](mailto:support@tokenimobi.com)
+
+Project Link: [https://tokenimobi.com](https://tokenimobi.com)
+
+---
+
+**Powered by Lovable 🚀**
