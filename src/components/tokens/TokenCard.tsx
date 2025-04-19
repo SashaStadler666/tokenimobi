@@ -21,14 +21,32 @@ const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
         transition={{ duration: 0.2 }}
       >
         <Card className="overflow-hidden border border-border/50 h-full">
-          <TokenCardImage token={token} />
+          <TokenCardImage 
+            imageUrl={token.imageUrl} 
+            name={token.name} 
+            isWholeProperty={token.isWholeProperty}
+            propertyType={token.propertyType}
+          />
           <CardContent className="p-4">
-            <TokenCardHeader token={token} />
-            <TokenCardDetails 
-              token={token} 
-              showWholePrice={showWholePrice}
+            <TokenCardHeader 
+              name={token.name} 
+              symbol={token.symbol} 
+              description={token.description} 
+              location={token.location}
             />
-            <TokenCardAvailability token={token} />
+            <TokenCardDetails 
+              fractionPrice={token.fractionPrice}
+              wholePropertyPrice={token.wholePropertyPrice}
+              showWholePrice={showWholePrice}
+              priceChange24h={token.priceChange24h}
+              propertyType={token.propertyType}
+              area={token.area}
+            />
+            <TokenCardAvailability 
+              isWholeProperty={token.isWholeProperty}
+              availableFractions={token.availableFractions}
+              totalFractions={token.totalFractions}
+            />
           </CardContent>
         </Card>
       </motion.div>
