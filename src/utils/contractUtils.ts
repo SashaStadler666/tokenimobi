@@ -31,7 +31,9 @@ const CONTRACT_ABI = [
 
 export const initWeb3 = async () => {
   if (typeof window.ethereum !== 'undefined') {
-    const web3 = new Web3(window.ethereum);
+    // Use a type assertion to handle the provider type mismatch
+    const provider = window.ethereum as any;
+    const web3 = new Web3(provider);
     return web3;
   }
   throw new Error('MetaMask não está instalado');
@@ -80,4 +82,3 @@ export const mintToken = async (
     return false;
   }
 };
-
