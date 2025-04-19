@@ -9,6 +9,7 @@ import TokenHero from "@/components/token/TokenHero";
 import TokenContainer from "@/components/token/TokenContainer";
 import { toast } from "sonner";
 import PurchaseModal from "@/components/token/PurchaseModal";
+import PurchasePropertyModal from "@/components/token/PurchasePropertyModal";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 const TokenDetail = () => {
@@ -16,6 +17,7 @@ const TokenDetail = () => {
   const navigate = useNavigate();
   const { isConnected } = useWalletConnection();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showPropertyPurchaseModal, setShowPropertyPurchaseModal] = useState(false);
   
   // Look for token in both regular tokens and whole property tokens
   const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
@@ -59,7 +61,12 @@ const TokenDetail = () => {
       toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
       return;
     }
-    setShowPurchaseModal(true);
+    
+    if (token.isWholeProperty) {
+      setShowPropertyPurchaseModal(true);
+    } else {
+      setShowPurchaseModal(true);
+    }
   };
   
   return (
@@ -79,11 +86,19 @@ const TokenDetail = () => {
         />
       </div>
       
-      <PurchaseModal
-        open={showPurchaseModal}
-        onOpenChange={setShowPurchaseModal}
-        token={token}
-      />
+      {!token.isWholeProperty ? (
+        <PurchaseModal
+          open={showPurchaseModal}
+          onOpenChange={setShowPurchaseModal}
+          token={token}
+        />
+      ) : (
+        <PurchasePropertyModal
+          open={showPropertyPurchaseModal}
+          onOpenChange={setShowPropertyPurchaseModal}
+          token={token}
+        />
+      )}
       
       <Footer />
     </div>
