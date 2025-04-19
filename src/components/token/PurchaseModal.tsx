@@ -1,13 +1,12 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Token, addTransaction } from "@/lib/models";
-import { toast } from "sonner";
+import { Token } from "@/lib/models";
 import { PurchaseStep } from "./purchase/types";
 import { InputStep } from "./purchase/steps/InputStep";
 import { SummaryStep } from "./purchase/steps/SummaryStep";
 import { PasswordStep } from "./purchase/steps/PasswordStep";
 import { MINIMUM_INVESTMENT } from "./purchase/constants";
+import { useTokenPurchase } from "@/hooks/useTokenPurchase";
 
 interface PurchaseModalProps {
   token: Token;
@@ -18,8 +17,8 @@ interface PurchaseModalProps {
 const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
   const [step, setStep] = useState<PurchaseStep>("input");
   const [amount, setAmount] = useState<number>(0);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [walletPassword, setWalletPassword] = useState<string>("");
+  const { purchaseToken, isProcessing } = useTokenPurchase();
   
   const minimumFractions = Math.ceil(MINIMUM_INVESTMENT / token.fractionPrice);
   
@@ -31,36 +30,18 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
     }
   }, [open, minimumFractions]);
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (!walletPassword) {
-      toast.error("Senha da carteira é obrigatória");
       return;
     }
     
-    setIsProcessing(true);
-    
-    setTimeout(() => {
-      try {
-        addTransaction({
-          tokenId: token.id,
-          type: 'buy',
-          fractions: amount,
-          price: token.fractionPrice,
-          total: amount * token.fractionPrice,
-          timestamp: new Date()
-        });
-        
-        toast.success(`Compra de ${amount} frações do token ${token.name} realizada com sucesso!`);
-        onOpenChange(false);
-        setAmount(minimumFractions);
-        setStep("input");
-        setWalletPassword("");
-      } catch (error) {
-        toast.error("Erro ao processar a compra. Tente novamente.");
-      } finally {
-        setIsProcessing(false);
-      }
-    }, 1500);
+    const success = await purchaseToken(token, amount);
+    if (success) {
+      onOpenChange(false);
+      setAmount(minimumFractions);
+      setStep("input");
+      setWalletPassword("");
+    }
   };
 
   const renderStep = () => {

@@ -8,61 +8,59 @@ import PortfolioSummaryCards from "@/components/portfolio/PortfolioSummaryCards"
 import PortfolioCharts from "@/components/portfolio/PortfolioCharts";
 import PortfolioTabs from "@/components/portfolio/PortfolioTabs";
 import ConnectWalletCard from "@/components/portfolio/ConnectWalletCard";
+import { Button } from "@/components/ui/button";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 const Portfolio = () => {
   const navigate = useNavigate();
-  const [isConnected, setIsConnected] = useState(false);
-  
-  // Mock portfolio data
+  const { isConnected } = useWalletConnection();
   const [userTokens, setUserTokens] = useState<Token[]>([]);
   const [totalValue, setTotalValue] = useState(0);
   const [totalGrowth, setTotalGrowth] = useState(0);
   
-  useEffect(() => {
-    // Check if wallet is connected
-    const walletConnected = localStorage.getItem("walletConnected") === "true";
-    setIsConnected(walletConnected);
-    
-    if (!walletConnected) {
-      // If not connected, we'll still show the page but with a prompt to connect
-    } else {
-      // In a real app, we would fetch the user's tokens from the API
-      // For now, we'll use mock data - assume the user owns these tokens
-      const mockUserTokens = mockTokens.slice(0, 3);
-      setUserTokens(mockUserTokens);
-      
-      // Calculate total portfolio value and growth
-      const value = mockUserTokens.reduce((total, token) => {
-        return total + (token.fractionPrice * 50); // Assume 50 fractions of each token
-      }, 0);
-      
-      setTotalValue(value);
-      setTotalGrowth(2.8); // Mock growth percentage
-    }
-  }, [navigate]);
+  const handleExploreTokens = () => {
+    navigate('/tokens');
+  };
+
+  const EmptyPortfolio = () => (
+    <div className="text-center py-12">
+      <h3 className="text-xl font-semibold mb-2">Seu portfólio está vazio</h3>
+      <p className="text-muted-foreground mb-6">
+        Você ainda não possui tokens em seu portfólio. 
+        Comece explorando nossos tokens disponíveis.
+      </p>
+      <Button onClick={handleExploreTokens} className="button-glow">
+        Explorar Tokens Disponíveis
+      </Button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen p-4 pt-20">
       <Navbar />
       
-      <div className="container mx-auto px-4 pt-24 pb-12">
+      <div className="container mx-auto mt-8">
         <PortfolioHeader />
         
         {isConnected ? (
-          <>
-            <PortfolioSummaryCards 
-              totalValue={totalValue}
-              totalGrowth={totalGrowth}
-              tokenCount={userTokens.length}
-            />
-            
-            <PortfolioCharts tokens={userTokens} />
-            
-            <PortfolioTabs 
-              userTokens={userTokens}
-              transactions={mockTransactions}
-            />
-          </>
+          userTokens.length > 0 ? (
+            <>
+              <PortfolioSummaryCards 
+                totalValue={totalValue}
+                totalGrowth={totalGrowth}
+                tokenCount={userTokens.length}
+              />
+              
+              <PortfolioCharts tokens={userTokens} />
+              
+              <PortfolioTabs 
+                userTokens={userTokens}
+                transactions={mockTransactions}
+              />
+            </>
+          ) : (
+            <EmptyPortfolio />
+          )
         ) : (
           <ConnectWalletCard />
         )}
