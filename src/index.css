@@ -120,4 +120,50 @@
   .ken-burns-effect {
     @apply animate-ken-burns;
   }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+  }
+  
+  .card-hover-effect {
+    @apply transition-all duration-300 hover:translate-y-[-5px] hover:shadow-lg;
+  }
+  
+  .section-gradient {
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(247,247,247,0.5) 100%);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes ken-burns {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-ken-burns {
+    animation: ken-burns 20s ease-in-out infinite;
+  }
 }

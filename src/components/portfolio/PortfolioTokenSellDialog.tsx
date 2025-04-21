@@ -28,8 +28,9 @@ const PortfolioTokenSellDialog = ({
 }: PortfolioTokenSellDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sellAmount, setSellAmount] = useState("0");
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSell = () => {
+  const handleSell = async () => {
     const amount = parseInt(sellAmount);
     if (isNaN(amount) || amount <= 0) {
       toast.error("Digite uma quantidade válida");
@@ -41,25 +42,41 @@ const PortfolioTokenSellDialog = ({
       return;
     }
 
-    const newTransaction: Transaction = {
-      id: `tx${mockTransactions.length + 1}`,
-      tokenId: token.id,
-      type: "sell",
-      fractions: amount,
-      price: token.fractionPrice,
-      total: amount * token.fractionPrice,
-      timestamp: new Date(),
-      status: "completed",
-      txHash: `0x${Math.random().toString(16).substring(2)}`,
-      address: "0xaBcD...1234",
-    };
+    setIsProcessing(true);
 
-    mockTransactions.push(newTransaction);
-    onSell(amount);
+    try {
+      // In a real app, this would call a blockchain function
+      const txHash = `0x${Math.random().toString(16).substring(2)}`;
+      
+      const newTransaction: Transaction = {
+        id: `tx${mockTransactions.length + 1}`,
+        tokenId: token.id,
+        type: "sell",
+        fractions: amount,
+        price: token.fractionPrice,
+        total: amount * token.fractionPrice,
+        timestamp: new Date(),
+        status: "completed",
+        txHash: txHash,
+        address: "0xaBcD...1234",
+      };
 
-    toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
-    setDialogOpen(false);
-    setSellAmount("0");
+      mockTransactions.push(newTransaction);
+      
+      // Update token's available fractions (in a real app, this would happen on the backend)
+      if (token.availableFractions !== undefined) {
+        token.availableFractions += amount;
+      }
+      
+      onSell(amount);
+      toast.success(`Ordem de venda de ${amount} frações enviada com sucesso!`);
+      setDialogOpen(false);
+      setSellAmount("0");
+    } catch (error) {
+      toast.error("Erro ao processar a venda");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSellAll = () => {
@@ -128,12 +145,13 @@ const PortfolioTokenSellDialog = ({
           <Button
             onClick={handleSell}
             disabled={
+              isProcessing ||
               !sellAmount ||
               parseFloat(sellAmount) <= 0 ||
               parseFloat(sellAmount) > userOwnedFractions
             }
           >
-            Confirmar Venda
+            {isProcessing ? "Processando..." : "Confirmar Venda"}
           </Button>
         </DialogFooter>
       </DialogContent>

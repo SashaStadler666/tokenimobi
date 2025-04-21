@@ -33,7 +33,7 @@ const InfoGraphicSection = () => {
   ];
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4 bg-gradient-to-b from-background to-secondary/10">
       <motion.div 
         className="max-w-6xl mx-auto text-center"
         initial={{ opacity: 0 }}
@@ -51,7 +51,7 @@ const InfoGraphicSection = () => {
           {steps.map((step, index) => (
             <motion.div 
               key={index}
-              className="p-6 rounded-xl border border-border hover:border-primary/30 hover:shadow-lg transition-all"
+              className="p-6 rounded-xl border border-border hover:border-primary/30 hover:shadow-lg transition-all bg-background/80"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -94,4 +94,3 @@ const InfoGraphicSection = () => {
 };
 
 export default InfoGraphicSection;
-

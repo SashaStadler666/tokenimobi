@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Token } from "@/lib/models";
@@ -7,6 +8,7 @@ import { SummaryStep } from "./purchase/steps/SummaryStep";
 import { PasswordStep } from "./purchase/steps/PasswordStep";
 import { MINIMUM_INVESTMENT } from "./purchase/constants";
 import { useTokenPurchase } from "@/hooks/useTokenPurchase";
+import { toast } from "sonner";
 
 interface PurchaseModalProps {
   token: Token;
@@ -21,6 +23,7 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
   const { purchaseToken, isProcessing } = useTokenPurchase();
   
   const minimumFractions = Math.ceil(MINIMUM_INVESTMENT / token.fractionPrice);
+  const maxFractions = token.availableFractions || 1000;
   
   useEffect(() => {
     if (open) {
@@ -32,6 +35,12 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
 
   const handlePurchase = async () => {
     if (!walletPassword) {
+      toast.error("Digite a senha da carteira");
+      return;
+    }
+    
+    if (amount > maxFractions) {
+      toast.error(`Apenas ${maxFractions} frações disponíveis`);
       return;
     }
     
@@ -41,6 +50,16 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       setAmount(minimumFractions);
       setStep("input");
       setWalletPassword("");
+      
+      // Navigate to portfolio after successful purchase
+      setTimeout(() => {
+        toast.info("Veja suas novas aquisições no seu portfólio!", {
+          action: {
+            label: "Ver Portfólio",
+            onClick: () => window.location.href = "/portfolio"
+          }
+        });
+      }, 2000);
     }
   };
 
@@ -57,6 +76,7 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       onPrevious: () => setStep(step === "summary" ? "input" : "summary"),
       onNext: () => setStep(step === "input" ? "summary" : "password"),
       onConfirmPurchase: handlePurchase,
+      maxFractions,
     };
 
     switch (step) {

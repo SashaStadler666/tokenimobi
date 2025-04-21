@@ -25,11 +25,12 @@ export const useTokenPurchase = () => {
 
     try {
       // Attempt to mint token on blockchain
-      const success = await mintToken('K1', walletAddress);
+      const txHash = await mintToken(token.symbol, walletAddress);
+      const success = !!txHash;
       
       if (success) {
         // Add transaction to mock data
-        addTransaction({
+        const transaction = addTransaction({
           tokenId: token.id,
           type: 'buy',
           fractions: fractions,
@@ -38,8 +39,13 @@ export const useTokenPurchase = () => {
           timestamp: new Date()
         });
 
+        // Update token's available fractions (in a real app, this would happen on the backend)
+        if (token.availableFractions) {
+          token.availableFractions -= fractions;
+        }
+
         toast.success(`Compra de ${fractions} frações de ${token.name} realizada com sucesso!`);
-        return true;
+        return transaction;
       } else {
         toast.error("Erro ao processar a transação no blockchain");
         return false;
