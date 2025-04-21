@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models";
