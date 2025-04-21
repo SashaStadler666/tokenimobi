@@ -1,8 +1,7 @@
-
 import Web3 from 'web3';
 import { toast } from "sonner";
 
-const CONTRACT_ADDRESS = '0x9D7f74d0C41E726EC95884E0e97Fa6129e3b5E99';
+const CONTRACT_ADDRESS = '0x7EF2e0048f5bAeDe046f6BF797943daF4ED8CB47';
 
 // Simplified ABI with just the functions we need
 const CONTRACT_ABI = [

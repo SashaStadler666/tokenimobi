@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Token } from "@/lib/models";
@@ -7,8 +6,7 @@ import { InputStep } from "./purchase/steps/InputStep";
 import { SummaryStep } from "./purchase/steps/SummaryStep";
 import { PasswordStep } from "./purchase/steps/PasswordStep";
 import { MINIMUM_INVESTMENT } from "./purchase/constants";
-import { useTokenPurchase } from "@/hooks/useTokenPurchase";
-import { toast } from "sonner";
+import { usePurchaseWithSupabase } from "@/hooks/usePurchaseWithSupabase";
 
 interface PurchaseModalProps {
   token: Token;
@@ -20,7 +18,7 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
   const [step, setStep] = useState<PurchaseStep>("input");
   const [amount, setAmount] = useState<number>(0);
   const [walletPassword, setWalletPassword] = useState<string>("");
-  const { purchaseToken, isProcessing } = useTokenPurchase();
+  const { purchaseToken, isProcessing } = usePurchaseWithSupabase();
   
   const minimumFractions = Math.ceil(MINIMUM_INVESTMENT / token.fractionPrice);
   const maxFractions = token.availableFractions || 1000;
@@ -44,14 +42,13 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       return;
     }
     
-    const success = await purchaseToken(token, amount);
+    const success = await purchaseToken(Number(token.id), amount * token.fractionPrice);
     if (success) {
       onOpenChange(false);
       setAmount(minimumFractions);
       setStep("input");
       setWalletPassword("");
       
-      // Navigate to portfolio after successful purchase
       setTimeout(() => {
         toast.info("Veja suas novas aquisições no seu portfólio!", {
           action: {
