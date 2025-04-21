@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import { mockTokens, Token, mockTransactions } from "@/lib/models";
 import PortfolioHeader from "@/components/portfolio/PortfolioHeader";
 import PortfolioSummaryCards from "@/components/portfolio/PortfolioSummaryCards";
 import PortfolioCharts from "@/components/portfolio/PortfolioCharts";
@@ -10,63 +8,51 @@ import PortfolioTabs from "@/components/portfolio/PortfolioTabs";
 import ConnectWalletCard from "@/components/portfolio/ConnectWalletCard";
 import { Button } from "@/components/ui/button";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
+import Web3 from "web3";
+import TokenK_ABI from "@/lib/TokenK_ABI.json";
+import { toast } from "sonner";
+
+const CONTRACT_ADDRESS = "0x7EF2e0048f5bAeDe046f6BF797943daF4ED8CB47";
 
 const Portfolio = () => {
   const navigate = useNavigate();
-  const { isConnected } = useWalletConnection();
-  const [userTokens, setUserTokens] = useState<Token[]>([]);
+  const { isConnected, walletAddress } = useWalletConnection();
+  const [userTokens, setUserTokens] = useState<any[]>([]);
   const [totalValue, setTotalValue] = useState(0);
   const [totalGrowth, setTotalGrowth] = useState(0);
-  
+
   useEffect(() => {
-    if (isConnected) {
-      // Determine user tokens based on transaction history
-      const userTokenIds = new Set<string>();
-      
-      mockTransactions.forEach(tx => {
-        if (tx.type === 'buy') {
-          userTokenIds.add(tx.tokenId);
+    const loadUserTokens = async () => {
+      try {
+        const web3 = new Web3(window.ethereum as any);
+        const contract = new web3.eth.Contract(TokenK_ABI as any, CONTRACT_ADDRESS);
+
+        const tokens = [];
+        for (let tokenId = 1; tokenId <= 2; tokenId++) {
+          const owner = await contract.methods.ownerOf(tokenId).call();
+          if (owner.toLowerCase() === walletAddress.toLowerCase()) {
+            const desc = await contract.methods.getTokenDescription(tokenId).call();
+            tokens.push({ id: tokenId, description: desc });
+          }
         }
-      });
-      
-      // Calculate owned fractions per token
-      const ownedTokens = Array.from(userTokenIds).map(tokenId => {
-        const token = mockTokens.find(t => t.id === tokenId);
-        if (!token) return null;
-        
-        // Calculate how many fractions user owns
-        const fractions = mockTransactions
-          .filter(tx => tx.tokenId === tokenId)
-          .reduce((total, tx) => {
-            if (tx.type === 'buy') return total + tx.fractions;
-            if (tx.type === 'sell') return total - tx.fractions;
-            return total;
-          }, 0);
-        
-        // Only include tokens where user still owns fractions
-        return fractions > 0 ? token : null;
-      }).filter(Boolean) as Token[];
-      
-      setUserTokens(ownedTokens);
-      
-      // Calculate total value and growth
-      const value = ownedTokens.reduce((sum, token) => 
-        sum + (token.fractionPrice * token.totalFractions), 0);
-      
-      setTotalValue(value);
-      
-      const growth = ownedTokens.length > 0 
-        ? ownedTokens.reduce((sum, token) => sum + token.priceChange24h, 0) / ownedTokens.length
-        : 0;
-      
-      setTotalGrowth(growth);
+        setUserTokens(tokens);
+        setTotalValue(tokens.length); 
+        setTotalGrowth(0); 
+      } catch (err) {
+        toast.error("Erro ao carregar tokens: " + err);
+        console.error(err);
+      }
+    };
+
+    if (isConnected && walletAddress) {
+      loadUserTokens();
     } else {
       setUserTokens([]);
       setTotalValue(0);
       setTotalGrowth(0);
     }
-  }, [isConnected, mockTransactions]);
-  
+  }, [isConnected, walletAddress]);
+
   const handleExploreTokens = () => {
     navigate('/tokens');
   };
@@ -87,10 +73,10 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen p-4 pt-20 bg-gradient-to-b from-background to-secondary/5">
       <Navbar />
-      
+
       <div className="container mx-auto mt-8">
         <PortfolioHeader />
-        
+
         {isConnected ? (
           userTokens.length > 0 ? (
             <>
@@ -99,12 +85,12 @@ const Portfolio = () => {
                 totalGrowth={totalGrowth}
                 tokenCount={userTokens.length}
               />
-              
+
               <PortfolioCharts tokens={userTokens} />
-              
+
               <PortfolioTabs 
                 userTokens={userTokens}
-                transactions={mockTransactions}
+                transactions={[]} // Placeholder se não tiver integração de transações reais ainda
               />
             </>
           ) : (
