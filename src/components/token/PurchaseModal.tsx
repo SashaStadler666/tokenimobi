@@ -7,6 +7,7 @@ import { SummaryStep } from "./purchase/steps/SummaryStep";
 import { PasswordStep } from "./purchase/steps/PasswordStep";
 import { MINIMUM_INVESTMENT } from "./purchase/constants";
 import { usePurchaseWithSupabase } from "@/hooks/usePurchaseWithSupabase";
+import { toast } from "sonner";
 
 interface PurchaseModalProps {
   token: Token;
