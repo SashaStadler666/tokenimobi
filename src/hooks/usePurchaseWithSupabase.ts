@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWalletConnection } from "./useWalletConnection";
@@ -36,12 +35,11 @@ export const usePurchaseWithSupabase = () => {
     setIsProcessing(true);
 
     try {
-      // Insert purchase request in Supabase
+      // Inserir solicitação de compra no Supabase
       await insertPurchaseRequest(tokenId, valor, walletAddress);
       
-      // Determine token type and mint
-      const tokenType = tokenId === 1 ? "K1" : "K2";
-      const success = await mintToken(tokenType, walletAddress);
+      // Mintar o token
+      const success = await mintToken(tokenId === 1 ? "K1" : "K2", walletAddress);
       
       if (success) {
         toast.success("Token mintado e solicitação registrada com sucesso!");
