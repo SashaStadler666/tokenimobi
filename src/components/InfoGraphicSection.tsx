@@ -69,81 +69,8 @@ const InfoGraphicSection = () => {
           ))}
         </div>
 
-        {/* Infográfico de fluxo */}
-        <motion.div 
-          className="relative p-8 rounded-xl border border-border bg-secondary/30 mb-10 hidden md:block"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.7 }}
-        >
-          <div className="flex justify-between items-center relative">
-            {/* Linha conectando os itens */}
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent -z-10"></div>
-            
-            {/* Item 1: Imóvel */}
-            <motion.div 
-              className="flex flex-col items-center bg-background p-4 rounded-xl border border-border z-10"
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.9, duration: 0.5 }}
-            >
-              <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <Home className="w-6 h-6 text-primary" aria-label="Ícone casa" />
-              </div>
-              <p className="text-sm font-medium">Propriedade</p>
-            </motion.div>
-
-            {/* Seta */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.0, duration: 0.5 }}
-            >
-              <ArrowRight className="w-6 h-6 text-muted-foreground" aria-label="Seta para direita" />
-            </motion.div>
-
-            {/* Item 2: Tokenização */}
-            <motion.div 
-              className="flex flex-col items-center bg-background p-4 rounded-xl border border-border z-10"
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.1, duration: 0.5 }}
-            >
-              <div className="rounded-full bg-accent/10 p-3 mb-2">
-                <ShieldCheck className="w-6 h-6 text-accent" aria-label="Ícone segurança" />
-              </div>
-              <p className="text-sm font-medium">Tokenização</p>
-            </motion.div>
-
-            {/* Seta */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.2, duration: 0.5 }}
-            >
-              <ArrowRight className="w-6 h-6 text-muted-foreground" aria-label="Seta para direita" />
-            </motion.div>
-
-            {/* Item 3: Investidores */}
-            <motion.div 
-              className="flex flex-col items-center bg-background p-4 rounded-xl border border-border z-10"
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.3, duration: 0.5 }}
-            >
-              <div className="rounded-full bg-primary/10 p-3 mb-2">
-                <TrendingUp className="w-6 h-6 text-primary" aria-label="Ícone crescimento" />
-              </div>
-              <p className="text-sm font-medium">Investidores</p>
-            </motion.div>
-          </div>
-        </motion.div>
+        {/* Removido: Infográfico de fluxo (linha com propriedade, tokenização, investidores) */}
+        {/* Seção removida para ficar mais clean e semelhante ao visual fornecido */}
 
         {/* Botão de call to action */}
         <motion.div 
@@ -167,3 +94,4 @@ const InfoGraphicSection = () => {
 };
 
 export default InfoGraphicSection;
+
