@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
@@ -84,10 +83,12 @@ const generatePerformanceData = (initial = 1000, months = 7) => {
   const currentMonth = new Date().getMonth();
   
   for (let i = 0; i < months; i++) {
-    const monthIndex = (currentMonth - (months - 1) + i) % 12;
-    if (monthIndex < 0) monthIndex += 12;
+    let adjustedMonthIndex = (currentMonth - (months - 1) + i) % 12;
+    if (adjustedMonthIndex < 0) {
+      adjustedMonthIndex += 12;
+    }
     
-    const month = monthNames[monthIndex];
+    const month = monthNames[adjustedMonthIndex];
     
     // Random growth between -3% and +8%
     const changePercent = -3 + Math.random() * 11;

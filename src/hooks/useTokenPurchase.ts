@@ -24,8 +24,12 @@ export const useTokenPurchase = () => {
     setIsProcessing(true);
 
     try {
-      // Attempt to mint token on blockchain
-      const txHash = await mintToken(token.symbol, walletAddress);
+      // Determine token type based on the symbol or use K1 as default
+      // Using K1 as default because mintToken expects "K1" | "K2"
+      const tokenType = token.symbol === "K2" ? "K2" : "K1";
+      
+      // Attempt to mint token on blockchain with correct type
+      const txHash = await mintToken(tokenType, walletAddress);
       const success = !!txHash;
       
       if (success) {
