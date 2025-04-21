@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Token } from "@/lib/models";
 import { addTransaction } from "@/lib/models/Transaction";
@@ -24,26 +23,20 @@ export const useTokenPurchase = () => {
     setIsProcessing(true);
 
     try {
-      // Determine token type based on the symbol or use K1 as default
-      // Using K1 as default because mintToken expects "K1" | "K2"
       const tokenType = token.symbol === "K2" ? "K2" : "K1";
-      
-      // Attempt to mint token on blockchain with correct type
       const txHash = await mintToken(tokenType, walletAddress);
       const success = !!txHash;
-      
+
       if (success) {
-        // Add transaction to mock data
         const transaction = addTransaction({
           tokenId: token.id,
-          type: 'buy',
-          fractions: fractions,
+          type: "buy",
+          fractions,
           price: token.fractionPrice,
           total: fractions * token.fractionPrice,
           timestamp: new Date()
         });
 
-        // Update token's available fractions (in a real app, this would happen on the backend)
         if (token.availableFractions) {
           token.availableFractions -= fractions;
         }
