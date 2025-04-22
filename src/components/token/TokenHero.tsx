@@ -32,7 +32,7 @@ const TokenHero = ({ token }: TokenHeroProps) => {
         <img
           src={displayImage}
           alt={token.name}
-          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${isImageLoaded ? 'ken-burns-effect' : ''}`}
+          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
           loading="lazy"
           onLoad={() => setIsImageLoaded(true)}
         />

@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models";
 import Navbar from "@/components/Navbar";
@@ -20,6 +21,11 @@ const TokenDetail = () => {
   
   // Look for token in both regular tokens and whole property tokens
   const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
+  
+  useEffect(() => {
+    // Scroll to top when component mounts or token ID changes
+    window.scrollTo(0, 0);
+  }, [id]);
   
   if (!token) {
     return (

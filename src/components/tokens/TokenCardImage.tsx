@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { getPropertyIcon, getPropertyDescription } from "@/lib/imageUtils";
@@ -35,18 +34,10 @@ const TokenCardImage = ({ imageUrl, name, isWholeProperty, propertyType }: Token
   return (
     <div className="aspect-square overflow-hidden relative bg-muted group">
       {!imageError ? (
-        <motion.img 
+        <img 
           src={imageUrl} 
           alt={name} 
-          className="w-full h-full object-cover"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.05 }}
-          transition={{ 
-            duration: 10, 
-            repeat: Infinity, 
-            repeatType: "reverse", 
-            ease: "linear" 
-          }}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           onError={() => setImageError(true)}
         />
       ) : (

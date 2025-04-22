@@ -21,6 +21,9 @@ const Tokens = () => {
   const allTokens = [...mockTokens, ...wholePropertyTokens];
   
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     if (typeFromUrl === "rural") {
       setPropertyTypeTab("rural");
     } else if (typeFromUrl === "urbano") {
