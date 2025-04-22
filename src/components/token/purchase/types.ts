@@ -12,7 +12,9 @@ export interface StepProps {
   isProcessing?: boolean;
   minimumFractions: number;
   minimumInvestment: number;
+  maxFractions: number;  // Added this line to resolve the TypeScript error
   walletPassword?: string;
   onWalletPasswordChange?: (password: string) => void;
   onConfirmPurchase?: () => void;
 }
+
