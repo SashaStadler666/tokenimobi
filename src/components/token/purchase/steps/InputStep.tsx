@@ -4,10 +4,9 @@ import { Input } from "@/components/ui/input";
 import { StepProps } from "../types";
 import { MINIMUM_INVESTMENT } from "../constants";
 import { toast } from "sonner";
-import { mintToken } from "@/utils/contractUtils";
-import { useWalletConnection } from "@/hooks/useWalletConnection";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 
 export const InputStep = ({ 
   token,
@@ -15,31 +14,34 @@ export const InputStep = ({
   amount,
   onAmountChange,
   minimumFractions,
+  maxFractions
 }: StepProps) => {
-  const { walletAddress } = useWalletConnection();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { isConnected, walletAddress } = useWalletConnection();
+  const [isValidating, setIsValidating] = useState(false);
   const totalCost = amount * token.fractionPrice;
   
   const handleProceedToSummary = async () => {
-    if (!walletAddress) {
+    if (!isConnected || !walletAddress) {
       toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
       return;
     }
 
     if (amount <= 0 || totalCost < MINIMUM_INVESTMENT) {
-      toast.error("Investimento mínimo de R$1.000,00 necessário");
+      toast.error(`Investimento mínimo de R$${MINIMUM_INVESTMENT.toLocaleString('pt-BR')} necessário`);
       return;
     }
 
-    setIsProcessing(true);
+    if (amount > maxFractions) {
+      toast.error(`Apenas ${maxFractions} frações disponíveis para este token`);
+      return;
+    }
+
+    setIsValidating(true);
     try {
-      // For demonstration, using K1 type. You might want to add logic to determine K1 vs K2
-      const success = await mintToken('K1', walletAddress);
-      if (success) {
-        onNext();
-      }
+      // Just validate and proceed to summary
+      onNext();
     } finally {
-      setIsProcessing(false);
+      setIsValidating(false);
     }
   };
 
@@ -56,11 +58,17 @@ export const InputStep = ({
             value={amount}
             onChange={(e) => onAmountChange(parseInt(e.target.value) || 0)}
             min={minimumFractions}
+            max={maxFractions}
             className="col-span-3"
           />
-          <p className="text-xs text-muted-foreground mt-1">
-            Mínimo: {minimumFractions} frações (R$1.000,00)
-          </p>
+          <div className="flex flex-col gap-1 mt-1">
+            <p className="text-xs text-muted-foreground">
+              Mínimo: {minimumFractions} frações (R$1.000,00)
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Máximo: {maxFractions} frações disponíveis
+            </p>
+          </div>
         </div>
         
         <div className="bg-muted p-4 rounded-md">
@@ -70,7 +78,7 @@ export const InputStep = ({
           </div>
           <div className="flex justify-between font-medium">
             <span>Total a pagar:</span>
-            <span className={totalCost < MINIMUM_INVESTMENT ? "text-destructive" : "text-primary"}>
+            <span className={totalCost < MINIMUM_INVESTMENT || amount > maxFractions ? "text-destructive" : "text-primary"}>
               R$ {totalCost.toFixed(2)}
             </span>
           </div>
@@ -79,18 +87,23 @@ export const InputStep = ({
               O valor mínimo de investimento é R$1.000,00
             </p>
           )}
+          {amount > maxFractions && (
+            <p className="text-xs text-destructive mt-2">
+              Quantidade excede o limite disponível de {maxFractions} frações
+            </p>
+          )}
         </div>
       </div>
       
       <Button
         onClick={handleProceedToSummary}
-        disabled={totalCost < MINIMUM_INVESTMENT || isProcessing}
+        disabled={totalCost < MINIMUM_INVESTMENT || amount > maxFractions || isValidating || !isConnected}
         className="w-full button-glow"
       >
-        {isProcessing ? (
+        {isValidating ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Processando...
+            Validando...
           </>
         ) : (
           'Prosseguir'

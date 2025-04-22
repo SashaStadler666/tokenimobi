@@ -19,14 +19,15 @@ const ConnectWallet = () => {
     handleAcceptTerms,
     redirectToTermsPage,
     setShowTermsDialog,
-    setTermsAccepted
+    setTermsAccepted,
+    checkWalletConnection
   } = useWalletConnection();
 
   // Check if wallet is connected when component loads
   useEffect(() => {
     const walletConnected = localStorage.getItem("walletConnected") === "true";
     if (walletConnected && !isConnected) {
-      connectWallet();
+      checkWalletConnection();
     }
   }, []);
 

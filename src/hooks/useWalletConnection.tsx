@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -36,17 +37,26 @@ export const useWalletConnection = () => {
 
   const checkWalletConnection = async () => {
     try {
-      const accounts = await window.ethereum?.request({ method: "eth_accounts" });
+      if (!window.ethereum) {
+        setIsConnected(false);
+        setWalletAddress("");
+        return;
+      }
+      
+      const accounts = await window.ethereum.request({ method: "eth_accounts" });
       if (accounts && accounts.length > 0) {
         setWalletAddress(accounts[0]);
         setIsConnected(true);
         localStorage.setItem("walletConnected", "true");
       } else {
         setIsConnected(false);
+        setWalletAddress("");
+        localStorage.removeItem("walletConnected");
       }
     } catch (error) {
       console.error("Erro ao verificar carteira:", error);
       setIsConnected(false);
+      setWalletAddress("");
     }
   };
 
@@ -77,7 +87,11 @@ export const useWalletConnection = () => {
       }
     } catch (error: any) {
       console.error("Erro ao conectar carteira:", error);
-      toast.error(error?.message || "Erro ao conectar com a carteira.");
+      if (error.code === 4001) {
+        toast.error("Conexão rejeitada pelo usuário.");
+      } else {
+        toast.error(error?.message || "Erro ao conectar com a carteira.");
+      }
     } finally {
       setIsConnecting(false);
     }
@@ -88,6 +102,8 @@ export const useWalletConnection = () => {
       handleDisconnect();
     } else {
       setWalletAddress(accounts[0]);
+      setIsConnected(true);
+      localStorage.setItem("walletConnected", "true");
     }
   };
 
@@ -137,6 +153,7 @@ export const useWalletConnection = () => {
     handleAcceptTerms,
     redirectToTermsPage,
     setShowTermsDialog,
-    setTermsAccepted
+    setTermsAccepted,
+    checkWalletConnection
   };
 };

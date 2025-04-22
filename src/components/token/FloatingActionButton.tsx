@@ -61,7 +61,7 @@ const FloatingActionButton = ({ token, onBuyClick }: FloatingActionButtonProps) 
             <Wallet className="h-4 w-4" />
             {token.isWholeProperty 
               ? `Comprar por ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(token.wholePropertyPrice || 0)}`
-              : `Comprar por R$ ${token.fractionPrice.toFixed(2)}`
+              : `Comprar a partir de R$ ${token.fractionPrice.toFixed(2)}`
             }
           </Button>
         </motion.div>

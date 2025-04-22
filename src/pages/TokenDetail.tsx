@@ -11,11 +11,12 @@ import { toast } from "sonner";
 import PurchaseModal from "@/components/token/PurchaseModal";
 import PurchasePropertyModal from "@/components/token/PurchasePropertyModal";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
+import FloatingActionButton from "@/components/token/FloatingActionButton";
 
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isConnected } = useWalletConnection();
+  const { isConnected, connectWallet } = useWalletConnection();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showPropertyPurchaseModal, setShowPropertyPurchaseModal] = useState(false);
   
@@ -63,7 +64,13 @@ const TokenDetail = () => {
 
   const handleBuyClick = () => {
     if (!isConnected) {
-      toast.error("Carteira não conectada. Conecte sua carteira para realizar esta operação");
+      toast.error("Carteira não conectada", {
+        description: "Conecte sua carteira para realizar esta operação",
+        action: {
+          label: "Conectar",
+          onClick: connectWallet
+        }
+      });
       return;
     }
     
@@ -104,6 +111,8 @@ const TokenDetail = () => {
           token={token}
         />
       )}
+      
+      <FloatingActionButton token={token} onBuyClick={handleBuyClick} />
       
       <Footer />
     </div>
