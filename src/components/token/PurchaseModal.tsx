@@ -20,10 +20,10 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
   const [amount, setAmount] = useState<number>(0);
   const [walletPassword, setWalletPassword] = useState<string>("");
   const { purchaseToken, isProcessing } = usePurchaseWithSupabase();
-  
+
   const minimumFractions = Math.ceil(MINIMUM_INVESTMENT / token.fractionPrice);
   const maxFractions = token.availableFractions || 1000;
-  
+
   useEffect(() => {
     if (open) {
       setAmount(minimumFractions);
@@ -37,46 +37,51 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       toast.error("Digite a senha da carteira");
       return;
     }
-    
+
     if (amount > maxFractions) {
       toast.error(`Apenas ${maxFractions} frações disponíveis`);
       return;
     }
-    
-    const success = await purchaseToken(Number(token.id), amount * token.fractionPrice);
+
+    const valueInEther = amount * token.fractionPrice;
+    const success = await purchaseToken(Number(token.id), valueInEther);
+
     if (success) {
       onOpenChange(false);
       setAmount(minimumFractions);
       setStep("input");
       setWalletPassword("");
-      
+
       setTimeout(() => {
+        toast.success("Compra realizada com sucesso!");
         toast.info("Veja suas novas aquisições no seu portfólio!", {
           action: {
             label: "Ver Portfólio",
-            onClick: () => window.location.href = "/portfolio"
-          }
+            onClick: () => window.location.href = "/portfolio",
+          },
         });
       }, 2000);
+    } else {
+      toast.error("Falha na compra. Verifique sua carteira e tente novamente.");
     }
   };
 
-  const renderStep = () => {
-    const stepProps = {
-      token,
-      amount,
-      onAmountChange: setAmount,
-      minimumFractions,
-      minimumInvestment: MINIMUM_INVESTMENT,
-      isProcessing,
-      walletPassword,
-      onWalletPasswordChange: setWalletPassword,
-      onPrevious: () => setStep(step === "summary" ? "input" : "summary"),
-      onNext: () => setStep(step === "input" ? "summary" : "password"),
-      onConfirmPurchase: handlePurchase,
-      maxFractions,
-    };
+  const stepProps = {
+    token,
+    amount,
+    onAmountChange: setAmount,
+    minimumFractions,
+    minimumInvestment: MINIMUM_INVESTMENT,
+    isProcessing,
+    walletPassword,
+    onWalletPasswordChange: setWalletPassword,
+    onPrevious: () => setStep(step === "summary" ? "input" : "summary"),
+    onNext: () => setStep(step === "input" ? "summary" : "password"),
+    onConfirmPurchase: handlePurchase,
+    maxFractions,
+  };
 
+  const renderStep = () => {
     switch (step) {
       case "input":
         return <InputStep {...stepProps} />;
@@ -92,9 +97,9 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <img 
-              src={token.imageUrl} 
-              alt={token.name} 
+            <img
+              src={token.imageUrl}
+              alt={token.name}
               className="w-8 h-8 rounded-full object-cover"
               onError={(e) => {
                 e.currentTarget.src = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=64";
@@ -103,7 +108,7 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
             Comprar {token.name} ({token.symbol})
           </DialogTitle>
         </DialogHeader>
-        
+
         {renderStep()}
       </DialogContent>
     </Dialog>
