@@ -1,23 +1,34 @@
-export const purchaseToken = async (tokenId: number, priceInEther: number): Promise<boolean> => {
-  try {
-    const web3 = new Web3(window.ethereum as any);
-    const contract = new web3.eth.Contract(TokenK_ABI as any, CONTRACT_ADDRESS);
+import { useState } from "react";
+import { Token } from "@/lib/models";
+import { addTransaction } from "@/lib/models/Transaction";
+import { toast } from "sonner";
+import { useWalletConnection } from "./useWalletConnection";
+import { buyToken } from "@/utils/contractUtils";
 
-    const accounts = await web3.eth.getAccounts();
-    const buyer = accounts[0];
+export const useTokenPurchase = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { isConnected, walletAddress } = useWalletConnection();
 
-    const valueInWei = web3.utils.toWei(String(priceInEther), "ether");
+  const purchaseToken = async (tokenId: number, _priceEth: number) => {
+    if (!isConnected || !walletAddress) {
+      toast.error("Conecte sua carteira");
+      return false;
+    }
 
-    await contract.methods.buyToken(Number(tokenId)).send({
-      from: buyer,
-      value: valueInWei,
-    });
+    setIsProcessing(true);
 
-    toast.success("Compra realizada com sucesso!");
-    return true;
-  } catch (error: any) {
-    console.error("Erro ao comprar token:", error);
-    toast.error(error.message || "Erro na transação");
-    return false;
-  }
+    try {
+      const success = await buyToken(tokenId, walletAddress);
+      return success;
+    } catch (e) {
+      return false;
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return {
+    purchaseToken,
+    isProcessing
+  };
 };
