@@ -1,4 +1,3 @@
-
 import { Token } from "../interfaces/TokenInterface";
 
 export const mockTokens: Token[] = [
@@ -223,6 +222,25 @@ export const mockTokens: Token[] = [
     propertyType: "Fazenda",
     yearBuilt: 2015,
     isWholeProperty: true
+  },
+  {
+    id: "K3",
+    name: "Instituto K Professor Ulisses Vieira",
+    symbol: "IKPUV",
+    totalSupply: 1,
+    fractionPrice: 65.75,
+    imageUrl: "/lovable-uploads/3d927806-fff9-4cf1-8af0-3b7e05c7afae.png",
+    description: "Loja de manutenção de notebooks e informática localizada em área comercial estratégica. Estabelecimento com mais de 10 anos de atuação em Central de Manutenção de equipamentos eletrônicos.",
+    marketCap: 1200000,
+    volume24h: 45000,
+    priceChange24h: 3.2,
+    totalFractions: 800,
+    availableFractions: 250,
+    holders: 180,
+    location: "Centro, São José dos Campos, SP",
+    area: 60,
+    propertyType: "Comercial",
+    yearBuilt: 2010,
+    isWholeProperty: false
   }
 ];
-
