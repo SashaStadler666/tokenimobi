@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Token } from "@/lib/models";
@@ -26,6 +27,7 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
   
   useEffect(() => {
     if (open) {
+      // Reset to initial values when modal opens
       setAmount(minimumFractions);
       setStep("input");
       setWalletPassword("");
@@ -43,7 +45,17 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
       return;
     }
     
-    const success = await purchaseToken(Number(token.id), amount * token.fractionPrice);
+    // Parse numeric ID for K tokens if needed
+    let tokenId: number;
+    if (typeof token.id === 'string') {
+      if (token.id === 'k1') tokenId = 1;
+      else if (token.id === 'k2') tokenId = 2;
+      else tokenId = parseInt(token.id);
+    } else {
+      tokenId = token.id;
+    }
+    
+    const success = await purchaseToken(tokenId, amount * token.fractionPrice);
     if (success) {
       onOpenChange(false);
       setAmount(minimumFractions);

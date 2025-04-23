@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 
 export const useWalletConnection = () => {
@@ -8,6 +8,35 @@ export const useWalletConnection = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [showTermsDialog, setShowTermsDialog] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  // Use useCallback to make the function referenceable in dependency arrays
+  const checkWalletConnection = useCallback(async (): Promise<boolean> => {
+    try {
+      if (!window.ethereum) {
+        setIsConnected(false);
+        setWalletAddress("");
+        return false;
+      }
+      
+      const accounts = await window.ethereum.request({ method: "eth_accounts" });
+      if (accounts && accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        setIsConnected(true);
+        localStorage.setItem("walletConnected", "true");
+        return true;
+      } else {
+        setIsConnected(false);
+        setWalletAddress("");
+        localStorage.removeItem("walletConnected");
+        return false;
+      }
+    } catch (error) {
+      console.error("Erro ao verificar carteira:", error);
+      setIsConnected(false);
+      setWalletAddress("");
+      return false;
+    }
+  }, []);
 
   // Inicializa ao carregar
   useEffect(() => {
@@ -33,43 +62,18 @@ export const useWalletConnection = () => {
         window.ethereum.removeListener("disconnect", handleDisconnect);
       }
     };
-  }, []);
+  }, [checkWalletConnection]);
 
-  const checkWalletConnection = async () => {
-    try {
-      if (!window.ethereum) {
-        setIsConnected(false);
-        setWalletAddress("");
-        return;
-      }
-      
-      const accounts = await window.ethereum.request({ method: "eth_accounts" });
-      if (accounts && accounts.length > 0) {
-        setWalletAddress(accounts[0]);
-        setIsConnected(true);
-        localStorage.setItem("walletConnected", "true");
-      } else {
-        setIsConnected(false);
-        setWalletAddress("");
-        localStorage.removeItem("walletConnected");
-      }
-    } catch (error) {
-      console.error("Erro ao verificar carteira:", error);
-      setIsConnected(false);
-      setWalletAddress("");
-    }
-  };
-
-  const connectWallet = async () => {
+  const connectWallet = async (): Promise<string | null> => {
     if (!termsAccepted) {
       setShowTermsDialog(true);
-      return;
+      return null;
     }
 
     if (typeof window.ethereum === "undefined") {
       toast.error("MetaMask não encontrada. Instale para continuar.");
       window.open("https://metamask.io/download/", "_blank");
-      return;
+      return null;
     }
 
     setIsConnecting(true);
@@ -82,8 +86,10 @@ export const useWalletConnection = () => {
         setIsConnected(true);
         localStorage.setItem("walletConnected", "true");
         toast.success("Carteira conectada com sucesso!");
+        return accounts[0];
       } else {
         toast.error("Nenhuma conta encontrada.");
+        return null;
       }
     } catch (error: any) {
       console.error("Erro ao conectar carteira:", error);
@@ -92,6 +98,7 @@ export const useWalletConnection = () => {
       } else {
         toast.error(error?.message || "Erro ao conectar com a carteira.");
       }
+      return null;
     } finally {
       setIsConnecting(false);
     }

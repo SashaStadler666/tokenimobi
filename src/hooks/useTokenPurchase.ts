@@ -4,7 +4,7 @@ import { Token } from "@/lib/models";
 import { addTransaction } from "@/lib/models/Transaction";
 import { toast } from "sonner";
 import { useWalletConnection } from "./useWalletConnection";
-import { mintToken } from "@/utils/contractUtils";
+import { buyToken } from "@/utils/contractUtils";
 
 export const useTokenPurchase = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -21,20 +21,24 @@ export const useTokenPurchase = () => {
       return false;
     }
 
+    // Validate fractions against available
+    if (token.availableFractions !== undefined && fractions > token.availableFractions) {
+      toast.error(`Apenas ${token.availableFractions} frações disponíveis para este token`);
+      return false;
+    }
+
     setIsProcessing(true);
 
     try {
-      // Determine which token type to mint based on token symbol
-      const tokenType = token.symbol === "K2" ? "K2" : "K1";
-      
-      // Make sure to handle K Institute tokens specially
+      // For K Institute tokens use buyToken directly
       const isKToken = token.symbol === "K1" || token.symbol === "K2";
       
       let success = false;
       
       if (isKToken) {
-        const txHash = await mintToken(tokenType, walletAddress);
-        success = !!txHash;
+        // Use tokenId from token.id (convert k1/k2 string to number if needed)
+        const tokenId = token.id;
+        success = await buyToken(tokenId, walletAddress);
       } else {
         // For other tokens, we'd use a different approach
         // This is a mock success for demonstration

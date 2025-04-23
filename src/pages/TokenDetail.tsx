@@ -16,7 +16,7 @@ import FloatingActionButton from "@/components/token/FloatingActionButton";
 const TokenDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isConnected, connectWallet } = useWalletConnection();
+  const { isConnected, walletAddress, connectWallet, checkWalletConnection } = useWalletConnection();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showPropertyPurchaseModal, setShowPropertyPurchaseModal] = useState(false);
   
@@ -26,7 +26,10 @@ const TokenDetail = () => {
   useEffect(() => {
     // Scroll to top when component mounts or token ID changes
     window.scrollTo(0, 0);
-  }, [id]);
+    
+    // Verify wallet connection status when page loads
+    checkWalletConnection();
+  }, [id, checkWalletConnection]);
   
   if (!token) {
     return (
@@ -62,8 +65,11 @@ const TokenDetail = () => {
   
   const tokenTransactions = mockTransactions.filter(tx => tx.tokenId === token.id);
 
-  const handleBuyClick = () => {
-    if (!isConnected) {
+  const handleBuyClick = async () => {
+    // Verificar a conexão da carteira antes de abrir o modal
+    const walletConnected = await checkWalletConnection();
+    
+    if (!isConnected || !walletAddress) {
       toast.error("Carteira não conectada", {
         description: "Conecte sua carteira para realizar esta operação",
         action: {
