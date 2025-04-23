@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Token } from "@/lib/models";
 import { addTransaction } from "@/lib/models/Transaction";
@@ -23,9 +24,23 @@ export const useTokenPurchase = () => {
     setIsProcessing(true);
 
     try {
+      // Determine which token type to mint based on token symbol
       const tokenType = token.symbol === "K2" ? "K2" : "K1";
-      const txHash = await mintToken(tokenType, walletAddress);
-      const success = !!txHash;
+      
+      // Make sure to handle K Institute tokens specially
+      const isKToken = token.symbol === "K1" || token.symbol === "K2";
+      
+      let success = false;
+      
+      if (isKToken) {
+        const txHash = await mintToken(tokenType, walletAddress);
+        success = !!txHash;
+      } else {
+        // For other tokens, we'd use a different approach
+        // This is a mock success for demonstration
+        success = true;
+        toast.success(`Transação simulada para ${token.symbol}. Em produção, interagiria com o contrato.`);
+      }
 
       if (success) {
         const transaction = addTransaction({
@@ -37,7 +52,7 @@ export const useTokenPurchase = () => {
           timestamp: new Date()
         });
 
-        if (token.availableFractions) {
+        if (token.availableFractions !== undefined) {
           token.availableFractions -= fractions;
         }
 

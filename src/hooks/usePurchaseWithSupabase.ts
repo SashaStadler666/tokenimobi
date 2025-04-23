@@ -67,23 +67,29 @@ export const usePurchaseWithSupabase = () => {
         }
       }
 
-      // Inserir solicitação de compra no Supabase
+      // Inserir solicitação de compra no Supabase (sempre fazer isso, mesmo se der erro no blockchain)
       const supabaseSuccess = await insertPurchaseRequest(tokenId, valor, userWallet);
       
       if (!supabaseSuccess) {
         toast.error("Não foi possível registrar a compra. Tente novamente.");
-        return false;
       }
       
-      // Comprar o token
-      const purchaseSuccess = await buyToken(tokenId, userWallet);
-      
-      if (purchaseSuccess) {
-        toast.success(`Token ${tokenId} comprado com sucesso!`);
-        return true;
-      } else {
-        toast.error("Erro ao finalizar a compra do token");
-        return false;
+      try {
+        // Tentativa de compra no blockchain (mesmo que o supabaseSuccess seja false)
+        const purchaseSuccess = await buyToken(tokenId, userWallet);
+        
+        if (purchaseSuccess) {
+          toast.success(`Token ${tokenId} comprado com sucesso!`);
+          return true;
+        } else {
+          toast.info("A operação foi registrada, mas não pôde ser finalizada no blockchain. Um administrador entrará em contato.");
+          return supabaseSuccess; // Consideramos sucesso se pelo menos o registro foi feito
+        }
+      } catch (blockchainError: any) {
+        console.error("Erro na interação com blockchain:", blockchainError);
+        // Se deu erro no blockchain mas o registro foi feito, ainda consideramos parcialmente bem-sucedido
+        toast.info("A solicitação foi registrada, mas ocorreu um erro na interação com o blockchain. Um administrador entrará em contato para finalizar a compra.");
+        return supabaseSuccess;
       }
     } catch (error: any) {
       console.error("Erro ao processar a compra:", error);

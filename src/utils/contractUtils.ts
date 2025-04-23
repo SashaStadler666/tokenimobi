@@ -29,8 +29,12 @@ export const getContract = async () => {
 export const isContractOwner = async (address: string): Promise<boolean> => {
   try {
     const contract = await getContract();
-    const owner = await contract.methods.owner().call();
-    return owner.toLowerCase() === address.toLowerCase();
+    // Only check if the owner function exists in the contract
+    if (contract.methods.owner) {
+      const owner = await contract.methods.owner().call();
+      return owner.toLowerCase() === address.toLowerCase();
+    }
+    return false;
   } catch (error) {
     console.error('Erro ao verificar proprietário:', error);
     return false;
@@ -105,8 +109,12 @@ export const mintToken = async (
       return false;
     }
 
+    // Determine which method to call based on token type
     const method = type === 'K1' ? 'mintK1' : 'mintK2';
     
+    // Call the appropriate mint method on the contract
+    // This will work as long as the contract's mintK1 and mintK2 functions are 
+    // allowed to be called by users (not restricted to owner)
     await contract.methods[method](walletAddress).send({
       from: walletAddress
     });
@@ -115,7 +123,17 @@ export const mintToken = async (
     return true;
   } catch (error: any) {
     console.error('Erro ao mintar token:', error);
-    toast.error(error.message || 'Erro ao mintar token');
+    
+    // Check if the error is related to owner-only restriction
+    if (error.message && error.message.includes('revert') && 
+        (error.message.includes('owner') || error.message.includes('Ownable'))) {
+      toast.error('Essa operação só pode ser realizada pelo proprietário do contrato. Entre em contato com o administrador para adquirir este token.');
+    } else if (error.code === 4001) {
+      toast.error('Transação rejeitada pelo usuário');
+    } else {
+      toast.error(error.message || 'Erro ao mintar token');
+    }
+    
     return false;
   }
 };
@@ -139,23 +157,43 @@ export const buyToken = async (
       return false;
     }
 
-    // Determine which method to call based on tokenId
-    const method = tokenId === 1 ? 'mintK1' : 'mintK2';
+    // Try to use the buyToken method if it exists, otherwise fallback to mintKX
+    let method;
+    let tokenType: 'K1' | 'K2' = 'K1';
     
-    // Call the appropriate buy method on the contract
-    await contract.methods[method](walletAddress).send({
-      from: walletAddress
-    });
+    if (tokenId === 1 || tokenId === Number("k1")) {
+      tokenType = 'K1';
+      method = contract.methods.mintK1 ? 'mintK1' : 'buyToken';
+    } else {
+      tokenType = 'K2';
+      method = contract.methods.mintK2 ? 'mintK2' : 'buyToken';
+    }
+    
+    // If using buyToken method (universal buying method)
+    if (method === 'buyToken' && contract.methods[method]) {
+      await contract.methods[method](tokenId).send({
+        from: walletAddress
+      });
+    } else {
+      // Fallback to mintK1/mintK2
+      await mintToken(tokenType, walletAddress);
+    }
     
     toast.success(`Token ${tokenId} comprado com sucesso!`);
     return true;
   } catch (error: any) {
     console.error('Erro ao comprar token:', error);
-    if (error.code === 4001) {
+    
+    // Check if the error is related to owner-only restriction
+    if (error.message && error.message.includes('revert') && 
+        (error.message.includes('owner') || error.message.includes('Ownable'))) {
+      toast.error('Esse token só pode ser comprado pelo proprietário do contrato. Por favor, entre em contato com o administrador.');
+    } else if (error.code === 4001) {
       toast.error('Transação rejeitada pelo usuário');
     } else {
       toast.error(error.message || 'Erro ao comprar token');
     }
+    
     return false;
   }
 };
@@ -176,17 +214,25 @@ export const sellToken = async (
       }
     }
 
-    // Call sellToken method if it exists in the contract
-    // This is just a placeholder since we don't have the exact contract method
-    await contract.methods.sellToken(tokenId).send({
-      from: walletAddress
-    });
-    
-    toast.success(`Token ${tokenId} vendido com sucesso!`);
-    return true;
+    // Check if sellToken method exists in the contract
+    if (contract.methods.sellToken) {
+      await contract.methods.sellToken(tokenId).send({
+        from: walletAddress
+      });
+      toast.success(`Token ${tokenId} vendido com sucesso!`);
+      return true;
+    } else {
+      throw new Error('Função de venda não disponível neste contrato');
+    }
   } catch (error: any) {
     console.error('Erro ao vender token:', error);
-    toast.error(error.message || 'Erro ao vender token');
+    
+    if (error.code === 4001) {
+      toast.error('Transação rejeitada pelo usuário');
+    } else {
+      toast.error(error.message || 'Erro ao vender token');
+    }
+    
     return false;
   }
 };

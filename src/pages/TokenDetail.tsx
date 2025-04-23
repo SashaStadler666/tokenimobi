@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { mockTokens, mockTransactions, wholePropertyTokens } from "@/lib/models";
+import { mockTokens, mockTransactions, wholePropertyTokens, kTokens } from "@/lib/models";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeaderSection from "@/components/token/HeaderSection";
@@ -20,8 +20,8 @@ const TokenDetail = () => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showPropertyPurchaseModal, setShowPropertyPurchaseModal] = useState(false);
   
-  // Look for token in both regular tokens and whole property tokens
-  const token = [...mockTokens, ...wholePropertyTokens].find(t => t.id === id);
+  // Look for token in both regular tokens, whole property tokens, and K tokens
+  const token = [...mockTokens, ...wholePropertyTokens, ...kTokens].find(t => t.id === id);
   
   useEffect(() => {
     // Scroll to top when component mounts or token ID changes
