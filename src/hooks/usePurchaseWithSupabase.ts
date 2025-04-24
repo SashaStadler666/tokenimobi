@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWalletConnection } from "./useWalletConnection";
-import { buyToken, connectWallet, getConnectedWallet } from "@/utils/contractUtils";
+import { useWalletConnection } from "@/hooks/useWalletConnection";
 import { toast } from "sonner";
 
 export const usePurchaseWithSupabase = () => {
