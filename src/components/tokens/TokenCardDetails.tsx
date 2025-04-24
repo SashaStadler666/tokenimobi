@@ -1,6 +1,6 @@
 
-import { ArrowUp, ArrowDown, Home, Ruler } from "lucide-react";
-import { formatCurrency } from "@/components/tokens/tokenUtils";
+import { Token } from "@/lib/models";
+import { ArrowRight } from "lucide-react";
 
 interface TokenCardDetailsProps {
   fractionPrice: number;
@@ -9,49 +9,46 @@ interface TokenCardDetailsProps {
   priceChange24h: number;
   propertyType?: string;
   area?: number;
+  ownerAddress?: string;
 }
 
 const TokenCardDetails = ({ 
   fractionPrice, 
-  wholePropertyPrice, 
+  wholePropertyPrice,
   showWholePrice = false,
   priceChange24h,
   propertyType,
-  area
+  area,
+  ownerAddress
 }: TokenCardDetailsProps) => {
   return (
-    <div className="grid grid-cols-2 gap-2 mb-3">
-      <div>
-        <p className="text-xs text-muted-foreground">
-          {showWholePrice && wholePropertyPrice ? "Valor Total" : "Fração"}
-        </p>
-        <p className="font-medium">
-          {showWholePrice && wholePropertyPrice 
-            ? formatCurrency(wholePropertyPrice, true)
-            : formatCurrency(fractionPrice, false)}
-        </p>
-      </div>
-      <div>
-        <p className="text-xs text-muted-foreground">24h</p>
-        <div className={`flex items-center ${priceChange24h >= 0 ? 'text-success' : 'text-destructive'}`}>
-          {priceChange24h >= 0 ? (
-            <ArrowUp className="h-3 w-3 mr-1" />
+    <div className="space-y-2 mt-4">
+      <div className="flex justify-between items-baseline">
+        <p className="text-lg font-semibold">
+          {showWholePrice && wholePropertyPrice ? (
+            `R$ ${wholePropertyPrice.toLocaleString('pt-BR')}`
           ) : (
-            <ArrowDown className="h-3 w-3 mr-1" />
+            `R$ ${fractionPrice.toFixed(3)}/fração`
           )}
-          <span className="font-medium">{Math.abs(priceChange24h).toFixed(1)}%</span>
+        </p>
+        <span className={`text-sm ${priceChange24h >= 0 ? 'text-success' : 'text-destructive'}`}>
+          {priceChange24h >= 0 ? '+' : ''}{priceChange24h}%
+        </span>
+      </div>
+      
+      {(propertyType || area) && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          {propertyType && <span>{propertyType}</span>}
+          {propertyType && area && <span>•</span>}
+          {area && <span>{area}m²</span>}
         </div>
-      </div>
-      <div className="flex items-center">
-        <Home className="h-3 w-3 mr-1" />
-        <p className="text-xs text-muted-foreground mr-1">Tipo:</p>
-        <p className="text-xs">{propertyType}</p>
-      </div>
-      {area && (
-        <div className="flex items-center">
-          <Ruler className="h-3 w-3 mr-1" />
-          <p className="text-xs text-muted-foreground mr-1">Área:</p>
-          <p className="text-xs">{area >= 10000 ? `${(area / 10000).toFixed(1)} ha` : `${area} m²`}</p>
+      )}
+      
+      {ownerAddress && (
+        <div className="mt-2 p-2 rounded bg-muted/30">
+          <p className="text-xs text-muted-foreground truncate">
+            Proprietário: {ownerAddress.substring(0, 6)}...{ownerAddress.substring(38)}
+          </p>
         </div>
       )}
     </div>
@@ -59,3 +56,4 @@ const TokenCardDetails = ({
 };
 
 export default TokenCardDetails;
+

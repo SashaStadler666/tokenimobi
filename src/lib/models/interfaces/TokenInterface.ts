@@ -20,4 +20,6 @@ export interface Token {
   propertyType?: string;
   yearBuilt?: number;
   isWholeProperty?: boolean;
+  ownerAddress?: string;
 }
+

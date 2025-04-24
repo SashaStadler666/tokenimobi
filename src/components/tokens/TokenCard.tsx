@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Token } from "@/lib/models";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,6 +43,7 @@ const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
               priceChange24h={token.priceChange24h}
               propertyType={token.propertyType}
               area={token.area}
+              ownerAddress={token.ownerAddress}
             />
             <TokenCardAvailability 
               isWholeProperty={token.isWholeProperty}
