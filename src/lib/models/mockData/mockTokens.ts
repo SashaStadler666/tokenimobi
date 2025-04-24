@@ -2,7 +2,7 @@ import { Token } from "@/lib/models";
 
 const kTokens: Token[] = [
   {
-    id: "1",
+    id: 1,
     name: "Ulisses Vieira",
     symbol: "K1",
     fractionPrice: 0.01,
@@ -14,7 +14,7 @@ const kTokens: Token[] = [
     imageUrl: "https://link-da-imagem.com",
   },
   {
-    id: "2",
+    id: 2,
     name: "Parintins",
     symbol: "K2",
     fractionPrice: 0.015,
@@ -27,4 +27,4 @@ const kTokens: Token[] = [
   },
 ];
 
-export const mockTokens = [...kTokens];
+export const mockTokens: Token[] = kTokens;
