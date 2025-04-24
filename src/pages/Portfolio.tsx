@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -39,37 +38,34 @@ const Portfolio = () => {
 
       setIsLoading(true);
       try {
-        // 1. Verificar tokens no blockchain
         const web3 = new Web3(window.ethereum as any);
         const contract = new web3.eth.Contract(TokenK_ABI as any, CONTRACT_ADDRESS);
 
-        // 2. Buscar registros do Supabase
         const { data: supabaseData, error } = await supabase
           .from('K Instituto de Desenvolvimento Econômico')
           .select('*')
-          .eq('wallet', walletAddress.toLowerCase())
-          .eq('status', 'pendente');
+          .eq('wallet', walletAddress.toLowerCase());
 
         if (error) {
           console.error('Erro ao buscar do Supabase:', error);
+          toast.error('Erro ao carregar tokens do Supabase');
+          return;
         }
 
-        // 3. Tentar verificar no blockchain quais tokens o usuário possui
         const ownedTokens: Token[] = [];
         const userTransactions: any[] = [];
 
-        // Verificar os kTokens (K1, K2)
         for (const token of kTokens) {
           try {
-            const tokenId = token.id.replace(/\D/g, '');
-            if (!tokenId) continue;
+            const tokenId = parseInt(token.id.replace(/\D/g, ''), 10);
+            if (isNaN(tokenId)) continue;
             
-            // Tentar obter o dono atual do token
             try {
-              const owner = await contract.methods.ownerOf(Number(tokenId)).call();
+              const owner = await contract.methods.ownerOf(tokenId).call();
+              console.log(`Token ${tokenId} owner:`, owner);
               
-              // Se o usuário é o dono do token, adicionar à lista
-              if (owner && owner.toLowerCase() === walletAddress.toLowerCase()) {
+              if (owner.toLowerCase() === walletAddress.toLowerCase()) {
+                console.log(`User owns token ${tokenId}`);
                 ownedTokens.push(token);
                 userTransactions.push({
                   id: `blockchain-${token.id}`,
@@ -81,23 +77,20 @@ const Portfolio = () => {
                 });
               }
             } catch (ownerError) {
-              console.log(`Token ${tokenId} pode não existir ou não pertencer a ninguém ainda`);
+              console.log(`Token ${tokenId} não encontrado no blockchain:`, ownerError);
             }
           } catch (err) {
             console.error(`Erro ao verificar token ${token.id}:`, err);
           }
         }
 
-        // 4. Adicionar tokens do Supabase que não foram encontrados no blockchain
-        if (supabaseData && supabaseData.length > 0) {
+        if (supabaseData) {
           for (const record of supabaseData) {
             const tokenId = record.token_id?.toString();
             if (!tokenId) continue;
             
-            // Verificar se já não foi adicionado (para evitar duplicatas)
             const alreadyAdded = ownedTokens.some(t => t.id === `k${tokenId}`);
             if (!alreadyAdded) {
-              // Encontrar o token correspondente
               const token = kTokens.find(t => t.id === `k${tokenId}`);
               if (token) {
                 ownedTokens.push(token);
@@ -107,27 +100,25 @@ const Portfolio = () => {
                   type: 'buy',
                   fractions: 1,
                   total: token.fractionPrice,
-                  timestamp: new Date()
+                  timestamp: new Date(record.created_at)
                 });
               }
             }
           }
         }
 
-        // 5. Atualizar o estado
         setUserTokens(ownedTokens);
         setTransactions(userTransactions);
         
-        // Calcular valor total
         const total = ownedTokens.reduce((sum, token) => sum + token.fractionPrice, 0);
         setTotalValue(total);
         
-        // Simular crescimento (apenas para demonstração)
         const growth = ownedTokens.length > 0 ? 5.2 : 0;
         setTotalGrowth(growth);
+
       } catch (err) {
-        toast.error("Erro ao carregar tokens: " + (err as any).message);
-        console.error(err);
+        console.error('Erro ao carregar tokens:', err);
+        toast.error('Erro ao carregar seus tokens');
       } finally {
         setIsLoading(false);
       }

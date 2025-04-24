@@ -3,7 +3,7 @@ import { Token } from "@/lib/models";
 
 export const mockTokens: Token[] = [
   {
-    id: "1",
+    id: "k1",
     name: "Ulisses Vieira",
     symbol: "K1",
     fractionPrice: 0.01,
@@ -23,7 +23,7 @@ export const mockTokens: Token[] = [
     area: 450
   },
   {
-    id: "2",
+    id: "k2",
     name: "Parintins",
     symbol: "K2",
     fractionPrice: 0.015,
@@ -41,5 +41,6 @@ export const mockTokens: Token[] = [
     holders: 0,
     isWholeProperty: false,
     area: 580
-  },
+  }
 ];
+

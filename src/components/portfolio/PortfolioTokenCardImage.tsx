@@ -9,8 +9,9 @@ interface PortfolioTokenCardImageProps {
 const PortfolioTokenCardImage = ({ token }: PortfolioTokenCardImageProps) => {
   const [imageError, setImageError] = useState(false);
   
-  const fallbackUrl =
-    "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800";
+  const fallbackUrl = token.propertyType === "Institucional" 
+    ? "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800"
+    : "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800";
 
   return (
     <div className="relative h-40 bg-muted">
@@ -32,3 +33,4 @@ const PortfolioTokenCardImage = ({ token }: PortfolioTokenCardImageProps) => {
 };
 
 export default PortfolioTokenCardImage;
+

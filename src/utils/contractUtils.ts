@@ -1,4 +1,3 @@
-
 import Web3 from 'web3';
 import { toast } from 'sonner';
 
@@ -52,54 +51,47 @@ export const buyToken = async (tokenId: number, walletAddress: string): Promise<
     const web3 = await initWeb3();
     const contract = await getContract();
 
-    // Obter o preço do token do contrato
+    console.log(`Iniciando compra do token ${tokenId} usando carteira ${walletAddress}`);
+
+    // Obter o preço do token
     let priceWei;
     try {
-      // Primeiro tenta com 'tokenPrice' (nome correto no novo contrato)
       priceWei = await contract.methods.tokenPrice(tokenId).call();
+      console.log(`Preço do token em Wei: ${priceWei}`);
     } catch (err) {
-      try {
-        // Se falhar, tenta com 'tokenPrices' (para compatibilidade com versões antigas)
-        priceWei = await contract.methods.tokenPrices(tokenId).call();
-      } catch (secondErr) {
-        console.error('Erro ao obter o preço do token:', secondErr);
-        toast.error("Não foi possível obter o preço do token");
-        return false;
-      }
-    }
-
-    console.log(`Comprando token ${tokenId} por ${priceWei} wei usando a carteira ${walletAddress}`);
-    
-    // Verificar saldo da carteira
-    const balance = await web3.eth.getBalance(walletAddress);
-    console.log(`Saldo da carteira: ${balance} wei`);
-    
-    if (Number(balance) < Number(priceWei)) {
-      toast.error(`Saldo insuficiente para comprar o token. Necessário: ${web3.utils.fromWei(priceWei, 'ether')} ETH`);
+      console.error('Erro ao obter preço do token:', err);
+      toast.error("Não foi possível obter o preço do token");
       return false;
     }
+
+    // Verificar saldo da carteira
+    const balance = await web3.eth.getBalance(walletAddress);
+    console.log(`Saldo da carteira em Wei: ${balance}`);
     
-    // Enviar a transação de compra
+    if (Number(balance) < Number(priceWei)) {
+      toast.error(`Saldo insuficiente. Necessário: ${web3.utils.fromWei(priceWei, 'ether')} ETH`);
+      return false;
+    }
+
+    // Enviar transação de compra
     const receipt = await contract.methods.buyToken(tokenId).send({
       from: walletAddress,
       value: priceWei,
-      gas: 300000 // Fornecer limite de gas explícito para evitar estimativas que possam falhar
+      gas: 300000
     });
 
     console.log('Transação concluída:', receipt);
     toast.success(`Token #${tokenId} comprado com sucesso!`);
     return true;
   } catch (err: any) {
-    console.error('Erro ao comprar token:', err);
-    let errorMessage = err.message || "Erro ao comprar token";
+    console.error('Erro na compra do token:', err);
     
-    // Verificar se é um erro de rejeição pelo usuário
-    if (errorMessage.includes("User denied") || errorMessage.includes("rejected")) {
+    if (err.message.includes("User denied")) {
       toast.error("Transação rejeitada pelo usuário");
-    } else if (errorMessage.includes("insufficient funds")) {
-      toast.error("Saldo insuficiente para concluir a transação");
+    } else if (err.message.includes("insufficient funds")) {
+      toast.error("Saldo insuficiente para completar a transação");
     } else {
-      toast.error(errorMessage.substring(0, 100)); // Limitar o tamanho da mensagem
+      toast.error(err.message.substring(0, 100));
     }
     
     return false;
