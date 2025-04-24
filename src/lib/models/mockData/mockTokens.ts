@@ -12,7 +12,7 @@ export const mockTokens: Token[] = [
     marketCap: 1550000,
     volume24h: 10000,
     priceChange24h: 2.5,
-    imageUrl: "https://link-da-imagem.com",
+    imageUrl: "https://raw.githubusercontent.com/SashaStadler666/token/main/images/k1.jpg",
     description: "Token for Instituto K",
     totalSupply: 1,
     yearBuilt: 2023,
@@ -31,7 +31,7 @@ export const mockTokens: Token[] = [
     marketCap: 1300000,
     volume24h: 8500,
     priceChange24h: 1.7,
-    imageUrl: "https://link-da-imagem.com",
+    imageUrl: "https://raw.githubusercontent.com/SashaStadler666/token/main/images/k2.jpg",
     description: "Token for Instituto K",
     totalSupply: 1,
     yearBuilt: 2023,
@@ -41,4 +41,3 @@ export const mockTokens: Token[] = [
     isWholeProperty: false
   },
 ];
-

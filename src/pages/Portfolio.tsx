@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -11,46 +12,128 @@ import { useWalletConnection } from "@/hooks/useWalletConnection";
 import Web3 from "web3";
 import TokenK_ABI from "@/lib/TokenK_ABI.json";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Token, kTokens } from "@/lib/models";
 
 const CONTRACT_ADDRESS = "0x7EF2e0048f5bAeDe046f6BF797943daF4ED8CB47";
 
 const Portfolio = () => {
   const navigate = useNavigate();
   const { isConnected, walletAddress } = useWalletConnection();
-  const [userTokens, setUserTokens] = useState<any[]>([]);
+  const [userTokens, setUserTokens] = useState<Token[]>([]);
   const [totalValue, setTotalValue] = useState(0);
   const [totalGrowth, setTotalGrowth] = useState(0);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadUserTokens = async () => {
+      if (!isConnected || !walletAddress) {
+        setUserTokens([]);
+        setTotalValue(0);
+        setTotalGrowth(0);
+        setTransactions([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
       try {
+        // 1. Verificar tokens no blockchain
         const web3 = new Web3(window.ethereum as any);
         const contract = new web3.eth.Contract(TokenK_ABI as any, CONTRACT_ADDRESS);
 
-        const tokens = [];
-        for (let tokenId = 1; tokenId <= 2; tokenId++) {
-          const owner = await contract.methods.ownerOf(tokenId).call();
-          if (owner.toLowerCase() === walletAddress.toLowerCase()) {
-            const desc = await contract.methods.getTokenDescription(tokenId).call();
-            tokens.push({ id: tokenId, description: desc });
+        // 2. Buscar registros do Supabase
+        const { data: supabaseData, error } = await supabase
+          .from('K Instituto de Desenvolvimento Econômico')
+          .select('*')
+          .eq('wallet', walletAddress.toLowerCase())
+          .eq('status', 'pendente');
+
+        if (error) {
+          console.error('Erro ao buscar do Supabase:', error);
+        }
+
+        // 3. Tentar verificar no blockchain quais tokens o usuário possui
+        const ownedTokens: Token[] = [];
+        const userTransactions: any[] = [];
+
+        // Verificar os kTokens (K1, K2)
+        for (const token of kTokens) {
+          try {
+            const tokenId = token.id.replace(/\D/g, '');
+            if (!tokenId) continue;
+            
+            // Tentar obter o dono atual do token
+            try {
+              const owner = await contract.methods.ownerOf(Number(tokenId)).call();
+              
+              // Se o usuário é o dono do token, adicionar à lista
+              if (owner && owner.toLowerCase() === walletAddress.toLowerCase()) {
+                ownedTokens.push(token);
+                userTransactions.push({
+                  id: `blockchain-${token.id}`,
+                  tokenId: token.id,
+                  type: 'buy',
+                  fractions: 1,
+                  total: token.fractionPrice,
+                  timestamp: new Date()
+                });
+              }
+            } catch (ownerError) {
+              console.log(`Token ${tokenId} pode não existir ou não pertencer a ninguém ainda`);
+            }
+          } catch (err) {
+            console.error(`Erro ao verificar token ${token.id}:`, err);
           }
         }
-        setUserTokens(tokens);
-        setTotalValue(tokens.length); 
-        setTotalGrowth(0); 
+
+        // 4. Adicionar tokens do Supabase que não foram encontrados no blockchain
+        if (supabaseData && supabaseData.length > 0) {
+          for (const record of supabaseData) {
+            const tokenId = record.token_id?.toString();
+            if (!tokenId) continue;
+            
+            // Verificar se já não foi adicionado (para evitar duplicatas)
+            const alreadyAdded = ownedTokens.some(t => t.id === `k${tokenId}`);
+            if (!alreadyAdded) {
+              // Encontrar o token correspondente
+              const token = kTokens.find(t => t.id === `k${tokenId}`);
+              if (token) {
+                ownedTokens.push(token);
+                userTransactions.push({
+                  id: `supabase-${record.id}`,
+                  tokenId: token.id,
+                  type: 'buy',
+                  fractions: 1,
+                  total: token.fractionPrice,
+                  timestamp: new Date()
+                });
+              }
+            }
+          }
+        }
+
+        // 5. Atualizar o estado
+        setUserTokens(ownedTokens);
+        setTransactions(userTransactions);
+        
+        // Calcular valor total
+        const total = ownedTokens.reduce((sum, token) => sum + token.fractionPrice, 0);
+        setTotalValue(total);
+        
+        // Simular crescimento (apenas para demonstração)
+        const growth = ownedTokens.length > 0 ? 5.2 : 0;
+        setTotalGrowth(growth);
       } catch (err) {
-        toast.error("Erro ao carregar tokens: " + err);
+        toast.error("Erro ao carregar tokens: " + (err as any).message);
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (isConnected && walletAddress) {
-      loadUserTokens();
-    } else {
-      setUserTokens([]);
-      setTotalValue(0);
-      setTotalGrowth(0);
-    }
+    loadUserTokens();
   }, [isConnected, walletAddress]);
 
   const handleExploreTokens = () => {
@@ -78,7 +161,11 @@ const Portfolio = () => {
         <PortfolioHeader />
 
         {isConnected ? (
-          userTokens.length > 0 ? (
+          isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : userTokens.length > 0 ? (
             <>
               <PortfolioSummaryCards 
                 totalValue={totalValue}
@@ -90,7 +177,7 @@ const Portfolio = () => {
 
               <PortfolioTabs 
                 userTokens={userTokens}
-                transactions={[]} // Placeholder se não tiver integração de transações reais ainda
+                transactions={transactions}
               />
             </>
           ) : (

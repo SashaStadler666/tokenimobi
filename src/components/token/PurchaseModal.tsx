@@ -48,25 +48,29 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
     
     // Convert token id to number if it's a string
     const tokenId = typeof token.id === "string" ? parseInt(token.id.replace(/\D/g, ''), 10) : Number(token.id);
-    const success = await purchaseToken(tokenId, valueInEther);
+    const result = await purchaseToken(tokenId, valueInEther);
 
-    if (success) {
+    if (result.success) {
       onOpenChange(false);
       setAmount(minimumFractions);
       setStep("input");
       setWalletPassword("");
 
       setTimeout(() => {
-        toast.success("Compra realizada com sucesso!");
+        toast.success(result.message || "Compra realizada com sucesso!");
         toast.info("Veja suas novas aquisições no seu portfólio!", {
           action: {
             label: "Ver Portfólio",
             onClick: () => window.location.href = "/portfolio"
           }
         });
-      }, 2000);
+      }, 1000);
+    } else if (result.partialSuccess) {
+      // Caso de erro no blockchain mas sucesso no Supabase
+      toast.error("Erro no blockchain, mas sua solicitação foi registrada com sucesso.");
+      onOpenChange(false);
     } else {
-      toast.error("Falha na compra. Verifique sua carteira e tente novamente.");
+      toast.error(result.message || "Falha na compra. Verifique sua carteira e tente novamente.");
     }
   };
 

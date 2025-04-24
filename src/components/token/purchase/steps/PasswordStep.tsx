@@ -1,67 +1,80 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Lock, Info, Loader2 } from "lucide-react";
-import { StepProps } from "../types";
+import { Label } from "@/components/ui/label";
+import { Wallet, ArrowLeft, Loader2 } from "lucide-react";
+import { PurchaseStepProps } from "../types";
 
-export const PasswordStep = ({ 
-  onPrevious,
+export function PasswordStep({
+  token,
+  amount,
   isProcessing,
   walletPassword,
   onWalletPasswordChange,
-  onConfirmPurchase,
-}: StepProps) => {
+  onPrevious,
+  onConfirmPurchase
+}: PurchaseStepProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <>
-      <div className="grid gap-4 py-4">
-        <div className="flex justify-center mb-2">
-          <div className="bg-secondary/30 p-3 rounded-full">
-            <Lock className="h-6 w-6 text-primary" />
+    <div className="space-y-6 py-2">
+      <div>
+        <div className="flex items-center gap-2 mb-6">
+          <div className="p-2 rounded-full bg-primary/10">
+            <Wallet className="h-5 w-5 text-primary" />
           </div>
-        </div>
-        
-        <h3 className="text-center text-lg font-medium">Autenticação de Carteira</h3>
-        <p className="text-center text-sm text-muted-foreground mb-2">
-          Digite a senha da sua carteira digital para autorizar esta transação
-        </p>
-        
-        <div>
-          <label htmlFor="wallet-password" className="text-sm font-medium mb-2 block">
-            Senha da Carteira
-          </label>
-          <Input
-            id="wallet-password"
-            type="password"
-            value={walletPassword}
-            onChange={(e) => onWalletPasswordChange?.(e.target.value)}
-            placeholder="Digite sua senha"
-            className="col-span-3"
-          />
-        </div>
-        
-        <div className="bg-secondary/20 p-4 rounded-md border border-border">
-          <div className="flex items-start">
-            <Info className="h-4 w-4 text-primary mt-0.5 mr-2 flex-shrink-0" />
-            <p className="text-xs text-muted-foreground">
-              Sua senha não é armazenada em nossos servidores. Ela é usada apenas para 
-              autorizar esta transação específica em sua carteira digital.
+          <div className="flex-1">
+            <h3 className="text-lg font-medium">Confirmar Compra</h3>
+            <p className="text-sm text-muted-foreground">
+              Digite a senha da sua carteira para finalizar a compra
             </p>
           </div>
         </div>
+        
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="wallet-password">Senha da Carteira</Label>
+            <Input
+              id="wallet-password"
+              type={showPassword ? "text" : "password"}
+              value={walletPassword}
+              onChange={(e) => onWalletPasswordChange(e.target.value)}
+              placeholder="Digite sua senha"
+              disabled={isProcessing}
+            />
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="show-password"
+                className="mr-2"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+                disabled={isProcessing}
+              />
+              <Label htmlFor="show-password" className="text-xs text-muted-foreground cursor-pointer">
+                Mostrar senha
+              </Label>
+            </div>
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            <p>Resumo da compra:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>{amount} frações de {token.symbol}</li>
+              <li>Valor por fração: R$ {token.fractionPrice.toFixed(2)}</li>
+              <li>Total: R$ {(amount * token.fractionPrice).toFixed(2)}</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      
-      <div className="flex flex-col sm:flex-row gap-2">
-        <Button
-          variant="outline"
-          onClick={onPrevious}
-          className="w-full sm:w-auto"
-        >
-          Voltar
-        </Button>
-        <Button
-          onClick={onConfirmPurchase}
+
+      <div className="flex flex-col gap-3">
+        <Button 
+          type="button" 
+          onClick={onConfirmPurchase} 
+          className="w-full"
           disabled={isProcessing || !walletPassword}
-          className="w-full sm:w-auto button-glow"
         >
           {isProcessing ? (
             <>
@@ -69,10 +82,20 @@ export const PasswordStep = ({
               Processando...
             </>
           ) : (
-            'Finalizar Compra'
+            "Confirmar Compra"
           )}
         </Button>
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onPrevious} 
+          className="w-full"
+          disabled={isProcessing}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar
+        </Button>
       </div>
-    </>
+    </div>
   );
-};
+}
