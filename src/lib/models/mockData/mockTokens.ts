@@ -6,7 +6,8 @@ import { wholePropertyTokens } from "./wholePropertyTokens";
 import { kTokens } from "../Token";
 
 // Combine all fractional tokens into one array
-export const mockTokens: Token[] = [
+export const mockTokens = [...kTokens];
+const kTokens = [...];
   ...urbanTokens,
   ...ruralTokens,
   ...kTokens
