@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 export const usePurchaseWithSupabase = () => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const { isConnected, walletAddress, checkWalletConnection } = useWalletConnection();
+  const { connectWallet } = useWalletConnection();
 
   const insertPurchaseRequest = async (tokenId: number, valor: number, wallet: string) => {
     try {
