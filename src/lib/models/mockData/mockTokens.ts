@@ -1,10 +1,9 @@
 
 import { Token } from "@/lib/models";
 
-// Define the kTokens array first
 export const mockTokens: Token[] = [
   {
-    id: 1,
+    id: "1", // Convert to string
     name: "Ulisses Vieira",
     symbol: "K1",
     fractionPrice: 0.01,
@@ -14,9 +13,16 @@ export const mockTokens: Token[] = [
     volume24h: 10000,
     priceChange24h: 2.5,
     imageUrl: "https://link-da-imagem.com",
+    description: "Token for Instituto K",
+    totalSupply: 1,
+    yearBuilt: 2023,
+    location: "São Paulo, SP",
+    propertyType: "Institucional",
+    holders: 0,
+    isWholeProperty: false
   },
   {
-    id: 2,
+    id: "2", // Convert to string
     name: "Parintins",
     symbol: "K2",
     fractionPrice: 0.015,
@@ -26,5 +32,13 @@ export const mockTokens: Token[] = [
     volume24h: 8500,
     priceChange24h: 1.7,
     imageUrl: "https://link-da-imagem.com",
+    description: "Token for Instituto K",
+    totalSupply: 1,
+    yearBuilt: 2023,
+    location: "São Paulo, SP",
+    propertyType: "Institucional",
+    holders: 0,
+    isWholeProperty: false
   },
 ];
+
