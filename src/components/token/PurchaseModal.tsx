@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Token } from "@/lib/models";
@@ -44,8 +45,10 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
     }
 
     const valueInEther = amount * token.fractionPrice;
-
-    const success = await purchaseToken(Number(token.id), valueInEther); // 💥 Aqui está a chamada
+    
+    // Convert token id to number if it's a string
+    const tokenId = typeof token.id === "string" ? parseInt(token.id.replace(/\D/g, ''), 10) : Number(token.id);
+    const success = await purchaseToken(tokenId, valueInEther);
 
     if (success) {
       onOpenChange(false);

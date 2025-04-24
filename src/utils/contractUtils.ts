@@ -1,3 +1,4 @@
+
 import Web3 from 'web3';
 import { toast } from 'sonner';
 
@@ -59,5 +60,20 @@ export const buyToken = async (tokenId: number, walletAddress: string): Promise<
     console.error('Erro ao comprar token:', err);
     toast.error(err.message || "Erro ao comprar token");
     return false;
+  }
+};
+
+export const getConnectedWallet = async (): Promise<string | null> => {
+  try {
+    if (!window.ethereum) return null;
+    
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts && accounts.length > 0) {
+      return accounts[0];
+    }
+    return null;
+  } catch (error) {
+    console.error('Erro ao verificar carteira:', error);
+    return null;
   }
 };

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Token } from "@/lib/models";
 import { addTransaction } from "@/lib/models/Transaction";
@@ -33,8 +34,8 @@ export const useTokenPurchase = () => {
       let success = false;
 
       if (isKToken) {
-        // 💥 Aqui tá o ajuste importante: forçamos token.id ser number
-        const tokenId = Number(token.id);
+        // Make sure we're using a number for tokenId
+        const tokenId = typeof token.id === 'string' ? parseInt(token.id.replace(/\D/g, ''), 10) : Number(token.id);
         success = await buyToken(tokenId, walletAddress);
       } else {
         success = true;

@@ -1,13 +1,13 @@
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useWalletConnection } from "./useWalletConnection";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
 import { toast } from "sonner";
+import { buyToken } from "@/utils/contractUtils";
 
 export const usePurchaseWithSupabase = () => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const { connectWallet } = useWalletConnection();
+  const { isConnected, walletAddress, checkWalletConnection, connectWallet } = useWalletConnection();
 
   const insertPurchaseRequest = async (tokenId: number, valor: number, wallet: string) => {
     try {
@@ -56,8 +56,8 @@ export const usePurchaseWithSupabase = () => {
         }
       } else {
         // Validar se a carteira ainda está conectada
-        const connectedWallet = await getConnectedWallet();
-        if (!connectedWallet) {
+        const isStillConnected = await checkWalletConnection();
+        if (!isStillConnected || !walletAddress) {
           toast.error("Conexão com a carteira perdida. Reconectando...");
           userWallet = await connectWallet();
           
@@ -66,10 +66,6 @@ export const usePurchaseWithSupabase = () => {
             setIsProcessing(false);
             return false;
           }
-        } else if (connectedWallet.toLowerCase() !== userWallet.toLowerCase()) {
-          toast.error("Endereço da carteira mudou. Por favor, reconecte sua carteira.");
-          setIsProcessing(false);
-          return false;
         }
       }
 

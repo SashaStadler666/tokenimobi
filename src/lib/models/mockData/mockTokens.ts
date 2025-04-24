@@ -1,6 +1,8 @@
+
 import { Token } from "@/lib/models";
 
-const kTokens: Token[] = [
+// Define the kTokens array first
+export const mockTokens: Token[] = [
   {
     id: 1,
     name: "Ulisses Vieira",
@@ -26,5 +28,3 @@ const kTokens: Token[] = [
     imageUrl: "https://link-da-imagem.com",
   },
 ];
-
-export const mockTokens: Token[] = kTokens;
