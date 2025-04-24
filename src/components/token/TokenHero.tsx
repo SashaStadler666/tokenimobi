@@ -11,10 +11,13 @@ interface TokenHeroProps {
 }
 
 const TokenHero = ({ token }: TokenHeroProps) => {
+  const [isImageError, setIsImageError] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   
-  // Determine display image without mutating the original token
-  const displayImage = token.imageUrl || getImageForType(token.propertyType);
+  // Use a fallback image if the main image fails to load
+  const displayImage = isImageError ? 
+    getImageForType(token.propertyType) : 
+    token.imageUrl || getImageForType(token.propertyType);
   
   // Determine property type icon
   const PropertyTypeIcon = token.propertyType?.toLowerCase().includes('fazenda') || 
@@ -35,6 +38,10 @@ const TokenHero = ({ token }: TokenHeroProps) => {
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
           loading="lazy"
           onLoad={() => setIsImageLoaded(true)}
+          onError={() => {
+            console.log(`Error loading hero image for token: ${token.id}, URL: ${token.imageUrl}`);
+            setIsImageError(true);
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
         <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">

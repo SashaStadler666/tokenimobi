@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { getPropertyIcon, getPropertyDescription } from "@/lib/imageUtils";
+import { getPropertyIcon, getPropertyDescription, getImageForType } from "@/lib/imageUtils";
 
 interface TokenCardImageProps {
   imageUrl: string;
@@ -14,21 +14,13 @@ interface TokenCardImageProps {
 const TokenCardImage = ({ imageUrl, name, isWholeProperty, propertyType }: TokenCardImageProps) => {
   const [imageError, setImageError] = useState(false);
   
-  // Create backup image URL based on property type
-  const getBackupImageUrl = () => {
-    const type = propertyType?.toLowerCase() || 'default';
-    const bgColor = {
-      'apartamento': '3a86ff',
-      'casa': '8338ec',
-      'flat': 'ff006e',
-      'comercial': 'fb5607',
-      'industrial': 'ffbe0b',
-      'terreno': '8ac926',
-      'fazenda': '2a9d8f',
-      'rural': 'e9c46a'
-    }[type] || '6c757d';
+  // Create backup image URL based on property type or use placeholder
+  const getBackupImage = () => {
+    if (propertyType) {
+      return getImageForType(propertyType);
+    }
     
-    return `https://placehold.co/300x300/${bgColor}/ffffff?text=${propertyType || 'Imóvel'}`;
+    return `https://placehold.co/300x300/6c757d/ffffff?text=${name || 'Token'}`;
   };
 
   return (
@@ -38,11 +30,14 @@ const TokenCardImage = ({ imageUrl, name, isWholeProperty, propertyType }: Token
           src={imageUrl} 
           alt={name} 
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          onError={() => setImageError(true)}
+          onError={() => {
+            console.log(`Error loading image: ${imageUrl} for token ${name}`);
+            setImageError(true);
+          }}
         />
       ) : (
         <img 
-          src={getBackupImageUrl()}
+          src={getBackupImage()}
           alt={name}
           className="w-full h-full object-cover"
         />

@@ -3,7 +3,7 @@ import { Token } from "@/lib/models";
 
 export const mockTokens: Token[] = [
   {
-    id: "1", // Convert to string
+    id: "1",
     name: "Ulisses Vieira",
     symbol: "K1",
     fractionPrice: 0.01,
@@ -19,10 +19,11 @@ export const mockTokens: Token[] = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
-    isWholeProperty: false
+    isWholeProperty: false,
+    area: 450
   },
   {
-    id: "2", // Convert to string
+    id: "2",
     name: "Parintins",
     symbol: "K2",
     fractionPrice: 0.015,
@@ -38,6 +39,7 @@ export const mockTokens: Token[] = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
-    isWholeProperty: false
+    isWholeProperty: false,
+    area: 580
   },
 ];
