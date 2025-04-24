@@ -13,14 +13,15 @@ export const mockTokens: Token[] = [
     volume24h: 10000,
     priceChange24h: 2.5,
     imageUrl: "https://raw.githubusercontent.com/SashaStadler666/token/main/images/k1.jpg",
-    description: "Token for Instituto K",
+    description: "Imóvel institucional localizado em São Paulo, com área total de 450m²",
     totalSupply: 1,
     yearBuilt: 2023,
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
     isWholeProperty: false,
-    area: 450
+    area: 450,
+    wholePropertyPrice: 1550000
   },
   {
     id: "k2",
@@ -33,14 +34,14 @@ export const mockTokens: Token[] = [
     volume24h: 8500,
     priceChange24h: 1.7,
     imageUrl: "https://raw.githubusercontent.com/SashaStadler666/token/main/images/k2.jpg",
-    description: "Token for Instituto K",
+    description: "Imóvel institucional localizado em São Paulo, com área total de 580m²",
     totalSupply: 1,
     yearBuilt: 2023,
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
     isWholeProperty: false,
-    area: 580
+    area: 580,
+    wholePropertyPrice: 1300000
   }
 ];
-

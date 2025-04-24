@@ -2,11 +2,13 @@
 import { Link } from "react-router-dom";
 import { Token } from "@/lib/models";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import TokenCardHeader from "./TokenCardHeader";
 import TokenCardImage from "./TokenCardImage";
 import TokenCardDetails from "./TokenCardDetails";
 import TokenCardAvailability from "./TokenCardAvailability";
 import { motion } from "framer-motion";
+import { Building } from "lucide-react";
 
 interface TokenCardProps {
   token: Token;
@@ -15,12 +17,13 @@ interface TokenCardProps {
 
 const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
   return (
-    <Link to={`/token/${token.id}`} style={{ display: 'block' }}>
-      <motion.div
-        whileHover={{ y: -5 }}
-        transition={{ duration: 0.2 }}
-      >
-        <Card className="overflow-hidden border border-border/50 h-full">
+    <motion.div
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="h-full"
+    >
+      <Card className="overflow-hidden border border-border/50 h-full cursor-pointer hover:border-primary/50 transition-colors">
+        <Link to={`/token/${token.id}`} className="block h-full">
           <TokenCardImage 
             imageUrl={token.imageUrl} 
             name={token.name} 
@@ -47,10 +50,17 @@ const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
               availableFractions={token.availableFractions}
               totalFractions={token.totalFractions}
             />
+            
+            <div className="mt-4">
+              <Button className="w-full" variant="outline">
+                <Building className="mr-2 h-4 w-4" />
+                Ver Detalhes
+              </Button>
+            </div>
           </CardContent>
-        </Card>
-      </motion.div>
-    </Link>
+        </Link>
+      </Card>
+    </motion.div>
   );
 };
 
