@@ -30,9 +30,10 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
   const filteredByPropertyType = propertyTypeTab === "urbano" ? urbanTokens : ruralTokens;
   
   // Further filter by acquisition mode
+  // Mark Instituto K tokens as whole properties for this filter
   const filteredTokens = acquisitionMode === "fracionados" 
-    ? filteredByPropertyType.filter(t => !t.isWholeProperty)
-    : filteredByPropertyType.filter(t => t.isWholeProperty);
+    ? filteredByPropertyType.filter(t => !t.isWholeProperty && t.symbol !== "K1" && t.symbol !== "K2")
+    : filteredByPropertyType.filter(t => t.isWholeProperty || t.symbol === "K1" || t.symbol === "K2");
 
   return (
     <div className="space-y-6">
@@ -48,7 +49,7 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
             >
               <TokenCard 
                 token={token} 
-                showWholePrice={acquisitionMode === "inteiros"} 
+                showWholePrice={acquisitionMode === "inteiros" || token.symbol === "K1" || token.symbol === "K2"} 
               />
             </motion.div>
           ))

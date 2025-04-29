@@ -25,7 +25,7 @@ export const kTokens = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 1,
-    isWholeProperty: false,
+    isWholeProperty: true,
     area: 450,
     wholePropertyPrice: 1550000,
     ownerAddress: "0x0e0584250443BcaB55021975c4F428B794989DB9"
@@ -47,10 +47,9 @@ export const kTokens = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 1,
-    isWholeProperty: false,
+    isWholeProperty: true,
     area: 580,
     wholePropertyPrice: 1300000,
     ownerAddress: "0x0e0584250443BcaB55021975c4F428B794989DB9"
   }
 ];
-

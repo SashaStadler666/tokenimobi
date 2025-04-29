@@ -10,6 +10,8 @@ interface TokenDetailSidebarProps {
 }
 
 const TokenDetailSidebar = ({ token, onBuyClick }: TokenDetailSidebarProps) => {
+  const isKToken = token.symbol === "K1" || token.symbol === "K2";
+  
   return (
     <div className="space-y-6">
       {token.ownerAddress && (
@@ -25,7 +27,7 @@ const TokenDetailSidebar = ({ token, onBuyClick }: TokenDetailSidebarProps) => {
         size="lg"
       >
         <Building className="mr-2 h-5 w-5" />
-        {token.isWholeProperty ? 'Comprar Imóvel Completo' : 'Comprar Frações'}
+        {isKToken ? 'Comprar Imóvel' : (token.isWholeProperty ? 'Comprar Imóvel Completo' : 'Comprar Frações')}
       </Button>
       
       <TokenDetailCard token={token} />
@@ -34,4 +36,3 @@ const TokenDetailSidebar = ({ token, onBuyClick }: TokenDetailSidebarProps) => {
 };
 
 export default TokenDetailSidebar;
-

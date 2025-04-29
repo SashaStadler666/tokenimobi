@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Token } from "@/lib/models";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +16,9 @@ interface TokenCardProps {
 }
 
 const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
+  // Check if it's a K token
+  const isKToken = token.symbol === "K1" || token.symbol === "K2";
+  
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -26,7 +30,7 @@ const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
           <TokenCardImage 
             imageUrl={token.imageUrl} 
             name={token.name} 
-            isWholeProperty={token.isWholeProperty}
+            isWholeProperty={token.isWholeProperty || isKToken}
             propertyType={token.propertyType}
           />
           <CardContent className="p-4">
@@ -39,14 +43,14 @@ const TokenCard = ({ token, showWholePrice = false }: TokenCardProps) => {
             <TokenCardDetails 
               fractionPrice={token.fractionPrice}
               wholePropertyPrice={token.wholePropertyPrice}
-              showWholePrice={showWholePrice}
+              showWholePrice={showWholePrice || isKToken}
               priceChange24h={token.priceChange24h}
               propertyType={token.propertyType}
               area={token.area}
               ownerAddress={token.ownerAddress}
             />
             <TokenCardAvailability 
-              isWholeProperty={token.isWholeProperty}
+              isWholeProperty={token.isWholeProperty || isKToken}
               availableFractions={token.availableFractions}
               totalFractions={token.totalFractions}
             />

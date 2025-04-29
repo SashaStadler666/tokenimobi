@@ -16,6 +16,7 @@ interface PurchasePropertyModalProps {
 const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyModalProps) => {
   const [loading, setLoading] = useState(false);
   const { isConnected, connectWallet } = useWalletConnection();
+  const isKToken = token.symbol === "K1" || token.symbol === "K2";
 
   const handlePurchase = () => {
     if (!isConnected) {
@@ -25,7 +26,10 @@ const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyMo
 
     setLoading(true);
     setTimeout(() => {
-      toast.success(`Compra do imóvel ${token.name} iniciada com sucesso!`);
+      const successMessage = isKToken 
+        ? `Compra do imóvel ${token.name} iniciada com sucesso!` 
+        : `Compra do imóvel ${token.name} iniciada com sucesso!`;
+      toast.success(successMessage);
       setLoading(false);
       onOpenChange(false);
     }, 2000);
@@ -52,7 +56,7 @@ const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyMo
                 e.currentTarget.src = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=64";
               }}
             />
-            Comprar {token.name}
+            {isKToken ? `Comprar ${token.name}` : `Comprar ${token.name}`}
           </DialogTitle>
         </DialogHeader>
 
@@ -65,7 +69,9 @@ const PurchasePropertyModal = ({ open, onOpenChange, token }: PurchasePropertyMo
               }).format(token.wholePropertyPrice || 0)}
             </p>
             <p className="text-sm text-muted-foreground">
-              Ao confirmar, você iniciará o processo de compra do imóvel inteiro.
+              {isKToken 
+                ? "Ao confirmar, você iniciará o processo de compra deste imóvel institucional."
+                : "Ao confirmar, você iniciará o processo de compra do imóvel inteiro."}
             </p>
           </div>
 
