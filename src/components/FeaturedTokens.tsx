@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { mockTokens, Token } from "@/lib/models";
+import { mockTokens, Token, kTokens } from "@/lib/models";
 import FilterButton from "./featured/FilterButton";
 import PropertyTypeSelector from "./featured/PropertyTypeSelector";
 import FiltersPanel from "./featured/FiltersPanel";
@@ -20,16 +20,20 @@ const FeaturedTokens = () => {
   useEffect(() => {
     // Filter and sort tokens based on active tab and property type
     const getTokens = () => {
+      // Include kTokens in the tokens array
+      const allTokens = [...mockTokens, ...kTokens];
+      
       // First filter by urban/rural property type
       const propertyTypeFiltered = propertyTypeTab === "urbano" 
-        ? [...mockTokens].filter(t => 
+        ? allTokens.filter(t => 
             t.propertyType === "Apartamento" || 
             t.propertyType === "Casa" || 
             t.propertyType === "Flat" ||
             t.propertyType === "Comercial" ||
-            t.propertyType === "Industrial"
+            t.propertyType === "Industrial" ||
+            t.propertyType === "Institucional"  // Added Institucional type for K tokens
           )
-        : [...mockTokens].filter(t => 
+        : allTokens.filter(t => 
             t.propertyType === "Terreno" || 
             t.propertyType === "Fazenda" ||
             t.propertyType === "Rural"
@@ -46,7 +50,8 @@ const FeaturedTokens = () => {
         case "commercial":
           return propertyTypeFiltered.filter(t => 
             t.propertyType === "Comercial" || 
-            t.propertyType === "Industrial"
+            t.propertyType === "Industrial" ||
+            t.propertyType === "Institucional"  // Added Institucional for K tokens
           ).slice(0, 6);
         case "performance":
           return propertyTypeFiltered.sort((a, b) => b.priceChange24h - a.priceChange24h).slice(0, 6);

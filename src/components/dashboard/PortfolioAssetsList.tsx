@@ -40,7 +40,7 @@ const PortfolioAssetsList = ({
               {urbanCount > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {ownedTokens.map((item, index) => {
-                    if (!item || !['Apartamento', 'Casa', 'Flat', 'Comercial'].includes(item.token.propertyType)) 
+                    if (!item || !['Apartamento', 'Casa', 'Flat', 'Comercial', 'Institucional'].includes(item.token.propertyType)) 
                       return null;
                       
                     return (

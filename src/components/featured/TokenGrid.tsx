@@ -16,7 +16,8 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
     t.propertyType === "Casa" || 
     t.propertyType === "Flat" ||
     t.propertyType === "Comercial" ||
-    t.propertyType === "Industrial"
+    t.propertyType === "Industrial" ||
+    t.propertyType === "Institucional"  // Added Institucional type
   );
   
   const ruralTokens = tokens.filter(t => 

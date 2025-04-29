@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { mockTokens, Token, wholePropertyTokens } from "@/lib/models";
+import { mockTokens, Token, wholePropertyTokens, kTokens } from "@/lib/models";
 import { useLocation } from "react-router-dom";
 import TokensPageHeader from "@/components/tokens/TokensPageHeader";
 import TokenFilterControls from "@/components/tokens/TokenFilterControls";
@@ -18,7 +18,9 @@ const Tokens = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [acquisitionMode, setAcquisitionMode] = useState<string>("fracionados");
   const [loading, setLoading] = useState(true);
-  const allTokens = [...mockTokens, ...wholePropertyTokens];
+  
+  // Include kTokens in the allTokens array
+  const allTokens = [...mockTokens, ...wholePropertyTokens, ...kTokens];
   
   useEffect(() => {
     // Scroll to top when component mounts

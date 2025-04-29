@@ -1,5 +1,4 @@
-
-import { Token, Transaction, mockTokens } from "@/lib/models";
+import { Token, Transaction, mockTokens, kTokens } from "@/lib/models";
 
 interface PortfolioData {
   totalInvestment: number;
@@ -24,9 +23,12 @@ export const calculatePortfolioData = (transactions: Transaction[]): PortfolioDa
     }
   });
   
+  // Include all tokens (mockTokens and kTokens)
+  const allTokens = [...mockTokens, ...kTokens];
+  
   // Calculate owned fractions per token
   const ownedTokens = Array.from(userTokenIds).map(tokenId => {
-    const token = mockTokens.find(t => t.id === tokenId);
+    const token = allTokens.find(t => t.id === tokenId);
     if (!token) return null;
     
     // Calculate how many fractions user owns
@@ -48,12 +50,13 @@ export const calculatePortfolioData = (transactions: Transaction[]): PortfolioDa
     return sum + (item.token.fractionPrice * item.fractions);
   }, 0);
 
-  // Count token types
+  // Count token types - include Institucional in urbanCount
   const urbanCount = ownedTokens.filter(item => 
     item && (item.token.propertyType === "Apartamento" || 
     item.token.propertyType === "Casa" || 
     item.token.propertyType === "Flat" ||
-    item.token.propertyType === "Comercial")
+    item.token.propertyType === "Comercial" ||
+    item.token.propertyType === "Institucional")
   ).length;
 
   const ruralCount = ownedTokens.filter(item => 
