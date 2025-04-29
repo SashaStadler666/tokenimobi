@@ -17,7 +17,7 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
     t.propertyType === "Flat" ||
     t.propertyType === "Comercial" ||
     t.propertyType === "Industrial" ||
-    t.propertyType === "Institucional"  // Added Institucional type
+    t.propertyType === "Institucional"  // Make sure Institucional type is included
   );
   
   const ruralTokens = tokens.filter(t => 
@@ -29,8 +29,8 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
   // Select tokens based on property type
   const filteredByPropertyType = propertyTypeTab === "urbano" ? urbanTokens : ruralTokens;
   
-  // Further filter by acquisition mode
-  // Mark Instituto K tokens as whole properties for this filter
+  // Further filter by acquisition mode but make sure K tokens are always visible
+  // For whole properties, include K tokens
   const filteredTokens = acquisitionMode === "fracionados" 
     ? filteredByPropertyType.filter(t => !t.isWholeProperty && t.symbol !== "K1" && t.symbol !== "K2")
     : filteredByPropertyType.filter(t => t.isWholeProperty || t.symbol === "K1" || t.symbol === "K2");

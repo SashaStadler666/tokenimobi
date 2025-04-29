@@ -6,9 +6,9 @@ export const mockTokens: Token[] = [
     id: "k1",
     name: "Ulisses Vieira",
     symbol: "K1",
-    fractionPrice: 0.01,
-    totalFractions: 1000,
-    availableFractions: 1000,
+    fractionPrice: 1000, // Updated to minimum required price
+    totalFractions: 1,
+    availableFractions: 1,
     marketCap: 1550000,
     volume24h: 10000,
     priceChange24h: 2.5,
@@ -19,7 +19,7 @@ export const mockTokens: Token[] = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
-    isWholeProperty: false,
+    isWholeProperty: true, // Set to true to indicate this is a whole property
     area: 450,
     wholePropertyPrice: 1550000
   },
@@ -27,9 +27,9 @@ export const mockTokens: Token[] = [
     id: "k2",
     name: "Parintins",
     symbol: "K2",
-    fractionPrice: 0.015,
-    totalFractions: 1000,
-    availableFractions: 1000,
+    fractionPrice: 1000, // Updated to minimum required price
+    totalFractions: 1,
+    availableFractions: 1,
     marketCap: 1300000,
     volume24h: 8500,
     priceChange24h: 1.7,
@@ -40,7 +40,7 @@ export const mockTokens: Token[] = [
     location: "São Paulo, SP",
     propertyType: "Institucional",
     holders: 0,
-    isWholeProperty: false,
+    isWholeProperty: true, // Set to true to indicate this is a whole property
     area: 580,
     wholePropertyPrice: 1300000
   }

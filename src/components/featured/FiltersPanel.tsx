@@ -18,7 +18,7 @@ interface FiltersPanelProps {
   acquisitionMode?: string;
 }
 
-const FiltersPanel = ({ showFilters, propertyTypeTab, acquisitionMode = "fracionados" }: FiltersPanelProps) => {
+const FiltersPanel = ({ showFilters, propertyTypeTab, acquisitionMode = "inteiros" }: FiltersPanelProps) => {
   const urbanForm = useForm<FilterValues>({
     defaultValues: {
       location: "",

@@ -6,15 +6,15 @@ export { wholePropertyTokens } from './mockData/wholePropertyTokens';
 export { urbanTokens } from './mockData/urbanTokens';
 export { ruralTokens } from './mockData/ruralTokens';
 
-// Add the K tokens for Instituto K
+// Updated K tokens for Instituto K with proper visibility settings
 export const kTokens = [
   {
     id: "k1",
     name: "Instituto K Professor Ulisses Vieira",
     symbol: "K1",
-    fractionPrice: 0.01,
-    totalFractions: 1000,
-    availableFractions: 1000,
+    fractionPrice: 1000, // Minimum price as requested
+    totalFractions: 1,
+    availableFractions: 1,
     marketCap: 1550000,
     volume24h: 10000,
     priceChange24h: 2.5,
@@ -34,9 +34,9 @@ export const kTokens = [
     id: "k2",
     name: "Instituto K Parintins",
     symbol: "K2",
-    fractionPrice: 0.015,
-    totalFractions: 1000,
-    availableFractions: 1000,
+    fractionPrice: 1000, // Minimum price as requested
+    totalFractions: 1,
+    availableFractions: 1,
     marketCap: 1300000,
     volume24h: 8500,
     priceChange24h: 1.7,

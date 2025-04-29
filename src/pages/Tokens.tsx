@@ -16,7 +16,8 @@ const Tokens = () => {
   
   const [propertyTypeTab, setPropertyTypeTab] = useState(typeFromUrl === "rural" ? "rural" : "urbano");
   const [showFilters, setShowFilters] = useState(false);
-  const [acquisitionMode, setAcquisitionMode] = useState<string>("fracionados");
+  // Set default to "inteiros" to show K tokens
+  const [acquisitionMode, setAcquisitionMode] = useState<string>("inteiros");
   const [loading, setLoading] = useState(true);
   
   // Include kTokens in the allTokens array

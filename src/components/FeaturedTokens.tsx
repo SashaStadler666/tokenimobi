@@ -14,8 +14,8 @@ const FeaturedTokens = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [propertyTypeTab, setPropertyTypeTab] = useState("urbano");
   const [showFilters, setShowFilters] = useState(false);
-  // Add default acquisitionMode state
-  const [acquisitionMode, setAcquisitionMode] = useState("fracionados");
+  // Set default acquisition mode to "inteiros" to show K tokens
+  const [acquisitionMode, setAcquisitionMode] = useState("inteiros");
   
   useEffect(() => {
     // Filter and sort tokens based on active tab and property type
