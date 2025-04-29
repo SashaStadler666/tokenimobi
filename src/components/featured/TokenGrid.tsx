@@ -11,6 +11,7 @@ interface TokenGridProps {
 
 const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps) => {
   // Filter tokens by property type
+  // Special handling for K tokens: always include them in urban properties
   const urbanTokens = tokens.filter(t => 
     t.propertyType === "Apartamento" || 
     t.propertyType === "Casa" || 
@@ -29,11 +30,15 @@ const TokenGrid = ({ tokens, propertyTypeTab, acquisitionMode }: TokenGridProps)
   // Select tokens based on property type
   const filteredByPropertyType = propertyTypeTab === "urbano" ? urbanTokens : ruralTokens;
   
-  // Further filter by acquisition mode but make sure K tokens are always visible
-  // For whole properties, include K tokens
+  // ALWAYS include K tokens when showing whole properties or when specifically looking for K tokens
   const filteredTokens = acquisitionMode === "fracionados" 
     ? filteredByPropertyType.filter(t => !t.isWholeProperty && t.symbol !== "K1" && t.symbol !== "K2")
     : filteredByPropertyType.filter(t => t.isWholeProperty || t.symbol === "K1" || t.symbol === "K2");
+
+  console.log("Filtered tokens:", filteredTokens);
+  console.log("Total tokens available:", tokens.length);
+  console.log("Property type:", propertyTypeTab);
+  console.log("Acquisition mode:", acquisitionMode);
 
   return (
     <div className="space-y-6">

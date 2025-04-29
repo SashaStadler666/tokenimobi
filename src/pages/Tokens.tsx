@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { mockTokens, Token, wholePropertyTokens, kTokens } from "@/lib/models";
+import { mockTokens, Token, wholePropertyTokens } from "@/lib/models";
 import { useLocation } from "react-router-dom";
 import TokensPageHeader from "@/components/tokens/TokensPageHeader";
 import TokenFilterControls from "@/components/tokens/TokenFilterControls";
@@ -20,8 +20,11 @@ const Tokens = () => {
   const [acquisitionMode, setAcquisitionMode] = useState<string>("inteiros");
   const [loading, setLoading] = useState(true);
   
-  // Include kTokens in the allTokens array
-  const allTokens = [...mockTokens, ...wholePropertyTokens, ...kTokens];
+  // Use mockTokens directly as our token source to ensure K tokens are shown
+  const allTokens = [...mockTokens, ...wholePropertyTokens];
+  
+  console.log("All tokens:", allTokens);
+  console.log("mockTokens:", mockTokens);
   
   useEffect(() => {
     // Scroll to top when component mounts
