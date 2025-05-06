@@ -36,7 +36,7 @@
     --input: 0 0% 90%;
     --ring: 0 0% 10%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -92,7 +92,7 @@
   }
   
   .button-glow {
-    @apply relative overflow-hidden;
+    @apply relative overflow-hidden transition-all duration-300;
   }
   
   .button-glow::after {
@@ -132,6 +132,29 @@
   .section-gradient {
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(247,247,247,0.5) 100%);
   }
+  
+  /* Custom styles for map popup */
+  .custom-popup .leaflet-popup-content-wrapper {
+    @apply rounded-xl overflow-hidden shadow-lg border border-border bg-background;
+  }
+  
+  .custom-popup .leaflet-popup-tip {
+    @apply bg-background border border-border;
+  }
+  
+  .custom-popup .leaflet-popup-close-button {
+    @apply text-foreground hover:text-primary transition-colors;
+  }
+  
+  /* Enhanced button styles */
+  .enhanced-button {
+    @apply transition-all duration-300 transform hover:scale-105 active:scale-95;
+  }
+  
+  /* Card with subtle hover effect */
+  .subtle-hover-card {
+    @apply transition-all duration-300 bg-card hover:bg-card/80 border border-border hover:border-primary/30;
+  }
 }
 
 @keyframes float {
@@ -158,6 +181,17 @@
   }
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 10px 5px rgba(var(--primary), 0);
+  }
+}
+
 @layer utilities {
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -165,5 +199,9 @@
   
   .animate-ken-burns {
     animation: ken-burns 20s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }

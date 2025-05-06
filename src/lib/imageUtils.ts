@@ -12,6 +12,8 @@ export const getImageForType = (type: string | undefined): string => {
     case "fazenda":
     case "agro":
       return "https://images.unsplash.com/photo-1566438480900-0609be27a4be";
+    case "institucional":
+      return "https://images.unsplash.com/photo-1541535881962-3f756058e5c1";
     default:
       return "https://images.unsplash.com/photo-1501183638710-841dd1904471";
   }
@@ -36,6 +38,8 @@ export const getPropertyIcon = (type: string | undefined): string => {
       return "🌾";
     case "fazenda":
       return "🌱";
+    case "institucional":
+      return "🏛️";
     default:
       return "🏠";
   }
@@ -60,6 +64,8 @@ export const getPropertyDescription = (type: string | undefined): string => {
       return "Terreno em zona rural para diversos usos";
     case "fazenda":
       return "Propriedade rural produtiva";
+    case "institucional":
+      return "Imóvel para fins educacionais ou institucionais";
     default:
       return "Imóvel tokenizado";
   }
@@ -80,7 +86,7 @@ export const getLocationCoordinates = (location: string | undefined): [number, n
     "Belo Horizonte, MG": [-43.9352, -19.9208],
     "Manaus, AM": [-60.0261, -3.1190],
     "Curitiba, PR": [-49.2733, -25.4284],
-    "Vila Izabel, Curitiba, PR": [-49.2933, -25.4560],
+    "Vila Izabel, Curitiba, PR": [-49.2933, -25.4560], // Precise coordinates for Vila Izabel
     "Recife, PE": [-34.8770, -8.0476],
     "Goiânia, GO": [-49.2647, -16.6864],
     "Belém, PA": [-48.4902, -1.4558],
@@ -98,10 +104,15 @@ export const getLocationCoordinates = (location: string | undefined): [number, n
     if (location.includes(key)) return coords;
   }
   
-  // Check for partial matches
+  // Check for partial matches (city name)
   for (const [key, coords] of Object.entries(locationMap)) {
     const parts = key.split(", ");
     if (parts.some(part => location.includes(part))) return coords;
+  }
+  
+  // Default to Curitiba if no match (since most properties are in Curitiba)
+  if (location.toLowerCase().includes('curitiba')) {
+    return [-49.2733, -25.4284];
   }
   
   // Default to Brazil center
