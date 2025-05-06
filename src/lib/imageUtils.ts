@@ -1,3 +1,4 @@
+
 // Utility function to get fallback images based on property type
 export const getImageForType = (type: string | undefined): string => {
   switch (type?.toLowerCase()) {
@@ -78,7 +79,8 @@ export const getLocationCoordinates = (location: string | undefined): [number, n
     "Fortaleza, CE": [-38.5266, -3.7319],
     "Belo Horizonte, MG": [-43.9352, -19.9208],
     "Manaus, AM": [-60.0261, -3.1190],
-    "Curitiba, PR": [-49.2671, -25.4195],
+    "Curitiba, PR": [-49.2733, -25.4284],
+    "Vila Izabel, Curitiba, PR": [-49.2933, -25.4560],
     "Recife, PE": [-34.8770, -8.0476],
     "Goiânia, GO": [-49.2647, -16.6864],
     "Belém, PA": [-48.4902, -1.4558],
