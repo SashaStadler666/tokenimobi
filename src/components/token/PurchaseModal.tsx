@@ -65,10 +65,6 @@ const PurchaseModal = ({ token, open, onOpenChange }: PurchaseModalProps) => {
           }
         });
       }, 1000);
-    } else if (result.partialSuccess) {
-      // Caso de erro no blockchain mas sucesso no Supabase
-      toast.error("Erro no blockchain, mas sua solicitação foi registrada com sucesso.");
-      onOpenChange(false);
     } else {
       toast.error(result.message || "Falha na compra. Verifique sua carteira e tente novamente.");
     }

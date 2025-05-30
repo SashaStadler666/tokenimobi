@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -41,15 +42,22 @@ const Portfolio = () => {
         const web3 = new Web3(window.ethereum as any);
         const contract = new web3.eth.Contract(TokenK_ABI as any, CONTRACT_ADDRESS);
 
-        const { data: supabaseData, error } = await supabase
-          .from('K Instituto de Desenvolvimento Econômico')
-          .select('*')
-          .eq('wallet', walletAddress.toLowerCase());
+        let supabaseData: any[] = [];
+        try {
+          const { data, error } = await supabase
+            .from('K Instituto de Desenvolvimento Econômico')
+            .select('*')
+            .eq('wallet', walletAddress.toLowerCase());
 
-        if (error) {
-          console.error('Erro ao buscar do Supabase:', error);
-          toast.error('Erro ao carregar tokens do Supabase');
-          return;
+          if (error) {
+            console.error('Erro ao buscar do Supabase:', error);
+            toast.error('Erro ao carregar tokens do Supabase');
+          } else {
+            supabaseData = data || [];
+          }
+        } catch (supabaseError) {
+          console.error('Erro de conexão com Supabase:', supabaseError);
+          // Continue without Supabase data
         }
 
         const ownedTokens: Token[] = [];
@@ -84,11 +92,12 @@ const Portfolio = () => {
           }
         }
 
-        if (supabaseData) {
+        if (supabaseData.length > 0) {
           for (const record of supabaseData) {
-            const tokenId = record.token_id?.toString();
-            if (!tokenId) continue;
+            const tokenIdValue = record.token_id;
+            if (!tokenIdValue) continue;
             
+            const tokenId = tokenIdValue.toString();
             const alreadyAdded = ownedTokens.some(t => t.id === `k${tokenId}`);
             if (!alreadyAdded) {
               const token = kTokens.find(t => t.id === `k${tokenId}`);

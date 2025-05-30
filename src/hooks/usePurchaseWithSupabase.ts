@@ -15,12 +15,12 @@ export const usePurchaseWithSupabase = () => {
       
       const { data, error } = await supabase
         .from('K Instituto de Desenvolvimento Econômico')
-        .insert([{
+        .insert({
           token_id: tokenId,
           status: 'pendente',
           valor: valor,
           wallet: wallet
-        }]);
+        });
 
       if (error) {
         console.error('Erro ao inserir no Supabase:', error);
