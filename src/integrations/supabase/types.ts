@@ -9,36 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      "K Instituto de Desenvolvimento Econômico": {
-        Row: {
-          created_at: string
-          id: number
-          status: string
-          token_id: number | null
-          user_id: string | null
-          valor: number
-          wallet: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          status?: string
-          token_id?: number | null
-          user_id?: string | null
-          valor: number
-          wallet: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          status?: string
-          token_id?: number | null
-          user_id?: string | null
-          valor?: number
-          wallet?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never

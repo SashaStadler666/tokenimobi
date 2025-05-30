@@ -3,7 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWalletConnection } from "@/hooks/useWalletConnection";
 import { toast } from "sonner";
-import { buyToken, getConnectedWallet } from "@/utils/contractUtils";
+import { buyToken } from "@/utils/contractUtils";
 
 export const usePurchaseWithSupabase = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -11,6 +11,8 @@ export const usePurchaseWithSupabase = () => {
 
   const insertPurchaseRequest = async (tokenId: number, valor: number, wallet: string) => {
     try {
+      console.log('Inserindo no Supabase:', { tokenId, valor, wallet });
+      
       const { data, error } = await supabase
         .from('K Instituto de Desenvolvimento Econômico')
         .insert([{
@@ -22,102 +24,91 @@ export const usePurchaseWithSupabase = () => {
 
       if (error) {
         console.error('Erro ao inserir no Supabase:', error);
-        return { success: false, message: `Erro ao registrar compra: ${error.message}` };
+        // Não falhar por erro do Supabase, continuar com a compra
+        return { success: false, message: `Aviso: ${error.message}`, continueWithPurchase: true };
       }
       
+      console.log('Inserção no Supabase bem-sucedida:', data);
       return { success: true, message: 'Solicitação registrada com sucesso' };
     } catch (error: any) {
       console.error('Erro ao registrar no Supabase:', error);
+      // Não falhar por erro do Supabase, continuar com a compra
       return { 
         success: false, 
-        message: `Erro ao registrar compra: ${error.message || 'Erro desconhecido'}` 
+        message: `Aviso: ${error.message || 'Erro desconhecido'}`,
+        continueWithPurchase: true
       };
     }
   };
 
   const purchaseToken = async (tokenId: number, valor: number) => {
+    console.log('Iniciando compra:', { tokenId, valor, isConnected, walletAddress });
+    
     setIsProcessing(true);
 
     try {
-      // Força uma verificação nova do estado da carteira
-      await checkWalletConnection();
-      
-      // Verificar conexão da carteira
-      let userWallet = walletAddress;
-      
-      if (!isConnected || !userWallet) {
-        toast.error("Carteira não conectada. Conectando...");
-        userWallet = await connectWallet();
+      // Verificar se a carteira está conectada
+      if (!isConnected || !walletAddress) {
+        console.log('Carteira não conectada, tentando conectar...');
+        const newWalletAddress = await connectWallet();
         
-        if (!userWallet) {
+        if (!newWalletAddress) {
+          setIsProcessing(false);
           return { 
             success: false, 
-            message: "Falha ao conectar carteira. Por favor, tente novamente." 
+            message: "Falha ao conectar carteira. Por favor, verifique se o MetaMask está instalado e desbloqueado." 
           };
         }
-      } else {
-        // Validar se a carteira ainda está conectada
-        const isStillConnected = await checkWalletConnection();
-        if (!isStillConnected || !walletAddress) {
-          toast.error("Conexão com a carteira perdida. Reconectando...");
-          userWallet = await connectWallet();
-          
-          if (!userWallet) {
-            return { 
-              success: false, 
-              message: "Falha ao reconectar carteira. Por favor, tente novamente." 
-            };
-          }
-        }
+        
+        console.log('Carteira conectada:', newWalletAddress);
       }
 
-      // Inserir solicitação de compra no Supabase (sempre fazer isso, antes de interagir com blockchain)
-      const supabaseResult = await insertPurchaseRequest(tokenId, valor, userWallet);
+      // Usar o endereço da carteira atual
+      const currentWalletAddress = walletAddress || await connectWallet();
       
-      // Mesmo se o registro falhar, tentar a compra no blockchain
-      try {
-        // Usa buyToken diretamente com o endereço da carteira
-        const purchaseSuccess = await buyToken(tokenId, userWallet);
-        
-        if (purchaseSuccess) {
-          return { 
-            success: true, 
-            message: `Token ${tokenId} comprado com sucesso!` 
-          };
-        } else if (supabaseResult.success) {
-          return { 
-            success: false, 
-            partialSuccess: true,
-            message: "A operação foi registrada, mas não pôde ser finalizada no blockchain." 
-          };
-        } else {
-          return { 
-            success: false, 
-            message: "Não foi possível registrar nem finalizar a compra. Tente novamente mais tarde." 
-          };
-        }
-      } catch (blockchainError: any) {
-        console.error("Erro na interação com blockchain:", blockchainError);
-        
-        // Se deu erro no blockchain mas o registro foi feito, ainda consideramos parcialmente bem-sucedido
-        if (supabaseResult.success) {
-          return { 
-            success: false, 
-            partialSuccess: true,
-            message: "Erro no blockchain, mas sua solicitação foi registrada com sucesso." 
-          };
-        } else {
-          return { 
-            success: false, 
-            message: "Ocorreu um erro na transação e não foi possível registrá-la. Tente novamente mais tarde." 
-          };
-        }
+      if (!currentWalletAddress) {
+        setIsProcessing(false);
+        return { 
+          success: false, 
+          message: "Endereço da carteira não encontrado." 
+        };
       }
+
+      console.log('Usando endereço da carteira:', currentWalletAddress);
+
+      // Tentar inserir no Supabase (opcional)
+      const supabaseResult = await insertPurchaseRequest(tokenId, valor, currentWalletAddress);
+      
+      if (supabaseResult.success) {
+        console.log('Registro no Supabase OK, prosseguindo com blockchain...');
+      } else if (supabaseResult.continueWithPurchase) {
+        console.log('Erro no Supabase mas continuando com blockchain:', supabaseResult.message);
+        toast.info("Continuando com a compra...");
+      }
+
+      // Executar compra no blockchain
+      console.log('Iniciando transação blockchain para token:', tokenId);
+      const purchaseSuccess = await buyToken(tokenId, currentWalletAddress);
+      
+      if (purchaseSuccess) {
+        console.log('Compra blockchain bem-sucedida');
+        return { 
+          success: true, 
+          message: `Token ${tokenId} comprado com sucesso!` 
+        };
+      } else {
+        console.log('Compra blockchain falhou');
+        return { 
+          success: false, 
+          message: "Erro na transação blockchain. Verifique sua carteira e tente novamente." 
+        };
+      }
+      
     } catch (error: any) {
       console.error("Erro ao processar a compra:", error);
       return { 
         success: false, 
-        message: error.message || "Erro ao processar a compra" 
+        message: error.message || "Erro inesperado ao processar a compra" 
       };
     } finally {
       setIsProcessing(false);

@@ -1,3 +1,4 @@
+
 import Web3 from 'web3';
 import { toast } from 'sonner';
 
@@ -28,16 +29,22 @@ const CONTRACT_ABI = [
 ];
 
 export const initWeb3 = async () => {
+  console.log('Inicializando Web3...');
+  
   if (typeof window.ethereum !== 'undefined') {
     try {
       const provider = window.ethereum as any;
       const web3 = new Web3(provider);
+      
+      console.log('Web3 inicializado com sucesso');
       return web3;
     } catch (error) {
       console.error('Erro ao inicializar Web3:', error);
       throw new Error('Erro ao conectar ao MetaMask');
     }
   }
+  
+  console.error('MetaMask não detectado');
   throw new Error('MetaMask não está instalada');
 };
 
@@ -47,31 +54,72 @@ export const getContract = async () => {
 };
 
 export const buyToken = async (tokenId: number, walletAddress: string): Promise<boolean> => {
+  console.log(`[buyToken] Iniciando compra - Token: ${tokenId}, Carteira: ${walletAddress}`);
+  
   try {
+    // Verificar se o MetaMask está conectado
+    if (!window.ethereum) {
+      console.error('MetaMask não encontrado');
+      toast.error("MetaMask não está instalado");
+      return false;
+    }
+
     const web3 = await initWeb3();
     const contract = await getContract();
 
-    console.log(`Iniciando compra do token ${tokenId} usando carteira ${walletAddress}`);
+    console.log(`[buyToken] Contrato carregado: ${CONTRACT_ADDRESS}`);
+
+    // Verificar se a conta está conectada
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (!accounts || accounts.length === 0) {
+      console.error('Nenhuma conta conectada');
+      toast.error("Nenhuma conta conectada ao MetaMask");
+      return false;
+    }
+
+    const connectedAccount = accounts[0].toLowerCase();
+    const expectedAccount = walletAddress.toLowerCase();
+    
+    if (connectedAccount !== expectedAccount) {
+      console.warn(`Conta conectada (${connectedAccount}) diferente da esperada (${expectedAccount})`);
+      toast.warning("Verifique se a conta correta está selecionada no MetaMask");
+    }
 
     // Obter o preço do token
     let priceWei;
     try {
       priceWei = await contract.methods.tokenPrice(tokenId).call();
-      console.log(`Preço do token em Wei: ${priceWei}`);
+      console.log(`[buyToken] Preço do token em Wei: ${priceWei}`);
+      
+      if (!priceWei || priceWei === '0') {
+        console.error('Preço do token inválido');
+        toast.error("Token não disponível para compra");
+        return false;
+      }
     } catch (err) {
       console.error('Erro ao obter preço do token:', err);
-      toast.error("Não foi possível obter o preço do token");
+      toast.error("Não foi possível obter informações do token");
       return false;
     }
 
     // Verificar saldo da carteira
     const balance = await web3.eth.getBalance(walletAddress);
-    console.log(`Saldo da carteira em Wei: ${balance}`);
+    console.log(`[buyToken] Saldo da carteira: ${balance} Wei (${web3.utils.fromWei(balance, 'ether')} ETH)`);
     
     if (Number(balance) < Number(priceWei)) {
-      toast.error(`Saldo insuficiente. Necessário: ${web3.utils.fromWei(priceWei, 'ether')} ETH`);
+      const requiredEth = web3.utils.fromWei(priceWei, 'ether');
+      const currentEth = web3.utils.fromWei(balance, 'ether');
+      console.error(`Saldo insuficiente. Necessário: ${requiredEth} ETH, Disponível: ${currentEth} ETH`);
+      toast.error(`Saldo insuficiente. Necessário: ${requiredEth} ETH`);
       return false;
     }
+
+    console.log(`[buyToken] Enviando transação...`);
+    
+    // Mostrar toast de carregamento
+    toast.loading("Processando transação...", {
+      description: "Confirme a transação no MetaMask"
+    });
 
     // Enviar transação de compra
     const receipt = await contract.methods.buyToken(tokenId).send({
@@ -80,18 +128,35 @@ export const buyToken = async (tokenId: number, walletAddress: string): Promise<
       gas: 300000
     });
 
-    console.log('Transação concluída:', receipt);
-    toast.success(`Token #${tokenId} comprado com sucesso!`);
-    return true;
-  } catch (err: any) {
-    console.error('Erro na compra do token:', err);
+    console.log('[buyToken] Transação concluída:', receipt);
     
-    if (err.message.includes("User denied")) {
-      toast.error("Transação rejeitada pelo usuário");
-    } else if (err.message.includes("insufficient funds")) {
-      toast.error("Saldo insuficiente para completar a transação");
+    // Remover toast de carregamento
+    toast.dismiss();
+    
+    if (receipt && receipt.status) {
+      toast.success(`Token #${tokenId} comprado com sucesso!`);
+      return true;
     } else {
-      toast.error(err.message.substring(0, 100));
+      console.error('Transação falhou:', receipt);
+      toast.error("Transação falhou");
+      return false;
+    }
+    
+  } catch (err: any) {
+    console.error('[buyToken] Erro na compra:', err);
+    
+    // Remover toast de carregamento se estiver ativo
+    toast.dismiss();
+    
+    if (err.code === 4001 || err.message?.includes("User denied")) {
+      toast.error("Transação cancelada pelo usuário");
+    } else if (err.code === -32603 || err.message?.includes("insufficient funds")) {
+      toast.error("Saldo insuficiente para completar a transação");
+    } else if (err.message?.includes("execution reverted")) {
+      toast.error("Transação rejeitada pelo contrato");
+    } else {
+      const errorMsg = err.message?.substring(0, 100) || "Erro desconhecido";
+      toast.error(`Erro na transação: ${errorMsg}`);
     }
     
     return false;
@@ -104,6 +169,7 @@ export const getConnectedWallet = async (): Promise<string | null> => {
     
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
     if (accounts && accounts.length > 0) {
+      console.log('Carteira conectada:', accounts[0]);
       return accounts[0];
     }
     return null;
@@ -120,8 +186,11 @@ export const connectWallet = async (): Promise<string | null> => {
       return null;
     }
     
+    console.log('Solicitando conexão da carteira...');
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    
     if (accounts && accounts.length > 0) {
+      console.log('Carteira conectada com sucesso:', accounts[0]);
       return accounts[0];
     }
     return null;
